@@ -1,0 +1,797 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="vi" lang="vi">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bản đồ Bản đồ du lịch Lào Cai</title>
+<style type="text/css">
+/*<![CDATA[*/
+
+/* required styles */
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+/* Prevents IE11 from highlighting tiles in blue */
+.leaflet-tile::selection {
+	background: transparent;
+}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */
+.leaflet-container .leaflet-overlay-pane svg {
+	max-width: none !important;
+	max-height: none !important;
+	}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+	max-width: none !important;
+	max-height: none !important;
+	width: auto;
+	padding: 0;
+	}
+
+.leaflet-container img.leaflet-tile {
+	/* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
+	mix-blend-mode: plus-lighter;
+}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	/* Fallback for FF which doesn't support pinch-zoom */
+	touch-action: none;
+	touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	behavior: url(#default#VML);
+	display: inline-block;
+	position: absolute;
+	}
+
+
+/* control positioning */
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+/* zoom and fade animations */
+
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+svg.leaflet-zoom-animated {
+	will-change: transform;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+/* cursors */
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor:         grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor:         grabbing;
+	}
+
+/* marker & overlays interactivity */
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+
+/* visual tweaks */
+
+.leaflet-container {
+	background: #ddd;
+	outline-offset: 1px;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+/* general typography */
+.leaflet-container {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	}
+
+
+/* general toolbar styles */
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+/* zoom control */
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+/* layers control */
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	background-image: url(images/layers.png);
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: url(images/layers-2x.png);
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	font-size: 13px;
+	font-size: 1.08333em;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+/* Default icon URLs */
+.leaflet-default-icon-path { /* used only in path-guessing heuristic, see L.Icon.Default */
+	background-image: url(images/marker-icon.png);
+	}
+
+
+/* attribution and scale controls */
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	line-height: 1.4;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover,
+.leaflet-control-attribution a:focus {
+	text-decoration: underline;
+	}
+.leaflet-attribution-flag {
+	display: inline !important;
+	vertical-align: baseline !important;
+	width: 1em;
+	height: 0.6669em;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px #fff;
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+/* popup */
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 24px 13px 20px;
+	line-height: 1.3;
+	font-size: 13px;
+	font-size: 1.08333em;
+	min-height: 1px;
+	}
+.leaflet-popup-content p {
+	margin: 17px 0;
+	margin: 1.3em 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-top: -1px;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+	pointer-events: auto;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: none;
+	text-align: center;
+	width: 24px;
+	height: 24px;
+	font: 16px/24px Tahoma, Verdana, sans-serif;
+	color: #757575;
+	text-decoration: none;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover,
+.leaflet-container a.leaflet-popup-close-button:focus {
+	color: #585858;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	-ms-zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+/* div icon */
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-interactive {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+
+/* Printing */
+
+@media print {
+	/* Prevent printers from removing background-images of controls. */
+	.leaflet-control {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+		}
+	}
+html,body{margin:0;padding:0;height:100%;font-family:Arial,Helvetica,sans-serif;}
+#wrap{display:flex;height:100vh;}
+#panel{width:330px;min-width:330px;background:#fff;border-right:1px solid #ddd;display:flex;flex-direction:column;z-index:1000;}
+#panel h2{margin:0;padding:12px 14px;background:#1F6F3B;color:#fff;font-size:16px;}
+#panel .sub{padding:8px 14px;font-size:12px;color:#555;border-bottom:1px solid #eee;}
+#search{margin:10px 14px 4px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:14px;}
+#filters{display:flex;gap:6px;padding:8px 14px;flex-wrap:wrap;}
+#filters button{flex:1;padding:7px 4px;border:1px solid #1F6F3B;background:#fff;color:#1F6F3B;border-radius:6px;font-size:13px;cursor:pointer;white-space:nowrap;}
+#filters button.active{background:#1F6F3B;color:#fff;}
+#list{flex:1;overflow-y:auto;padding:0 0 10px;}
+.item{padding:9px 14px;border-bottom:1px solid #f0f0f0;cursor:pointer;}
+.item:hover{background:#f4f9f5;}
+.item .t{font-weight:bold;font-size:14px;}
+.item .a{font-size:12px;color:#666;margin-top:2px;}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;color:#fff;margin-right:6px;}
+.badge.nh{background:#e67e22;} .badge.ks{background:#2980b9;} .badge.dl{background:#27ae60;} .badge.cf{background:#8e5a2b;} .badge.xx{background:#7f8c8d;}
+#map{flex:1;height:100vh;}
+.poi-icon{font-size:22px;text-align:center;line-height:30px;width:30px;height:30px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.4);}
+.leaflet-popup-content{font-size:13px;line-height:1.5;min-width:230px;}
+.leaflet-popup-content h3{margin:0 0 6px;font-size:15px;}
+.btns{margin-top:8px;}
+.btns a{display:inline-block;margin:3px 6px 0 0;padding:7px 12px;border-radius:6px;text-decoration:none;font-size:13px;color:#fff;}
+.btns a.gm{background:#1a73e8;} .btns a.dir{background:#1F6F3B;} .btns a.tel{background:#e67e22;}
+@media (max-width:760px){
+  #wrap{flex-direction:column;}
+  #panel{width:100%;min-width:0;max-height:42vh;border-right:none;border-bottom:1px solid #ddd;}
+  #map{height:58vh;}
+}
+/*]]>*/
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="panel">
+    <h2>🗺️ Bản đồ du lịch Lào Cai</h2>
+    <div class="sub" id="count"></div>
+    <input id="search" type="text" placeholder="Tìm tên, địa chỉ..." />
+    <div id="filters">
+      <button data-f="all" class="active">Tất cả</button>
+      <button data-f="Nhà hàng">🍽️ Ăn</button>
+      <button data-f="Cà phê">☕ Cafe</button>
+      <button data-f="Điểm du lịch">🏞️ Chơi</button>
+      <button data-f="Khách sạn">🏨 Ở</button>
+      <button data-f="Gọi xe">🚕 Gọi xe</button>
+    </div>
+    <div id="list"></div>
+  </div>
+  <div id="map"></div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="text/javascript">
+
+//<![CDATA[
+var DATA = [{"loai": "Nhà hàng", "ten": "Nhà hàng A Phủ Sapa", "dia_chi": "15 Fansipan, phường Sa Pa, tỉnh Lào Cai", "lat": 22.33429, "lon": 103.84078, "gio": "", "dienthoai": "0868 159 900", "gia": "", "mota": "Nổi tiếng với thắng cố ngựa và lẩu cá tầm/cá hồi, đa dạng đặc sản Tây Bắc."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Sapa TV", "dia_chi": "019 Hoàng Văn Thụ, phường Sa Pa, tỉnh Lào Cai", "lat": 22.33623, "lon": 103.84546, "gio": "", "dienthoai": "", "gia": "", "mota": "Cách nhà thờ đá 200m, gần 100 món Tây Bắc: trâu gác bếp, thắng cố, lẩu cá tầm, gà đen."}, {"loai": "Nhà hàng", "ten": "Viet Deli - Món Ngon Tây Bắc", "dia_chi": "6 Thủ Dầu Một, phường Sa Pa, tỉnh Lào Cai", "lat": 22.33635, "lon": 103.8447, "gio": "08:00 - 22:00", "dienthoai": "0862 109 168 / 0963 074 713", "gia": "", "mota": "Hơn 200 món Tây Bắc trong không gian tinh tế, nổi bật lẩu cá tầm."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Cá Tầm Vua", "dia_chi": "9 Fansipan, phường Sa Pa, tỉnh Lào Cai", "lat": 22.33437, "lon": 103.8408, "gio": "", "dienthoai": "0367 371 431", "gia": "", "mota": "Chuyên lẩu cá tầm tươi, không gian đẹp, thích hợp tiệc gia đình."}, {"loai": "Nhà hàng", "ten": "Nhà hàng bếp H'mong Sapa", "dia_chi": "468 Điện Biên Phủ, phường Sa Pa, tỉnh Lào Cai", "lat": 22.33968, "lon": 103.84889, "gio": "", "dienthoai": "", "gia": "", "mota": "Không gian ấm cúng kiểu H'Mông, lẩu cá tầm, thắng cố, lợn mán, rượu ngô."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Cầu Mây", "dia_chi": "92 Ngũ Chỉ Sơn, phường Sa Pa, tỉnh Lào Cai", "lat": 22.33716, "lon": 103.84961, "gio": "", "dienthoai": "", "gia": "", "mota": "Địa chỉ quen thuộc để ăn thắng cố đúng vị giữa trung tâm Sa Pa."}, {"loai": "Nhà hàng", "ten": "Thế Giới Ẩm Thực Tại Sapa", "dia_chi": "63 Xuân Viên, phường Sa Pa, tỉnh Lào Cai", "lat": 22.33639, "lon": 103.84277, "gio": "", "dienthoai": "0335 063 063 / 0984 796 791", "gia": "", "mota": "Tổ hợp ẩm thực rộng rãi: lẩu cá tầm, gà bản, lợn bản, thắng cố."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Khám Phá Việt", "dia_chi": "15 Thạch Sơn, phường Sa Pa, tỉnh Lào Cai", "lat": 22.33738, "lon": 103.85045, "gio": "08:00 - 22:00", "dienthoai": "0214 387 1555", "gia": "", "mota": "Lâu đời ở Sa Pa, thắng cố, lẩu cá hồi, cơm lam, thịt hun khói."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Thắng Cố Quành 2", "dia_chi": "127 Thạch Sơn, phường Sa Pa, tỉnh Lào Cai", "lat": 22.33705, "lon": 103.84901, "gio": "", "dienthoai": "0964 946 999", "gia": "", "mota": "Quán thắng cố đông khách, vị đậm đà chuẩn vùng cao."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Dũng Trâu", "dia_chi": "85 Xuân Viên, phường Sa Pa, tỉnh Lào Cai", "lat": 22.33849, "lon": 103.84485, "gio": "", "dienthoai": "", "gia": "", "mota": "Món lợn cắp nách quay và các đặc sản núi rừng giá phải chăng."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Lán Kiên", "dia_chi": "Ngã 3 Phố Bờ hồ (đường Vũ Văn Mật), xã Bắc Hà, tỉnh Lào Cai", "lat": 22.535517, "lon": 104.292936, "gio": "06:00 - 22:00", "dienthoai": "0984 350 229 / 0948 791 468", "gia": "", "mota": "Cách chợ phiên Bắc Hà 5 phút đi bộ, thắng cố, lẩu cá suối, trâu gác bếp chuẩn vị H'Mông."}, {"loai": "Nhà hàng", "ten": "Thắng cố LyLy Bắc Hà", "dia_chi": "Tổ dân phố Nậm Cáy 1, xã Bắc Hà, tỉnh Lào Cai (suy luận, chờ duyệt)", "lat": 22.53317, "lon": 104.29567, "gio": "", "dienthoai": "098 781 8460", "gia": "khoảng 100.000đ/bát", "mota": "Thắng cố ngựa truyền thống ăn kèm rượu ngô Bản Phố."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Thùy Linh", "dia_chi": "Tổ 2, xã Mù Cang Chải, tỉnh Lào Cai", "lat": 21.84946, "lon": 104.09272, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán ruột của dân địa phương: cơm lam, lẩu cá tầm, măng rừng, lợn mán giá rẻ."}, {"loai": "Nhà hàng", "ten": "Quán Luận Còi", "dia_chi": "Tổ 4, xã Mù Cang Chải, tỉnh Lào Cai", "lat": 21.852515, "lon": 104.083967, "gio": "07:30 - 24:00", "dienthoai": "0961 670 799", "gia": "", "mota": "Gà đồi chế biến kiểu bản địa: gà rang muối, gà nộm, gà quay giòn bì."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Homestay Sùng A Hờ", "dia_chi": "xã Cao Phạ, tỉnh Lào Cai", "lat": 21.77552, "lon": 104.27033, "gio": "", "dienthoai": "", "gia": "", "mota": "Nhà sàn view núi ở Cao Phạ, nổi tiếng gà đen: lẩu gà đen, gà nướng muối ớt, cơm lam."}, {"loai": "Cà phê", "ten": "Viettrekking Coffee Sapa", "dia_chi": "33 Hoàng Liên, phường Sa Pa, tỉnh Lào Cai", "lat": 22.3343, "lon": 103.83995, "gio": "07:00 - 22:00", "dienthoai": "0214 652 5555", "gia": "", "mota": "Café 'trên mây' view biển mây và Fansipan, điểm săn mây/check-in nổi tiếng nhất Sa Pa."}, {"loai": "Cà phê", "ten": "Le Petit Gecko", "dia_chi": "07 Xuân Viên, phường Sa Pa, tỉnh Lào Cai", "lat": 22.336186, "lon": 103.842245, "gio": "07:00 - 23:00", "dienthoai": "0335 929 496", "gia": "", "mota": "Café trung tâm view nhà thờ đá và vườn hoa Xuân Viên, nổi tiếng cà phê trứng."}, {"loai": "Cà phê", "ten": "Ginkgo Sapa - Rooftop Garden", "dia_chi": "07A Mường Hoa, xã Mường Hoa, tỉnh Lào Cai", "lat": 22.333153, "lon": 103.84325, "gio": "10:00 - 21:00", "dienthoai": "0369 110 041", "gia": "", "mota": "Rooftop vườn yên tĩnh view toàn cảnh thung lũng Mường Hoa."}, {"loai": "Cà phê", "ten": "Gem Valley Coffee", "dia_chi": "bản Cát Cát, phường Sa Pa, tỉnh Lào Cai (suy luận, chờ duyệt)", "lat": 22.33092, "lon": 103.83486, "gio": "07:00 - 21:00", "dienthoai": "0912 849 753", "gia": "", "mota": "Café nghệ thuật giữa bản Cát Cát, view ruộng bậc thang và núi rừng."}, {"loai": "Cà phê", "ten": "Tus De Liab", "dia_chi": "Tổ 7, xã Lao Chải, tỉnh Lào Cai", "lat": 22.32484, "lon": 103.857247, "gio": "08:00 - 17:00", "dienthoai": "0932 231 199", "gia": "", "mota": "Sân mây ở độ cao 1600m, view 360 độ thung lũng Mường Hoa, cappuccino quế hồi đặc trưng."}, {"loai": "Cà phê", "ten": "321 WoodenHouse", "dia_chi": "321 Điện Biên Phủ, phường Sa Pa, tỉnh Lào Cai", "lat": 22.341658, "lon": 103.855675, "gio": "08:00 - 18:00", "dienthoai": "0919 035 008", "gia": "", "mota": "Nhà gỗ mộc mạc trên đường Điện Biên Phủ, không gian yên tĩnh giá bình dân."}, {"loai": "Cà phê", "ten": "Thiểu Số Trà & Cà Phê - SaPa", "dia_chi": "01 Thạch Sơn, phường Sa Pa, tỉnh Lào Cai", "lat": 22.33586, "lon": 103.84503, "gio": "07:00 - 23:00", "dienthoai": "0702 022 686", "gia": "", "mota": "Café phong cách dân tộc thiểu số ngay trung tâm, đồ uống đa dạng."}, {"loai": "Cà phê", "ten": "Cà phê 8 độ C", "dia_chi": "11B Tuệ Tĩnh, phường Sa Pa, tỉnh Lào Cai", "lat": 22.33353, "lon": 103.84124, "gio": "07:00 - 23:00", "dienthoai": "0972 862 226", "gia": "", "mota": "Không gian cổ xưa đậm chất Sa Pa, nổi tiếng cà phê trứng và đồ uống nóng."}, {"loai": "Điểm du lịch", "ten": "Thị xã Sa Pa", "dia_chi": "Trung tâm thị xã Sa Pa (phường Sa Pa), tỉnh Lào Cai", "lat": 22.33503, "lon": 103.84236, "gio": "", "dienthoai": "", "gia": "Miễn phí", "mota": "Thị xã du lịch nổi tiếng vùng Tây Bắc với khí hậu mát lạnh quanh năm, trung tâm là nhà thờ đá và quảng trường."}, {"loai": "Điểm du lịch", "ten": "Đỉnh Fansipan", "dia_chi": "Đường Nguyễn Chí Thanh, phường Phan Si Păng, thị xã Sa Pa, tỉnh Lào Cai", "lat": 22.33747, "lon": 103.82438, "gio": "8h00–17h30 (ngày thường); 7h30–17h30 (T7, CN)", "dienthoai": "0948309999", "gia": "Cáp treo 850.000đ/người lớn, 550.000đ/trẻ em (2026)", "mota": "\"Nóc nhà Đông Dương\" cao 3.143m, chinh phục bằng cáp treo 15 phút ngắm thung lũng Mường Hoa và quần thể tâm linh trên đỉnh."}, {"loai": "Điểm du lịch", "ten": "Ruộng bậc thang Mù Cang Chải", "dia_chi": "Quốc lộ 32, xã Mù Cang Chải, tỉnh Lào Cai", "lat": 21.80416, "lon": 104.1489, "gio": "", "dienthoai": "", "gia": "30.000đ/người", "mota": "Di tích quốc gia đặc biệt với 853 ha ruộng bậc thang của người Mông, đẹp nhất mùa lúa chín tháng 9–10."}, {"loai": "Điểm du lịch", "ten": "Bản Cát Cát", "dia_chi": "Thôn Cát Cát, xã Hoàng Liên, thị xã Sa Pa, tỉnh Lào Cai", "lat": 22.33105, "lon": 103.83404, "gio": "6h00–17h00", "dienthoai": "", "gia": "150.000đ/người lớn, 70.000đ/trẻ em (1m–1,4m)", "mota": "Bản làng cổ của người H'Mông dưới chân dãy Hoàng Liên Sơn với suối, thác, guồng nước và nghề thủ công truyền thống."}, {"loai": "Điểm du lịch", "ten": "Đèo Ô Quy Hồ", "dia_chi": "Quốc lộ 4D, xã Hoàng Liên, thị xã Sa Pa, tỉnh Lào Cai (giáp Lai Châu)", "lat": 22.35407, "lon": 103.77562, "gio": "7h00–18h00", "dienthoai": "0969669299", "gia": "Cổng Trời 120.000đ/người lớn, 60.000đ/trẻ em", "mota": "Một trong \"tứ đại đỉnh đèo\" Tây Bắc ở độ cao khoảng 2.000m, điểm săn mây và ngắm hoàng hôn nổi tiếng (còn gọi là Đèo Mây)."}, {"loai": "Điểm du lịch", "ten": "Thác Bạc", "dia_chi": "Quốc lộ 4D, phường Sa Pa, thị xã Sa Pa, tỉnh Lào Cai", "lat": 22.36161, "lon": 103.77994, "gio": "", "dienthoai": "", "gia": "20.000đ/người lớn, 10.000đ/trẻ em", "mota": "Thác nước cao 200m dưới chân đèo Ô Quy Hồ, thượng nguồn suối Mường Hoa, bọt nước tung trắng xóa như dải bạc."}, {"loai": "Điểm du lịch", "ten": "Núi Hàm Rồng", "dia_chi": "Tổ 7, phường Sa Pa, thị xã Sa Pa, tỉnh Lào Cai", "lat": 22.33447, "lon": 103.84684, "gio": "8h00–17h00", "dienthoai": "", "gia": "70.000đ/người lớn, 30.000đ/trẻ em", "mota": "Ngọn núi hình đầu rồng ngay trung tâm thị xã Sa Pa với vườn lan, vườn đào và đài quan sát toàn cảnh thị trấn trong mây."}, {"loai": "Điểm du lịch", "ten": "Ruộng bậc thang La Pán Tẩn (Đồi Mâm Xôi)", "dia_chi": "Bản Hán Xung, xã La Pán Tẩn, tỉnh Lào Cai", "lat": 21.7833, "lon": 104.15537, "gio": "", "dienthoai": "", "gia": "20.000đ/người", "mota": "Đồi Mâm Xôi với những thửa ruộng uốn cong tròn độc đáo, hình ảnh biểu tượng của mùa vàng Mù Cang Chải."}, {"loai": "Điểm du lịch", "ten": "Đèo Khau Phạ", "dia_chi": "Quốc lộ 32, xã Cao Phạ, tỉnh Lào Cai", "lat": 21.75482, "lon": 104.26464, "gio": "", "dienthoai": "", "gia": "Dù lượn 2.000.000đ–2.600.000đ/lượt", "mota": "Một trong \"tứ đại đỉnh đèo\" Tây Bắc dài hơn 30km, điểm bay dù lượn ngắm mùa vàng nổi tiếng mỗi tháng 9."}, {"loai": "Điểm du lịch", "ten": "Chợ phiên Bắc Hà", "dia_chi": "Xã Bắc Hà, tỉnh Lào Cai", "lat": 22.53495, "lon": 104.29298, "gio": "Chủ nhật: 6h00–14h00", "dienthoai": "", "gia": "Miễn phí (Dinh thự Hoàng A Tưởng: 20.000đ/người lớn)", "mota": "Phiên chợ vùng cao lớn nhất Tây Bắc họp sáng Chủ nhật hàng tuần; gần đó là Dinh thự Hoàng A Tưởng gần 100 năm tuổi của \"vua Mèo\"."}, {"loai": "Điểm du lịch", "ten": "Y Tý", "dia_chi": "Xã Y Tý, tỉnh Lào Cai", "lat": 22.64983, "lon": 103.61564, "gio": "", "dienthoai": "", "gia": "", "mota": "Vùng đất biên viễn ở độ cao hơn 2.000m nổi tiếng săn mây, ruộng bậc thang và bản làng người Hà Nhì."}, {"loai": "Điểm du lịch", "ten": "Cửa khẩu quốc tế Lào Cai", "dia_chi": "3 Đường Hoàng Liên, phường Cốc Lếu, tỉnh Lào Cai", "lat": 22.50004, "lon": 103.96596, "gio": "7h00–22h00", "dienthoai": "", "gia": "", "mota": "Cửa khẩu quốc tế đường bộ qua cầu Hồ Kiều sang Hà Khẩu (Vân Nam, Trung Quốc); cần hộ chiếu hoặc giấy thông hành khi xuất cảnh."}, {"loai": "Điểm du lịch", "ten": "Hồ Thác Bà", "dia_chi": "Hồ Thác Bà, xã Yên Bình, tỉnh Lào Cai", "lat": 21.74729, "lon": 105.0244, "gio": "", "dienthoai": "", "gia": "Tàu tham quan 2.200.000đ–4.000.000đ/tàu (ngày thường)", "mota": "Hồ nhân tạo rộng hơn 23.000 ha với hơn 1.300 đảo lớn nhỏ, được ví như \"Vịnh Hạ Long trên cạn\" của Tây Bắc."}, {"loai": "Điểm du lịch", "ten": "Suối khoáng nóng Trạm Tấu", "dia_chi": "Khu 5, xã Trạm Tấu, tỉnh Lào Cai (suy luận, chờ duyệt)", "lat": 21.46609, "lon": 104.37963, "gio": "8h00–15h00 và 18h00–20h50", "dienthoai": "0943208704", "gia": "120.000đ/người lớn, 80.000đ/trẻ em", "mota": "Bể khoáng nóng tự nhiên 38–45°C giữa thung lũng ruộng bậc thang, được ví như \"Bali thu nhỏ\" của Tây Bắc."}, {"loai": "Điểm du lịch", "ten": "Thác Tình Yêu (Suối Vàng)", "dia_chi": "Trạm Tôn, xã Hoàng Liên, thị xã Sa Pa, tỉnh Lào Cai", "lat": 22.35292, "lon": 103.77473, "gio": "", "dienthoai": "", "gia": "70.000đ/người lớn, 30.000đ/trẻ em", "mota": "Thác nước cao khoảng 100m ẩn trong rừng nguyên sinh Trạm Tôn, gắn với truyền thuyết tình yêu của người Dao đỏ."}, {"loai": "Khách sạn", "ten": "Silk Path Grand Resort & Spa Sapa", "dia_chi": "Đồi Quan 6, Tổ 10, phường Phan Si Păng, tỉnh Lào Cai (suy luận, chờ duyệt)", "lat": 22.33858, "lon": 103.83776, "gio": "", "dienthoai": "0948 555 555 – 0917 613 000", "gia": "Từ 1.980.000đ/phòng/đêm", "mota": "Resort 5 sao phong cách Pháp kết hợp họa tiết thổ cẩm Tây Bắc, view núi và biển mây ngay trung tâm Sa Pa."}, {"loai": "Khách sạn", "ten": "Hôtel de la Coupole – MGallery Sapa", "dia_chi": "Số 1 Hoàng Liên, phường Phan Si Păng, tỉnh Lào Cai (suy luận, chờ duyệt)", "lat": 22.33441, "lon": 103.84055, "gio": "", "dienthoai": "", "gia": "Từ 3.000.000đ/phòng/đêm", "mota": "Khách sạn 5 sao phong cách Pháp xa hoa ngay trung tâm thị trấn, gần nhà thờ đá, được mệnh danh là cung điện của Sa Pa."}, {"loai": "Khách sạn", "ten": "Topas Ecolodge", "dia_chi": "Thanh Kim, Sa Pa, tỉnh Lào Cai (suy luận, chờ duyệt)", "lat": 22.33295, "lon": 103.8431, "gio": "", "dienthoai": "", "gia": "Từ 4.700.000đ/đêm", "mota": "Resort 5 sao trên đồi riêng 4 mặt hướng núi, nổi tiếng với bể bơi vô cực và tour trekking thung lũng Mường Hoa."}, {"loai": "Khách sạn", "ten": "Pao's Sapa Leisure Hotel", "dia_chi": "Đường Mường Hoa, phường Cầu Mây, tỉnh Lào Cai (suy luận, chờ duyệt)", "lat": 22.32727, "lon": 103.84651, "gio": "", "dienthoai": "", "gia": "", "mota": "Khách sạn thiết kế đường cong mô phỏng ruộng bậc thang, view núi đẹp nhất nhì Sa Pa, thích hợp ngồi ban công ngắm mây."}, {"loai": "Khách sạn", "ten": "Sapa Jade Hill Resort & Spa", "dia_chi": "Thôn Lý, xã Lao Chải, Sa Pa, tỉnh Lào Cai (suy luận, chờ duyệt)", "lat": 22.32364, "lon": 103.85501, "gio": "", "dienthoai": "", "gia": "Từ 1.960.000đ/đêm", "mota": "Resort 5 sao dạng bungalow biệt lập giữa bản làng, bể bơi 4 mùa trong nhà, spa, không gian riêng tư giữa núi rừng."}, {"loai": "Khách sạn", "ten": "Pistachio Hotel Sapa", "dia_chi": "Số 29, tổ 10, đường Thác Bạc, phường Phan Si Păng, tỉnh Lào Cai (suy luận, chờ duyệt)", "lat": 22.33497, "lon": 103.8378, "gio": "", "dienthoai": "", "gia": "Từ 1.200.000đ/phòng/đêm", "mota": "Khách sạn 4 sao nổi bật với bể bơi vô cực dát vàng, bể bơi 4 mùa trong nhà, gần trung tâm Sa Pa."}, {"loai": "Khách sạn", "ten": "Khách sạn Toàn Cảnh Sa Pa (Sapa Panorama Hotel)", "dia_chi": "Số 10 đường Hoàng Diệu, phường Phan Si Păng, tỉnh Lào Cai (suy luận, chờ duyệt)", "lat": 22.33663, "lon": 103.84231, "gio": "", "dienthoai": "0945 524 535", "gia": "", "mota": "Khách sạn bình dân ngay trung tâm thị trấn Sa Pa, view toàn cảnh thung lũng Mường Hoa, thuận tiện đi bộ các điểm chơi."}, {"loai": "Khách sạn", "ten": "Cát Cát Hill Resort & Spa", "dia_chi": "086 đường Fansipan, phường Ô Quy Hồ, tỉnh Lào Cai (suy luận, chờ duyệt)", "lat": 22.33303, "lon": 103.8344, "gio": "", "dienthoai": "", "gia": "Từ 1.150.000đ/phòng/đêm", "mota": "Resort 4 sao mới trên đường Fansipan, phòng có bồn tắm và ban công view núi, bể bơi vô cực."}, {"loai": "Khách sạn", "ten": "Aristo International Hotel", "dia_chi": "28 Yết Kiêu, phường Kim Tân, TP. Lào Cai, tỉnh Lào Cai", "lat": 22.4816, "lon": 103.97773, "gio": "", "dienthoai": "1900 23 23 55 (9h–20h)", "gia": "", "mota": "Khách sạn 5 sao quốc tế đầu tiên của tỉnh, ~400 phòng, hồ bơi, spa, sân tennis, ngay cạnh cửa khẩu quốc tế Lào Cai."}, {"loai": "Khách sạn", "ten": "Mù Cang Chải Ecolodge", "dia_chi": "Bản Hua Khắt, xã Nậm Khắt, huyện Mù Cang Chải, tỉnh Lào Cai", "lat": 21.7107, "lon": 104.22727, "gio": "", "dienthoai": "0943 333 333", "gia": "", "mota": "Khu nghỉ phong cách nhà Mông bằng gỗ trên đồi cao, bao quanh bởi ruộng bậc thang và rừng thông, ngắm trọn mùa lúa chín."}, {"loai": "Khách sạn", "ten": "Bắc Hà Lodge Retreat", "dia_chi": "Thôn Na Kim, xã Tà Chải, huyện Bắc Hà, tỉnh Lào Cai", "lat": 22.55441, "lon": 104.29396, "gio": "", "dienthoai": "", "gia": "Từ 1.672.830đ/đêm", "mota": "Lodge nghỉ dưỡng yên tĩnh ở cao nguyên trắng Bắc Hà, gần chợ phiên Bắc Hà và dinh thự Hoàng A Tưởng."}, {"loai": "Khách sạn", "ten": "Le Champ Tú Lệ Resort Hot Spring & Spa", "dia_chi": "Xã Tú Lệ, huyện Văn Chấn, tỉnh Lào Cai (Yên Bái cũ)", "lat": 21.78837, "lon": 104.31211, "gio": "", "dienthoai": "", "gia": "Từ 2.200.000đ/đêm", "mota": "Resort dưới chân đèo Khau Phạ, phòng phong cách nhà sàn, suối khoáng nóng, điệu xòe Thái và ẩm thực Tây Bắc."}, {"loai": "Gọi xe", "ten": "Taxi Mai Linh Lào Cai", "dia_chi": "Trung tâm Sa Pa, tỉnh Lào Cai (suy luận, chờ duyệt)", "lat": 22.33503, "lon": 103.84236, "gio": "", "dienthoai": "0214.3.833.388", "gia": "Tham khảo: 50.000–200.000đ/chuyến trong Sa Pa", "mota": "Hãng taxi quốc gia phủ sóng toàn tỉnh, phục vụ các điểm bản Cát Cát, nhà thờ đá, Hàm Rồng."}, {"loai": "Gọi xe", "ten": "Taxi Thành Công Lào Cai", "dia_chi": "Trung tâm Sa Pa, tỉnh Lào Cai (suy luận, chờ duyệt)", "lat": 22.33503, "lon": 103.84236, "gio": "", "dienthoai": "0214.3.685.685", "gia": "Tham khảo: 50.000–200.000đ/chuyến trong Sa Pa", "mota": "Hãng taxi lâu năm tại Lào Cai, đội xe lớn phục vụ TP. Lào Cai và Sa Pa."}, {"loai": "Gọi xe", "ten": "Taxi Xanh Sapa", "dia_chi": "Trung tâm Sa Pa, tỉnh Lào Cai (suy luận, chờ duyệt)", "lat": 22.33503, "lon": 103.84236, "gio": "", "dienthoai": "0214.3.63.63.63", "gia": "Tham khảo: 50.000–200.000đ/chuyến trong Sa Pa", "mota": "Hãng taxi màu xanh lá quen thuộc tại Sa Pa, dịch vụ chuyên nghiệp, giá bình dân."}, {"loai": "Gọi xe", "ten": "Xe điện du lịch Sapa (Công ty TNHH MTV xe điện Sapa)", "dia_chi": "Bến xe điện – Nhà thờ đá Sa Pa, phường Sa Pa, tỉnh Lào Cai (suy luận, chờ duyệt)", "lat": 22.33503, "lon": 103.84236, "gio": "06:30–23:00", "dienthoai": "0868.669.996", "gia": "Khoảng 6.000đ/khách/lượt", "mota": "Xe điện chở khách tham quan trung tâm Sa Pa theo tuyến cố định: bến xe – nhà thờ đá – chợ văn hóa."}, {"loai": "Gọi xe", "ten": "Dịch vụ cho thuê xe máy Sapa giá rẻ", "dia_chi": "17 Thạch Sơn, phường Sa Pa, tỉnh Lào Cai", "lat": 22.33623, "lon": 103.84425, "gio": "", "dienthoai": "0888 999 001", "gia": "100.000–150.000đ/ngày (xăng tự túc)", "mota": "Cho thuê xe máy, xe tay ga giao tận nơi, kèm mũ bảo hiểm và áo mưa, thủ tục đơn giản."}, {"loai": "Gọi xe", "ten": "Việt Nam Du Lịch – Cho thuê xe du lịch tại Sapa", "dia_chi": "Trung tâm thị trấn Sa Pa, tỉnh Lào Cai (suy luận, chờ duyệt)", "lat": 22.33503, "lon": 103.84236, "gio": "", "dienthoai": "033 714 2444", "gia": "Từ 350.000đ (xe máy) đến 6.500.000đ (xe 29 chỗ)", "mota": "Cho thuê xe du lịch 4–29 chỗ có tài xế bản địa, đón đúng giờ, giá trọn gói không phí ẩn."}];
+var map = L.map("map").setView([22.0, 104.2], 9.0);
+var gStreet = L.tileLayer("https://{s}.google.com/vt/lyrs=m&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gHybrid = L.tileLayer("https://{s}.google.com/vt/lyrs=y&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gTerrain = L.tileLayer("https://{s}.google.com/vt/lyrs=p&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"OpenStreetMap"});
+var gTraffic = L.tileLayer("https://{s}.google.com/vt/lyrs=h,traffic&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+gHybrid.addTo(map);
+gTraffic.addTo(map);
+var ICONS = {"Nhà hàng": "🍽️", "Cà phê": "☕", "Điểm du lịch": "🏞️", "Khách sạn": "🏨", "Gọi xe": "🚕"};
+var BADGES = {"Nhà hàng": "nh", "Cà phê": "cf", "Điểm du lịch": "dl", "Khách sạn": "ks", "Gọi xe": "gx"};
+function iconFor(loai){
+  var e = ICONS[loai] || "\uD83D\uDCCD";
+  return L.divIcon({className:"", html:'<div class="poi-icon">'+e+'</div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-14]});
+}
+function badgeCls(loai){
+  return BADGES[loai] || "xx";
+}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function popupHtml(d){
+  var h = '<h3>'+esc(d.ten)+'</h3>';
+  h += '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span></div>';
+  h += '<div>\uD83D\uDCCD '+esc(d.dia_chi)+'</div>';
+  if(d.gio) h += '<div>\uD83D\uDD50 '+esc(d.gio)+'</div>';
+  if(d.dienthoai) h += '<div>\uD83D\uDCDE <a href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">'+esc(d.dienthoai)+'</a></div>';
+  if(d.gia) h += '<div>\uD83D\uDCB0 '+esc(d.gia)+'</div>';
+  if(d.mota) h += '<div style="margin-top:4px;color:#444;">'+esc(d.mota)+'</div>';
+  h += '<div class="btns">';
+  h += '<a class="gm" target="_blank" href="https://www.google.com/maps/search/?api=1&query='+d.lat+','+d.lon+'">M\u1edf tr\u00ean Google Maps</a>';
+  h += '<a class="dir" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+d.lat+','+d.lon+'">D\u1eabn \u0111\u01b0\u1eddng t\u1edbi \u0111\u00e2y</a>';
+  if(d.dienthoai) h += '<a class="tel" href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">G\u1ecdi \u0111i\u1ec7n</a>';
+  h += '</div>';
+  return h;
+}
+var markers = [];
+var listEl = document.getElementById("list");
+var curFilter = "all";
+function render(){
+  listEl.innerHTML = "";
+  markers.forEach(function(m){ map.removeLayer(m); });
+  markers = [];
+  var q = document.getElementById("search").value.toLowerCase();
+  var shown = 0;
+  DATA.forEach(function(d, i){
+    if(curFilter !== "all" && d.loai !== curFilter) return;
+    if(q && (d.ten+" "+d.dia_chi+" "+d.mota).toLowerCase().indexOf(q) < 0) return;
+    shown++;
+    var mk = L.marker([d.lat, d.lon], {icon: iconFor(d.loai)}).addTo(map);
+    mk.bindPopup(popupHtml(d));
+    markers.push(mk);
+    var div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span><span class="t">'+esc(d.ten)+'</span></div><div class="a">'+esc(d.dia_chi)+'</div>';
+    (function(m){ div.onclick = function(){ map.setView(m.getLatLng(), 16); m.openPopup(); }; })(mk);
+    listEl.appendChild(div);
+  });
+  document.getElementById("count").textContent = "Hi\u1ec3n th\u1ecb "+shown+"/"+DATA.length+" \u0111\u1ecba \u0111i\u1ec3m";
+}
+document.getElementById("search").addEventListener("input", render);
+var fbtns = document.querySelectorAll("#filters button");
+fbtns.forEach(function(b){
+  b.addEventListener("click", function(){
+    fbtns.forEach(function(x){ x.classList.remove("active"); });
+    b.classList.add("active");
+    curFilter = b.getAttribute("data-f");
+    render();
+  });
+});
+render();
+//]]>
+
+</script>
+</body>
+</html>
