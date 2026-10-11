@@ -1,0 +1,797 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="vi" lang="vi">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bản đồ Bản đồ du lịch Cao Bằng</title>
+<style type="text/css">
+/*<![CDATA[*/
+
+/* required styles */
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+/* Prevents IE11 from highlighting tiles in blue */
+.leaflet-tile::selection {
+	background: transparent;
+}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */
+.leaflet-container .leaflet-overlay-pane svg {
+	max-width: none !important;
+	max-height: none !important;
+	}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+	max-width: none !important;
+	max-height: none !important;
+	width: auto;
+	padding: 0;
+	}
+
+.leaflet-container img.leaflet-tile {
+	/* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
+	mix-blend-mode: plus-lighter;
+}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	/* Fallback for FF which doesn't support pinch-zoom */
+	touch-action: none;
+	touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	behavior: url(#default#VML);
+	display: inline-block;
+	position: absolute;
+	}
+
+
+/* control positioning */
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+/* zoom and fade animations */
+
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+svg.leaflet-zoom-animated {
+	will-change: transform;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+/* cursors */
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor:         grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor:         grabbing;
+	}
+
+/* marker & overlays interactivity */
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+
+/* visual tweaks */
+
+.leaflet-container {
+	background: #ddd;
+	outline-offset: 1px;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+/* general typography */
+.leaflet-container {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	}
+
+
+/* general toolbar styles */
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+/* zoom control */
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+/* layers control */
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	background-image: url(images/layers.png);
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: url(images/layers-2x.png);
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	font-size: 13px;
+	font-size: 1.08333em;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+/* Default icon URLs */
+.leaflet-default-icon-path { /* used only in path-guessing heuristic, see L.Icon.Default */
+	background-image: url(images/marker-icon.png);
+	}
+
+
+/* attribution and scale controls */
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	line-height: 1.4;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover,
+.leaflet-control-attribution a:focus {
+	text-decoration: underline;
+	}
+.leaflet-attribution-flag {
+	display: inline !important;
+	vertical-align: baseline !important;
+	width: 1em;
+	height: 0.6669em;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px #fff;
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+/* popup */
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 24px 13px 20px;
+	line-height: 1.3;
+	font-size: 13px;
+	font-size: 1.08333em;
+	min-height: 1px;
+	}
+.leaflet-popup-content p {
+	margin: 17px 0;
+	margin: 1.3em 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-top: -1px;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+	pointer-events: auto;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: none;
+	text-align: center;
+	width: 24px;
+	height: 24px;
+	font: 16px/24px Tahoma, Verdana, sans-serif;
+	color: #757575;
+	text-decoration: none;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover,
+.leaflet-container a.leaflet-popup-close-button:focus {
+	color: #585858;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	-ms-zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+/* div icon */
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-interactive {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+
+/* Printing */
+
+@media print {
+	/* Prevent printers from removing background-images of controls. */
+	.leaflet-control {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+		}
+	}
+html,body{margin:0;padding:0;height:100%;font-family:Arial,Helvetica,sans-serif;}
+#wrap{display:flex;height:100vh;}
+#panel{width:330px;min-width:330px;background:#fff;border-right:1px solid #ddd;display:flex;flex-direction:column;z-index:1000;}
+#panel h2{margin:0;padding:12px 14px;background:#1F6F3B;color:#fff;font-size:16px;}
+#panel .sub{padding:8px 14px;font-size:12px;color:#555;border-bottom:1px solid #eee;}
+#search{margin:10px 14px 4px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:14px;}
+#filters{display:flex;gap:6px;padding:8px 14px;flex-wrap:wrap;}
+#filters button{flex:1;padding:7px 4px;border:1px solid #1F6F3B;background:#fff;color:#1F6F3B;border-radius:6px;font-size:13px;cursor:pointer;white-space:nowrap;}
+#filters button.active{background:#1F6F3B;color:#fff;}
+#list{flex:1;overflow-y:auto;padding:0 0 10px;}
+.item{padding:9px 14px;border-bottom:1px solid #f0f0f0;cursor:pointer;}
+.item:hover{background:#f4f9f5;}
+.item .t{font-weight:bold;font-size:14px;}
+.item .a{font-size:12px;color:#666;margin-top:2px;}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;color:#fff;margin-right:6px;}
+.badge.nh{background:#e67e22;} .badge.ks{background:#2980b9;} .badge.dl{background:#27ae60;} .badge.cf{background:#8e5a2b;} .badge.xx{background:#7f8c8d;}
+#map{flex:1;height:100vh;}
+.poi-icon{font-size:22px;text-align:center;line-height:30px;width:30px;height:30px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.4);}
+.leaflet-popup-content{font-size:13px;line-height:1.5;min-width:230px;}
+.leaflet-popup-content h3{margin:0 0 6px;font-size:15px;}
+.btns{margin-top:8px;}
+.btns a{display:inline-block;margin:3px 6px 0 0;padding:7px 12px;border-radius:6px;text-decoration:none;font-size:13px;color:#fff;}
+.btns a.gm{background:#1a73e8;} .btns a.dir{background:#1F6F3B;} .btns a.tel{background:#e67e22;}
+@media (max-width:760px){
+  #wrap{flex-direction:column;}
+  #panel{width:100%;min-width:0;max-height:42vh;border-right:none;border-bottom:1px solid #ddd;}
+  #map{height:58vh;}
+}
+/*]]>*/
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="panel">
+    <h2>🗺️ Bản đồ du lịch Cao Bằng</h2>
+    <div class="sub" id="count"></div>
+    <input id="search" type="text" placeholder="Tìm tên, địa chỉ..." />
+    <div id="filters">
+      <button data-f="all" class="active">Tất cả</button>
+      <button data-f="Nhà hàng">🍽️ Ăn</button>
+      <button data-f="Khách sạn">🏨 Ở</button>
+      <button data-f="Cà phê">☕ Cafe</button>
+      <button data-f="Điểm du lịch">🏞️ Chơi</button>
+      <button data-f="Gọi xe">🚕 Gọi xe</button>
+    </div>
+    <div id="list"></div>
+  </div>
+  <div id="map"></div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="text/javascript">
+
+//<![CDATA[
+var DATA = [{"loai": "Nhà hàng", "ten": "Bánh cuốn cô Hải", "dia_chi": "Đường Hoàng Đình Giong, phường Hợp Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66556, "lon": 106.25658, "gio": "", "dienthoai": "", "gia": "", "mota": "Bánh cuốn nức tiếng Cao Bằng: tráng mỏng, hành phi, nước xương nóng hổi, ăn kèm giò nhỏ và rau thơm."}, {"loai": "Nhà hàng", "ten": "Bánh cuốn cô Lan Pháo Đài", "dia_chi": "Đường Đông Khuê, phường Tân Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.65883, "lon": 106.26105, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán bánh cuốn truyền thống lâu đời, nổi tiếng chất lượng và giá rẻ, gần khu Pháo Đài."}, {"loai": "Nhà hàng", "ten": "Bánh cuốn Bà Sự", "dia_chi": "56 Kim Đồng, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66022, "lon": 106.25955, "gio": "", "dienthoai": "", "gia": "", "mota": "Bánh cuốn nóng chan nước xương ngọt lịm, ăn kèm chả và hành phi thơm lừng."}, {"loai": "Nhà hàng", "ten": "Phở chua Dì Thúy", "dia_chi": "20 Phố Cũ, phường Hợp Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66273, "lon": 106.2572, "gio": "", "dienthoai": "", "gia": "", "mota": "Phở chua đặc sản vùng biên: bánh phở dai, nước sốt chua nhẹ, thịt ba chỉ, lạc rang. Tọa độ cần kiểm tra lại."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Đại Hỷ Place (Daihy Palace)", "dia_chi": "3 Hẻm 1 Tháng 4, phường Hòa Chung, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.65943, "lon": 106.25191, "gio": "", "dienthoai": "", "gia": "", "mota": "Không gian sang trọng, chuyên tiệc cưới, hội nghị, đoàn đông; món đặc sản Cao Bằng và 3 miền."}, {"loai": "Nhà hàng", "ten": "Than Hoa BBQ", "dia_chi": "Phai Sắt Nà Ngần, phường Sông Hiến, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66628, "lon": 106.25364, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán đồ nướng nghi ngút khói, hợp tiết trời se lạnh Cao Bằng."}, {"loai": "Nhà hàng", "ten": "Ngọc Quán", "dia_chi": "Phai Khắt Nà Ngần, phường Sông Hiến, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.67288, "lon": 106.24965, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán bình dân chuyên thịt bê (bê thui, bê tái chanh) và cá suối. Tọa độ cần kiểm tra lại."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Quê Tôi", "dia_chi": "26 phường Sông Bằng, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.67178, "lon": 106.26651, "gio": "", "dienthoai": "", "gia": "", "mota": "Nổi tiếng món vịt quay 7 vị da vàng ruộm thơm lá mắc mật, xôi trám đen dẻo thơm. Tọa độ cần kiểm tra lại."}, {"loai": "Nhà hàng", "ten": "Vịt quay 7 vị (phố Vườn Cam)", "dia_chi": "Ngã tư phố Vườn Cam, đường Hoàng Văn Thụ, phường Hợp Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66974, "lon": 106.25509, "gio": "6:00 - 13:00", "dienthoai": "", "gia": "", "mota": "Vịt quay ướp 7 vị bí truyền (gừng, tỏi, mật ong, mắc mật khô...), ăn kèm bánh tráng, bún, măng chua. Tọa độ cần kiểm tra lại."}, {"loai": "Nhà hàng", "ten": "Nhà hàng La Stella", "dia_chi": "Đường 3/10, phường Sông Bằng, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.65939, "lon": 106.26574, "gio": "9:00 - 22:00", "dienthoai": "0908906969", "gia": "20.000 - 950.000đ/món", "mota": "Nhà hàng được đánh giá cao trên Google Maps, thực đơn đa dạng từ bình dân đến cao cấp."}, {"loai": "Nhà hàng", "ten": "Dốc Tình Quán", "dia_chi": "Đình Minh, xã Trùng Khánh, tỉnh Cao Bằng", "lat": 22.83093, "lon": 106.54217, "gio": "8:00 - 20:00", "dienthoai": "0834248991", "gia": "", "mota": "Quán bình dân gần thị trấn Trùng Khánh trên đường đi thác Bản Giốc, phục vụ đặc sản Cao Bằng, giá hợp lý."}, {"loai": "Nhà hàng", "ten": "Cơm phở Bích Diệp Thác Bản Giốc", "dia_chi": "ĐT206, xã Đàm Thủy, tỉnh Cao Bằng", "lat": 22.85849, "lon": 106.70445, "gio": "", "dienthoai": "+84 949 855 777", "gia": "", "mota": "Quán cơm phở gần thác Bản Giốc, tiện ăn trưa khi tham quan. Tọa độ cần kiểm tra lại."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Tùng Dương - Thác Bản Giốc", "dia_chi": "TL.206, xã Đàm Thủy, tỉnh Cao Bằng", "lat": 22.85295, "lon": 106.71822, "gio": "", "dienthoai": "+84 915 660 688", "gia": "", "mota": "Nhà hàng phục vụ bữa trưa cho đoàn khách tham quan thác Bản Giốc, có bãi đỗ xe rộng. Tọa độ cần kiểm tra lại."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Phương Cưu", "dia_chi": "ĐT206, xã Đàm Thủy, tỉnh Cao Bằng", "lat": 22.85061, "lon": 106.72613, "gio": "", "dienthoai": "", "gia": "", "mota": "Nhà hàng gần thác Bản Giốc, được nhiều đánh giá trên Google Maps."}, {"loai": "Nhà hàng", "ten": "Cơm Phượt Cao Bằng", "dia_chi": "Đường Vườn Cam, phường Hợp Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66729, "lon": 106.26076, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán cơm bình dân được du khách bụi đánh giá cao, gần phố đi bộ Kim Đồng."}, {"loai": "Khách sạn", "ten": "Mường Thanh Luxury Cao Bằng", "dia_chi": "42 Kim Đồng, phường Hợp Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66273, "lon": 106.26002, "gio": "", "dienthoai": "+84 2063 888 088", "gia": "Từ 1.402.500đ/đêm", "mota": "Khách sạn 4 sao cao cấp nhất Cao Bằng: bể bơi, spa, nhà hàng, phòng hội thảo; ngay trung tâm phố đi bộ."}, {"loai": "Khách sạn", "ten": "Khách sạn Đức Trung", "dia_chi": "Đường Bế Văn Đàn, phường Hợp Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66238, "lon": 106.25778, "gio": "", "dienthoai": "", "gia": "", "mota": "Khách sạn 2 sao 9 tầng kiến trúc Á - Âu, lễ tân 24h, ngay trung tâm TP. Cao Bằng."}, {"loai": "Khách sạn", "ten": "Khách sạn Kim Đồng", "dia_chi": "155 Kim Đồng, phường Hợp Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66148, "lon": 106.25966, "gio": "", "dienthoai": "02063 853 053", "gia": "", "mota": "Vị trí trung tâm, gần bến xe, chợ Xanh; thuận đường đi Pác Bó, Bản Giốc, Thang Hen. Tọa độ cần kiểm tra lại."}, {"loai": "Khách sạn", "ten": "TV Hotel Cao Bằng", "dia_chi": "Tổ 2, SN 080, phường Sông Bằng, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66687, "lon": 106.26455, "gio": "", "dienthoai": "02063 826 626 / 0387872950", "gia": "", "mota": "25 phòng hiện đại, view tầng 8 ngắm toàn cảnh TP. Cao Bằng về đêm, gần phố đi bộ Kim Đồng."}, {"loai": "Khách sạn", "ten": "Jeanne Hotel", "dia_chi": "99 Kim Đồng, phường Hợp Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66291, "lon": 106.26028, "gio": "", "dienthoai": "0912 130 126", "gia": "", "mota": "Khách sạn bình dân xanh - sạch - đẹp, giá mềm, có cho thuê xe máy. Tọa độ cần kiểm tra lại."}, {"loai": "Khách sạn", "ten": "Khách sạn Gia Quý", "dia_chi": "7 Hoàng Đình Giong, phường Hợp Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66593, "lon": 106.25759, "gio": "", "dienthoai": "0988 353 399", "gia": "", "mota": "Nằm ở phường trung tâm, xung quanh nhộn nhịp ăn uống - mua sắm, phòng yên tĩnh."}, {"loai": "Khách sạn", "ten": "Lan's Homestay", "dia_chi": "Làng Háng Thoang, xã Đàm Thủy, tỉnh Cao Bằng", "lat": 22.85671, "lon": 106.66597, "gio": "", "dienthoai": "", "gia": "", "mota": "Homestay nhà sàn Tày bên sông Quây Sơn, phòng đơn/đôi/tập thể, có kayak, múa sạp, hát then."}, {"loai": "Khách sạn", "ten": "Yến Nhi Homestay", "dia_chi": "Thác Bản Giốc, xã Đàm Thủy, tỉnh Cao Bằng", "lat": 22.85293, "lon": 106.70182, "gio": "", "dienthoai": "0942 241 760", "gia": "200.000đ/phòng đơn; dorm 100.000đ", "mota": "Nhà sàn đá Tày gần thác Bản Giốc và động Ngườm Ngao; có phòng trong hang đá tự nhiên, ăn uống và cho thuê xe máy."}, {"loai": "Khách sạn", "ten": "Khuổi Ky Homestay", "dia_chi": "Xã Đàm Thủy, tỉnh Cao Bằng", "lat": 22.85429, "lon": 106.70099, "gio": "", "dienthoai": "037 581 4059", "gia": "", "mota": "Homestay giữa núi rừng sông nước gần thác Bản Giốc, không gian yên bình, tiện nghi hiện đại."}, {"loai": "Khách sạn", "ten": "Ngườm Ngao Bản Giốc Homestay", "dia_chi": "Làng đá Khuổi Ky, xã Đàm Thủy, tỉnh Cao Bằng", "lat": 22.8539, "lon": 106.70167, "gio": "", "dienthoai": "0912 510 563", "gia": "", "mota": "Homestay trong làng đá cổ Khuổi Ky, cách động Ngườm Ngao khoảng 500m. Tọa độ cần kiểm tra lại."}, {"loai": "Khách sạn", "ten": "Hoàng Công Homestay", "dia_chi": "Làng đá Khuổi Ky, xã Đàm Thủy, tỉnh Cao Bằng", "lat": 22.85447, "lon": 106.70095, "gio": "", "dienthoai": "0359873112", "gia": "", "mota": "Homestay trong làng đá cổ Khuổi Ky, gần thác Bản Giốc và động Ngườm Ngao."}, {"loai": "Khách sạn", "ten": "Khách sạn Hà Vương", "dia_chi": "ĐT206, xã Đàm Thủy, tỉnh Cao Bằng", "lat": 22.85286, "lon": 106.71804, "gio": "", "dienthoai": "0962811311", "gia": "", "mota": "Khách sạn trên trục ĐT206 gần thác Bản Giốc, thuận tiện cho đoàn khách tham quan."}, {"loai": "Cà phê", "ten": "Tộc cà phê", "dia_chi": "201 Kim Đồng, phường Hợp Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66136, "lon": 106.25977, "gio": "7:00 - 23:00", "dienthoai": "0986 998 911", "gia": "20.000 - 35.000đ", "mota": "Quán 3 tầng mang đậm màu sắc dân tộc Tày - Nùng, view phố đi bộ ven sông Bằng Giang. Tọa độ cần kiểm tra lại."}, {"loai": "Cà phê", "ten": "Quán Nâng", "dia_chi": "Số 75, tổ 10, phường Sông Hiến, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.6681, "lon": 106.25442, "gio": "", "dienthoai": "0847 813 579", "gia": "", "mota": "Quán mô phỏng nhà truyền thống Tày - Nùng: tường đất, mái ngói âm dương, bể cá Koi, nhiều cây xanh."}, {"loai": "Cà phê", "ten": "Micasa Cao Bằng Camping", "dia_chi": "Tổ 7, phường Hòa Chung, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.65344, "lon": 106.25077, "gio": "", "dienthoai": "0819 886 466", "gia": "", "mota": "Tổ hợp homestay - cà phê - cắm trại trên sườn đồi, view ngắm hoàng hôn đẹp, không gian xanh yên tĩnh."}, {"loai": "Cà phê", "ten": "Cafe Mộc", "dia_chi": "004 Nước Giáp, phường Hợp Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.67071, "lon": 106.25412, "gio": "", "dienthoai": "090 450 0988", "gia": "", "mota": "Quán trong ngõ nhỏ phong cách hoài cổ thập niên 80-90, nhiều cây xanh, không gian riêng tư yên tĩnh."}, {"loai": "Cà phê", "ten": "Pha Phin cafe", "dia_chi": "79 Hiến Giang, phường Hợp Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66831, "lon": 106.25531, "gio": "", "dienthoai": "0842 565 565", "gia": "", "mota": "Phong cách hiện đại tối giản, không gian ngoài trời rộng rãi ngắm nhịp sống phố. Tọa độ cần kiểm tra lại."}, {"loai": "Cà phê", "ten": "Cà Phê Ao Quán", "dia_chi": "Phường Sông Hiến, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.67774, "lon": 106.24122, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán thân thiện thiên nhiên với hồ cá Koi, được nhiều bạn trẻ yêu thích."}, {"loai": "Cà phê", "ten": "Highlands Coffee Mường Thanh Cao Bằng", "dia_chi": "Tầng 1, 42 Kim Đồng, phường Hợp Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66273, "lon": 106.26002, "gio": "", "dienthoai": "", "gia": "", "mota": "Chuỗi cà phê trong khách sạn Mường Thanh Luxury, vị trí hai mặt tiền hướng phố đi bộ Kim Đồng."}, {"loai": "Cà phê", "ten": "Cà Phê Trúc", "dia_chi": "Tổ 5, phường Sông Hiến, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.67646, "lon": 106.24129, "gio": "", "dienthoai": "0888 881 212", "gia": "", "mota": "Không gian xanh nhiều cây và hoa, có khu vực dành cho người yêu gốm và sen đá. Tọa độ cần kiểm tra lại."}, {"loai": "Điểm du lịch", "ten": "Thác Bản Giốc", "dia_chi": "Xã Đàm Thủy, tỉnh Cao Bằng", "lat": 22.85098, "lon": 106.72597, "gio": "", "dienthoai": "", "gia": "Vé ~50.000đ/người", "mota": "Thác nước đẹp nhất Việt Nam trên sông Quây Sơn, giáp biên giới Trung Quốc; đẹp nhất mùa nước đổ tháng 5-10."}, {"loai": "Điểm du lịch", "ten": "Động Ngườm Ngao", "dia_chi": "Xóm Khuổi Ky, xã Đàm Thủy, tỉnh Cao Bằng", "lat": 22.84502, "lon": 106.70615, "gio": "", "dienthoai": "", "gia": "", "mota": "Hang động với hàng nghìn khối nhũ đá hình voi, rồng, hổ báo, suối ngầm róc rách; cách thác Bản Giốc vài km."}, {"loai": "Điểm du lịch", "ten": "Khu di tích quốc gia đặc biệt Pác Bó (suối Lê Nin, núi Các Mác)", "dia_chi": "Xã Trường Hà, tỉnh Cao Bằng", "lat": 22.98349, "lon": 106.04837, "gio": "", "dienthoai": "", "gia": "", "mota": "Nơi Bác Hồ về nước năm 1941: suối Lê Nin trong xanh, núi Các Mác, hang Cốc Bó - địa chỉ đỏ cách mạng."}, {"loai": "Điểm du lịch", "ten": "Hồ Thang Hen", "dia_chi": "Xã Quốc Toản, tỉnh Cao Bằng", "lat": 22.75907, "lon": 106.29798, "gio": "", "dienthoai": "", "gia": "", "mota": "Quần thể 36 hồ nước ngọt tự nhiên ở độ cao 800-1000m; hồ lớn nhất dài ~2000m, nước không bao giờ cạn."}, {"loai": "Điểm du lịch", "ten": "Vườn quốc gia Phia Oắc - Phia Đén", "dia_chi": "Xã Thành Công, tỉnh Cao Bằng", "lat": 22.57996, "lon": 105.87828, "gio": "", "dienthoai": "", "gia": "", "mota": "Vườn quốc gia với đỉnh Phia Oắc cao 1931m, rừng nguyên sinh, mùa đông có thể có băng tuyết."}, {"loai": "Điểm du lịch", "ten": "Khu di tích Kim Đồng", "dia_chi": "Xóm Nà Mạ, xã Trường Hà, tỉnh Cao Bằng", "lat": 22.93378, "lon": 106.04853, "gio": "", "dienthoai": "", "gia": "", "mota": "Khu tưởng niệm anh hùng liệt sĩ thiếu niên Kim Đồng (Nông Văn Dền), gần khu di tích Pác Bó."}, {"loai": "Điểm du lịch", "ten": "Làng đá Khuổi Ky", "dia_chi": "Xã Đàm Thủy, tỉnh Cao Bằng", "lat": 22.85447, "lon": 106.70095, "gio": "", "dienthoai": "", "gia": "", "mota": "Làng cổ của người Tày với những ngôi nhà sàn bằng đá tồn tại hàng trăm năm, cách thác Bản Giốc ~3km."}, {"loai": "Điểm du lịch", "ten": "Chùa Phật Tích Trúc Lâm Bản Giốc", "dia_chi": "Xã Đàm Thủy, tỉnh Cao Bằng", "lat": 22.85187, "lon": 106.7213, "gio": "", "dienthoai": "", "gia": "", "mota": "Ngôi chùa trên đồi gần thác Bản Giốc, từ chùa ngắm toàn cảnh thác và núi rừng biên giới."}, {"loai": "Điểm du lịch", "ten": "Đèo Mã Phục", "dia_chi": "Quốc lộ 3, xã Quốc Toản, tỉnh Cao Bằng", "lat": 22.72443, "lon": 106.33852, "gio": "", "dienthoai": "", "gia": "", "mota": "Cung đèo hiểm trở hùng vĩ trên đường từ TP. Cao Bằng đi thác Bản Giốc, thử thách dân phượt."}, {"loai": "Điểm du lịch", "ten": "Cửa khẩu quốc tế Tà Lùng", "dia_chi": "Xã Tà Lùng, tỉnh Cao Bằng", "lat": 22.47412, "lon": 106.57956, "gio": "", "dienthoai": "", "gia": "", "mota": "Cửa khẩu quốc tế trên Quốc lộ 3 thông sang Trung Quốc, điểm check-in biên giới."}, {"loai": "Điểm du lịch", "ten": "Làng rèn Phúc Sen", "dia_chi": "Xã Phúc Sen, tỉnh Cao Bằng", "lat": 22.68656, "lon": 106.41629, "gio": "", "dienthoai": "", "gia": "", "mota": "Làng nghề rèn dao truyền thống của người Nùng An trên Quốc lộ 3, nổi tiếng dao Phúc Sen sắc bén."}, {"loai": "Điểm du lịch", "ten": "Núi Mắt Thần (Phja Piót)", "dia_chi": "Xã Quốc Toản, tỉnh Cao Bằng", "lat": 22.73015, "lon": 106.33742, "gio": "", "dienthoai": "", "gia": "", "mota": "Ngọn núi có hang thủng hình tròn như con mắt khổng lồ giữa núi rừng - điểm check-in nổi tiếng. Tọa độ cần kiểm tra lại."}, {"loai": "Điểm du lịch", "ten": "Hồ Bản Viết", "dia_chi": "Xã Phong Châu, tỉnh Cao Bằng", "lat": 22.80189, "lon": 106.60022, "gio": "", "dienthoai": "", "gia": "", "mota": "Hồ nước trong vắt yên ả bao quanh bởi rừng phong rợp đỏ khi vào thu, trên đường đi thác Bản Giốc."}, {"loai": "Điểm du lịch", "ten": "Khu di tích lịch sử rừng Trần Hưng Đạo", "dia_chi": "Xã Tam Kim, tỉnh Cao Bằng", "lat": 22.59178, "lon": 106.04105, "gio": "", "dienthoai": "", "gia": "", "mota": "Nơi thành lập Đội Việt Nam Tuyên truyền Giải phóng quân (22/12/1944) - tiền thân Quân đội nhân dân Việt Nam."}, {"loai": "Điểm du lịch", "ten": "Di tích đồn Phai Khắt Nà Ngần", "dia_chi": "Xã Tam Kim, tỉnh Cao Bằng", "lat": 22.60686, "lon": 106.01759, "gio": "", "dienthoai": "", "gia": "", "mota": "Đồn binh Pháp bị Đội Việt Nam Tuyên truyền Giải phóng quân đánh chiếm trong trận đầu ra quân (25/12/1944). Tọa độ cần kiểm tra lại."}, {"loai": "Gọi xe", "ten": "Taxi Đông Bắc Cao Bằng", "dia_chi": "TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66499, "lon": 106.26085, "gio": "24/7", "dienthoai": "02063 955 955 / 1900 0220", "gia": "Mở cửa 30.000đ/2km", "mota": "Taxi điện VinFast thân thiện môi trường, đưa đón sân bay - bến xe - tour tham quan. Tọa độ trụ sở cần kiểm tra lại."}, {"loai": "Gọi xe", "ten": "Taxi Mai Linh Cao Bằng", "dia_chi": "Tổ 11, phường Sông Hiến, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.67323, "lon": 106.24939, "gio": "24/7", "dienthoai": "0206 685 85 85", "gia": "11.000 - 17.000đ/km", "mota": "Hãng taxi quen thuộc, số lượng xe lớn, đặt xe qua app hoặc hotline."}, {"loai": "Gọi xe", "ten": "Taxi Hương Sen", "dia_chi": "100 Kim Đồng, phường Hợp Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66257, "lon": 106.26031, "gio": "", "dienthoai": "0206 382 82 82", "gia": "~8.000 - 14.500đ/km", "mota": "Giá cước rẻ so với thị trường, phục vụ tận tình. Tọa độ cần kiểm tra lại."}, {"loai": "Gọi xe", "ten": "Taxi Đức Ngọc", "dia_chi": "49 Kim Đồng, phường Hợp Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66383, "lon": 106.26061, "gio": "", "dienthoai": "0206 379 79 79", "gia": "11.000 - 15.000đ/km", "mota": "Hãng taxi lâu năm tại Cao Bằng, tài xế được đào tạo bài bản. Tọa độ cần kiểm tra lại."}, {"loai": "Gọi xe", "ten": "Taxi Việt Vịnh", "dia_chi": "100 Kim Đồng, phường Hợp Giang, TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66257, "lon": 106.26031, "gio": "", "dienthoai": "0206 3851 851", "gia": "11.000 - 14.500đ/km", "mota": "Thuận tiện di chuyển nội thành và kết nối bến xe. Tọa độ cần kiểm tra lại."}, {"loai": "Gọi xe", "ten": "Taxi Bảo Trâm", "dia_chi": "TP. Cao Bằng, tỉnh Cao Bằng", "lat": 22.66499, "lon": 106.26085, "gio": "24/24", "dienthoai": "0206 3850 850", "gia": "11.000 - 15.000đ/km", "mota": "Phục vụ 24/24, xe 4-16 chỗ, cam kết đón khách sau 3-5 phút gọi. Tọa độ trụ sở cần kiểm tra lại."}];
+var map = L.map("map").setView([22.85, 106.3], 9.0);
+var gStreet = L.tileLayer("https://{s}.google.com/vt/lyrs=m&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gHybrid = L.tileLayer("https://{s}.google.com/vt/lyrs=y&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gTerrain = L.tileLayer("https://{s}.google.com/vt/lyrs=p&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"OpenStreetMap"});
+var gTraffic = L.tileLayer("https://{s}.google.com/vt/lyrs=h,traffic&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+gHybrid.addTo(map);
+gTraffic.addTo(map);
+var ICONS = {"Nhà hàng": "🍽️", "Khách sạn": "🏨", "Cà phê": "☕", "Điểm du lịch": "🏞️", "Gọi xe": "🚕"};
+var BADGES = {"Nhà hàng": "nh", "Khách sạn": "ks", "Cà phê": "cf", "Điểm du lịch": "dl", "Gọi xe": "gx"};
+function iconFor(loai){
+  var e = ICONS[loai] || "\uD83D\uDCCD";
+  return L.divIcon({className:"", html:'<div class="poi-icon">'+e+'</div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-14]});
+}
+function badgeCls(loai){
+  return BADGES[loai] || "xx";
+}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function popupHtml(d){
+  var h = '<h3>'+esc(d.ten)+'</h3>';
+  h += '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span></div>';
+  h += '<div>\uD83D\uDCCD '+esc(d.dia_chi)+'</div>';
+  if(d.gio) h += '<div>\uD83D\uDD50 '+esc(d.gio)+'</div>';
+  if(d.dienthoai) h += '<div>\uD83D\uDCDE <a href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">'+esc(d.dienthoai)+'</a></div>';
+  if(d.gia) h += '<div>\uD83D\uDCB0 '+esc(d.gia)+'</div>';
+  if(d.mota) h += '<div style="margin-top:4px;color:#444;">'+esc(d.mota)+'</div>';
+  h += '<div class="btns">';
+  h += '<a class="gm" target="_blank" href="https://www.google.com/maps/search/?api=1&query='+d.lat+','+d.lon+'">M\u1edf tr\u00ean Google Maps</a>';
+  h += '<a class="dir" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+d.lat+','+d.lon+'">D\u1eabn \u0111\u01b0\u1eddng t\u1edbi \u0111\u00e2y</a>';
+  if(d.dienthoai) h += '<a class="tel" href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">G\u1ecdi \u0111i\u1ec7n</a>';
+  h += '</div>';
+  return h;
+}
+var markers = [];
+var listEl = document.getElementById("list");
+var curFilter = "all";
+function render(){
+  listEl.innerHTML = "";
+  markers.forEach(function(m){ map.removeLayer(m); });
+  markers = [];
+  var q = document.getElementById("search").value.toLowerCase();
+  var shown = 0;
+  DATA.forEach(function(d, i){
+    if(curFilter !== "all" && d.loai !== curFilter) return;
+    if(q && (d.ten+" "+d.dia_chi+" "+d.mota).toLowerCase().indexOf(q) < 0) return;
+    shown++;
+    var mk = L.marker([d.lat, d.lon], {icon: iconFor(d.loai)}).addTo(map);
+    mk.bindPopup(popupHtml(d));
+    markers.push(mk);
+    var div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span><span class="t">'+esc(d.ten)+'</span></div><div class="a">'+esc(d.dia_chi)+'</div>';
+    (function(m){ div.onclick = function(){ map.setView(m.getLatLng(), 16); m.openPopup(); }; })(mk);
+    listEl.appendChild(div);
+  });
+  document.getElementById("count").textContent = "Hi\u1ec3n th\u1ecb "+shown+"/"+DATA.length+" \u0111\u1ecba \u0111i\u1ec3m";
+}
+document.getElementById("search").addEventListener("input", render);
+var fbtns = document.querySelectorAll("#filters button");
+fbtns.forEach(function(b){
+  b.addEventListener("click", function(){
+    fbtns.forEach(function(x){ x.classList.remove("active"); });
+    b.classList.add("active");
+    curFilter = b.getAttribute("data-f");
+    render();
+  });
+});
+render();
+//]]>
+
+</script>
+</body>
+</html>
