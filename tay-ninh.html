@@ -1,0 +1,797 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="vi" lang="vi">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bản đồ Bản đồ du lịch Tây Ninh</title>
+<style type="text/css">
+/*<![CDATA[*/
+
+/* required styles */
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+/* Prevents IE11 from highlighting tiles in blue */
+.leaflet-tile::selection {
+	background: transparent;
+}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */
+.leaflet-container .leaflet-overlay-pane svg {
+	max-width: none !important;
+	max-height: none !important;
+	}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+	max-width: none !important;
+	max-height: none !important;
+	width: auto;
+	padding: 0;
+	}
+
+.leaflet-container img.leaflet-tile {
+	/* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
+	mix-blend-mode: plus-lighter;
+}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	/* Fallback for FF which doesn't support pinch-zoom */
+	touch-action: none;
+	touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	behavior: url(#default#VML);
+	display: inline-block;
+	position: absolute;
+	}
+
+
+/* control positioning */
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+/* zoom and fade animations */
+
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+svg.leaflet-zoom-animated {
+	will-change: transform;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+/* cursors */
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor:         grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor:         grabbing;
+	}
+
+/* marker & overlays interactivity */
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+
+/* visual tweaks */
+
+.leaflet-container {
+	background: #ddd;
+	outline-offset: 1px;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+/* general typography */
+.leaflet-container {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	}
+
+
+/* general toolbar styles */
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+/* zoom control */
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+/* layers control */
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	background-image: url(images/layers.png);
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: url(images/layers-2x.png);
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	font-size: 13px;
+	font-size: 1.08333em;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+/* Default icon URLs */
+.leaflet-default-icon-path { /* used only in path-guessing heuristic, see L.Icon.Default */
+	background-image: url(images/marker-icon.png);
+	}
+
+
+/* attribution and scale controls */
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	line-height: 1.4;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover,
+.leaflet-control-attribution a:focus {
+	text-decoration: underline;
+	}
+.leaflet-attribution-flag {
+	display: inline !important;
+	vertical-align: baseline !important;
+	width: 1em;
+	height: 0.6669em;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px #fff;
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+/* popup */
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 24px 13px 20px;
+	line-height: 1.3;
+	font-size: 13px;
+	font-size: 1.08333em;
+	min-height: 1px;
+	}
+.leaflet-popup-content p {
+	margin: 17px 0;
+	margin: 1.3em 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-top: -1px;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+	pointer-events: auto;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: none;
+	text-align: center;
+	width: 24px;
+	height: 24px;
+	font: 16px/24px Tahoma, Verdana, sans-serif;
+	color: #757575;
+	text-decoration: none;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover,
+.leaflet-container a.leaflet-popup-close-button:focus {
+	color: #585858;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	-ms-zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+/* div icon */
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-interactive {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+
+/* Printing */
+
+@media print {
+	/* Prevent printers from removing background-images of controls. */
+	.leaflet-control {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+		}
+	}
+html,body{margin:0;padding:0;height:100%;font-family:Arial,Helvetica,sans-serif;}
+#wrap{display:flex;height:100vh;}
+#panel{width:330px;min-width:330px;background:#fff;border-right:1px solid #ddd;display:flex;flex-direction:column;z-index:1000;}
+#panel h2{margin:0;padding:12px 14px;background:#1F6F3B;color:#fff;font-size:16px;}
+#panel .sub{padding:8px 14px;font-size:12px;color:#555;border-bottom:1px solid #eee;}
+#search{margin:10px 14px 4px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:14px;}
+#filters{display:flex;gap:6px;padding:8px 14px;flex-wrap:wrap;}
+#filters button{flex:1;padding:7px 4px;border:1px solid #1F6F3B;background:#fff;color:#1F6F3B;border-radius:6px;font-size:13px;cursor:pointer;white-space:nowrap;}
+#filters button.active{background:#1F6F3B;color:#fff;}
+#list{flex:1;overflow-y:auto;padding:0 0 10px;}
+.item{padding:9px 14px;border-bottom:1px solid #f0f0f0;cursor:pointer;}
+.item:hover{background:#f4f9f5;}
+.item .t{font-weight:bold;font-size:14px;}
+.item .a{font-size:12px;color:#666;margin-top:2px;}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;color:#fff;margin-right:6px;}
+.badge.nh{background:#e67e22;} .badge.ks{background:#2980b9;} .badge.dl{background:#27ae60;} .badge.cf{background:#8e5a2b;} .badge.xx{background:#7f8c8d;}
+#map{flex:1;height:100vh;}
+.poi-icon{font-size:22px;text-align:center;line-height:30px;width:30px;height:30px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.4);}
+.leaflet-popup-content{font-size:13px;line-height:1.5;min-width:230px;}
+.leaflet-popup-content h3{margin:0 0 6px;font-size:15px;}
+.btns{margin-top:8px;}
+.btns a{display:inline-block;margin:3px 6px 0 0;padding:7px 12px;border-radius:6px;text-decoration:none;font-size:13px;color:#fff;}
+.btns a.gm{background:#1a73e8;} .btns a.dir{background:#1F6F3B;} .btns a.tel{background:#e67e22;}
+@media (max-width:760px){
+  #wrap{flex-direction:column;}
+  #panel{width:100%;min-width:0;max-height:42vh;border-right:none;border-bottom:1px solid #ddd;}
+  #map{height:58vh;}
+}
+/*]]>*/
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="panel">
+    <h2>🗺️ Bản đồ du lịch Tây Ninh</h2>
+    <div class="sub" id="count"></div>
+    <input id="search" type="text" placeholder="Tìm tên, địa chỉ..." />
+    <div id="filters">
+      <button data-f="all" class="active">Tất cả</button>
+      <button data-f="Nhà hàng">🍽️ Ăn</button>
+      <button data-f="Khách sạn">🏨 Ở</button>
+      <button data-f="Cà phê">☕ Cafe</button>
+      <button data-f="Điểm du lịch">🏞️ Chơi</button>
+      <button data-f="Gọi xe">🚕 Gọi xe</button>
+    </div>
+    <div id="list"></div>
+  </div>
+  <div id="map"></div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="text/javascript">
+
+//<![CDATA[
+var DATA = [{"loai": "Nhà hàng", "ten": "Bò tơ Út Khương", "dia_chi": "24 Đường 3 Tháng 2, Phường 3, tỉnh Tây Ninh", "lat": 11.30966, "lon": 106.10896, "gio": "10:00 - 22:00", "dienthoai": "", "gia": "50.000đ - 150.000đ", "mota": "Lẩu bò tơ, bò hấp, bò nướng, gỏi bò; địa chỉ bò tơ nổi tiếng của người địa phương"}, {"loai": "Nhà hàng", "ten": "Bò tơ Năm Sánh", "dia_chi": "Quốc lộ 22B, Hòa Thành, tỉnh Tây Ninh", "lat": 11.23691, "lon": 106.1383, "gio": "", "dienthoai": "", "gia": "", "mota": "Hệ thống nhà hàng bò tơ lâu năm"}, {"loai": "Nhà hàng", "ten": "Nhà hàng sinh thái Lạc Viên", "dia_chi": "482 Điện Biên Phủ, Phường Hiệp Ninh, tỉnh Tây Ninh", "lat": 11.31837, "lon": 106.13105, "gio": "8:00 - 23:00", "dienthoai": "", "gia": "50.000đ - 150.000đ", "mota": "Món chay truyền thống, không gian mở hòa hợp thiên nhiên"}, {"loai": "Nhà hàng", "ten": "Bò kho 6 Hòn", "dia_chi": "934 Cách Mạng Tháng 8, Phường Hiệp Ninh, tỉnh Tây Ninh", "lat": 11.30693, "lon": 106.12262, "gio": "", "dienthoai": "", "gia": "", "mota": "Bò kho đậm đà thịt mềm, địa chỉ quen của dân bản địa"}, {"loai": "Nhà hàng", "ten": "Cơm cháy lá cẩm Út 2 Coi", "dia_chi": "77 Nguyễn Thái Học, Phường 3, tỉnh Tây Ninh", "lat": 11.3066, "lon": 106.10216, "gio": "", "dienthoai": "", "gia": "", "mota": "Cơm cháy giòn rụm ăn kèm lá cẩm, đặc sắc về màu sắc và mùi vị"}, {"loai": "Nhà hàng", "ten": "Bánh canh Trảng Bàng Bé Năm", "dia_chi": "Phường Trảng Bàng, tỉnh Tây Ninh", "lat": 11.03193, "lon": 106.36357, "gio": "", "dienthoai": "", "gia": "", "mota": "Bánh canh Trảng Bàng trứ danh, nước dùng ngọt xương"}, {"loai": "Nhà hàng", "ten": "Bò tơ Trần Hiền", "dia_chi": "Xã Hưng Thuận, Trảng Bàng, tỉnh Tây Ninh", "lat": 11.14972, "lon": 106.42548, "gio": "", "dienthoai": "", "gia": "", "mota": "Bò tơ chế biến nhiều món: lẩu, nướng, xào"}, {"loai": "Nhà hàng", "ten": "Đồng Quê Quán", "dia_chi": "Hẻm 15 Đường 30 Tháng 4, Phường 2, tỉnh Tây Ninh", "lat": 11.30478, "lon": 106.09802, "gio": "", "dienthoai": "", "gia": "", "mota": "Ẩm thực dân dã, nổi tiếng món cơm cháy kho quẹt"}, {"loai": "Nhà hàng", "ten": "Cơm chay Âu Lạc", "dia_chi": "Đường Nguyễn Huệ, Phường Long Hoa, tỉnh Tây Ninh", "lat": 11.29375, "lon": 106.13137, "gio": "", "dienthoai": "", "gia": "", "mota": "Cơm chay gần Tòa Thánh, tiện cho du khách hành hương"}, {"loai": "Nhà hàng", "ten": "Bò nướng Tư Hồng", "dia_chi": "Hòa Thành, tỉnh Tây Ninh", "lat": 11.28043, "lon": 106.13033, "gio": "", "dienthoai": "", "gia": "", "mota": "Bò tơ nướng được nhiều người địa phương khen rẻ ngon"}, {"loai": "Nhà hàng", "ten": "Bò tơ Ba Bằng Ninh Sơn", "dia_chi": "Đường Số 31, Phường Ninh Sơn, tỉnh Tây Ninh", "lat": 11.33552, "lon": 106.11289, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán bò tơ khu vực Ninh Sơn, gần núi Bà Đen"}, {"loai": "Nhà hàng", "ten": "Nhà hàng hải sản Biển Đông 2", "dia_chi": "686 Đường Cách Mạng Tháng 8, Phường 3, tỉnh Tây Ninh", "lat": 11.30866, "lon": 106.11277, "gio": "", "dienthoai": "", "gia": "", "mota": "Hải sản đa dạng (cua, tôm, ghẹ, mực, ốc), phù hợp gia đình và tiệc"}, {"loai": "Nhà hàng", "ten": "Bò tơ Út Mây", "dia_chi": "128 Đường Nguyễn Văn Rốp, Phường 4, tỉnh Tây Ninh", "lat": 11.30285, "lon": 106.11706, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán bò tơ nhiều món: bò xào, bò nướng, lẩu bò"}, {"loai": "Nhà hàng", "ten": "Bánh xèo Ba Đô", "dia_chi": "Đường Hoàng Lê Kha, Châu Thành, tỉnh Tây Ninh", "lat": 11.31255, "lon": 106.03233, "gio": "", "dienthoai": "", "gia": "", "mota": "Bánh xèo Nam Bộ giòn rụm"}, {"loai": "Nhà hàng", "ten": "Quán ăn Cây Phượng", "dia_chi": "Phường Ninh Sơn, tỉnh Tây Ninh", "lat": 11.34946, "lon": 106.13457, "gio": "", "dienthoai": "", "gia": "", "mota": "Ốc núi Bà Đen, thằn lằn núi; gần chân núi Bà Đen"}, {"loai": "Khách sạn", "ten": "Meliá Vinpearl Tây Ninh", "dia_chi": "Đường Lê Duẩn, Phường 3, tỉnh Tây Ninh", "lat": 11.31933, "lon": 106.10015, "gio": "", "dienthoai": "", "gia": "~1.500.000đ/đêm", "mota": "Khách sạn 5 sao đánh giá cao nhất tỉnh, có hồ bơi, nhà hàng ăn sáng view đẹp"}, {"loai": "Khách sạn", "ten": "Sunrise Hotel", "dia_chi": "81 Hoàng Lê Kha, Phường 3, tỉnh Tây Ninh", "lat": 11.30626, "lon": 106.10642, "gio": "", "dienthoai": "", "gia": "Deluxe ~800.000đ/đêm", "mota": "Khách sạn 3 sao gần trung tâm, có chỗ đỗ xe"}, {"loai": "Khách sạn", "ten": "Arina Hotel", "dia_chi": "Phường 3, tỉnh Tây Ninh", "lat": 11.31977, "lon": 106.10121, "gio": "", "dienthoai": "", "gia": "", "mota": "Có nhà hàng phục vụ bữa ăn sáng"}, {"loai": "Khách sạn", "ten": "Victory Hotel", "dia_chi": "255 Đường 30 Tháng 4, Phường 1, tỉnh Tây Ninh", "lat": 11.31554, "lon": 106.0974, "gio": "", "dienthoai": "", "gia": "", "mota": "Vị trí trung tâm, phục vụ chuyên nghiệp, có nhà hàng và quầy bar"}, {"loai": "Khách sạn", "ten": "Hotel 986", "dia_chi": "6 Đường Trường Chinh, Phường 3, tỉnh Tây Ninh", "lat": 11.32531, "lon": 106.10291, "gio": "", "dienthoai": "", "gia": "", "mota": "Khách sạn 3 sao trong khu đô thị Mai Anh, phòng rộng rãi"}, {"loai": "Khách sạn", "ten": "Khách sạn Mỹ Mỹ", "dia_chi": "81A Nguyễn Hữu Thọ, Phường 3, tỉnh Tây Ninh", "lat": 11.32788, "lon": 106.11101, "gio": "", "dienthoai": "", "gia": "", "mota": "Phòng rộng rãi hiện đại, view hướng ra núi"}, {"loai": "Khách sạn", "ten": "Lê Phan Hotel", "dia_chi": "Đường Trường Chinh, Phường 3, tỉnh Tây Ninh", "lat": 11.32231, "lon": 106.10933, "gio": "", "dienthoai": "", "gia": "", "mota": "Có chỗ đỗ xe thuận lợi"}, {"loai": "Khách sạn", "ten": "Khách sạn Maison Camellia", "dia_chi": "56 Nguyễn Hữu Thọ, Phường 3, tỉnh Tây Ninh", "lat": 11.32756, "lon": 106.11116, "gio": "", "dienthoai": "", "gia": "", "mota": ""}, {"loai": "Khách sạn", "ten": "Nhà nghỉ Mai Tuấn", "dia_chi": "6 Chánh Môn A, Phường 4, tỉnh Tây Ninh", "lat": 11.30368, "lon": 106.12589, "gio": "", "dienthoai": "", "gia": "", "mota": "Giá bình dân, phòng sạch sẽ"}, {"loai": "Khách sạn", "ten": "DP Hotel", "dia_chi": "Đường Ba Mươi Tháng Tư, Phường 3, tỉnh Tây Ninh", "lat": 11.32011, "lon": 106.10054, "gio": "", "dienthoai": "", "gia": "", "mota": ""}, {"loai": "Cà phê", "ten": "Bean Family Coffee", "dia_chi": "25 Trường Chinh, tỉnh Tây Ninh", "lat": 11.32442, "lon": 106.10507, "gio": "6:00 - 22:00", "dienthoai": "0964429296", "gia": "45.000đ - 65.000đ", "mota": "Không gian đầy màu sắc, 2 tầng, đèn lồng, menu đa dạng kèm bánh tráng phơi sương"}, {"loai": "Cà phê", "ten": "Liila Liilac", "dia_chi": "Khu Mai Anh, Trường Chinh, Phường 3, tỉnh Tây Ninh", "lat": 11.32198, "lon": 106.10994, "gio": "7:00 - 22:00", "dienthoai": "0989211195", "gia": "15.000đ - 38.000đ", "mota": "Tông màu trầm ấm ngọt ngào, trà ổi hồng bắt mắt, nhiều góc check-in"}, {"loai": "Cà phê", "ten": "Y.A.M.A Coffee Tea Dessert", "dia_chi": "222 Võ Thị Sáu, Phường 4, tỉnh Tây Ninh", "lat": 11.29767, "lon": 106.11059, "gio": "9:00 - 22:00", "dienthoai": "02766559601", "gia": "", "mota": "Trà xanh cà phê đá xay, trà sữa mật ong, cà phê dừa"}, {"loai": "Cà phê", "ten": "Nabi Tea n More", "dia_chi": "81 Hồ Văn Suối, Gò Dầu, tỉnh Tây Ninh", "lat": 11.07936, "lon": 106.26587, "gio": "8:00 - 22:00", "dienthoai": "0943768383", "gia": "", "mota": "Phong cách Địa Trung Hải gam trắng, đá xay, trà sữa pha máy, cà phê & soda"}, {"loai": "Cà phê", "ten": "Green Hub", "dia_chi": "27 hẻm 74 Phạm Hùng, Hòa Thành, tỉnh Tây Ninh", "lat": 11.28436, "lon": 106.12739, "gio": "", "dienthoai": "", "gia": "", "mota": "Có bức tường check-in Việt Nam Ơi, không gian rộng thoáng"}, {"loai": "Cà phê", "ten": "Gu Việt Roastery", "dia_chi": "18 Võ Thị Sáu, Phường 3, tỉnh Tây Ninh", "lat": 11.30301, "lon": 106.1046, "gio": "", "dienthoai": "", "gia": "", "mota": "Không gian hiện đại, phá cách, đầy cá tính"}, {"loai": "Cà phê", "ten": "Green Cafe", "dia_chi": "Hẻm 4 Nguyễn Văn Rốp, Phường 4, tỉnh Tây Ninh", "lat": 11.30273, "lon": 106.11426, "gio": "", "dienthoai": "", "gia": "", "mota": ""}, {"loai": "Cà phê", "ten": "December Coffee Tea", "dia_chi": "Đường Cách Mạng Tháng 8, Phường 3, tỉnh Tây Ninh", "lat": 11.30999, "lon": 106.10437, "gio": "", "dienthoai": "", "gia": "", "mota": "Tiệm cà phê nhỏ xinh, không gian thơ mộng"}, {"loai": "Điểm du lịch", "ten": "Núi Bà Đen (KDL + cáp treo)", "dia_chi": "Phường Ninh Thạnh, tỉnh Tây Ninh", "lat": 11.36256, "lon": 106.17674, "gio": "", "dienthoai": "", "gia": "", "mota": "Nóc nhà Nam Bộ, cáp treo hiện đại, quần thể chùa Bà, hội xuân thu hút đông du khách"}, {"loai": "Điểm du lịch", "ten": "Tòa Thánh Cao Đài Tây Ninh", "dia_chi": "Đại lộ Phạm Hộ Pháp, Phường Long Hoa, tỉnh Tây Ninh", "lat": 11.303746, "lon": 106.133717, "gio": "", "dienthoai": "", "gia": "", "mota": "Trung tâm đạo Cao Đài, kiến trúc Đông-Tây giao thoa; lễ hội rằm tháng 8 và mùng 9 tháng Giêng; tọa độ theo Wikipedia"}, {"loai": "Điểm du lịch", "ten": "Hồ Dầu Tiếng (KDL)", "dia_chi": "Xã Phước Minh, Dương Minh Châu, tỉnh Tây Ninh", "lat": 11.3219, "lon": 106.33544, "gio": "", "dienthoai": "", "gia": "", "mota": "Hồ nước nhân tạo lớn, đặc sản cá lăng, Bãi Đá Trứng"}, {"loai": "Điểm du lịch", "ten": "Làng nổi Tân Lập", "dia_chi": "QL62, Xã Tân Lập, Mộc Hóa, tỉnh Tây Ninh", "lat": 10.71524, "lon": 105.98799, "gio": "", "dienthoai": "", "gia": "", "mota": "Rừng tràm, cầu chữ X, Hồ Bán Nguyệt, tháp quan sát 18m; bối cảnh phim Cánh Đồng Bất Tận"}, {"loai": "Điểm du lịch", "ten": "Làng cổ Phước Lộc Thọ", "dia_chi": "TL824, Xã Hựu Thạnh, Đức Hòa, tỉnh Tây Ninh", "lat": 10.80046, "lon": 106.4361, "gio": "7:00 - 21:00", "dienthoai": "", "gia": "40.000đ", "mota": "22 nhà gỗ cổ 3 miền, cổ vật quý; Sách Kỷ lục VN công nhận năm 2012"}, {"loai": "Điểm du lịch", "ten": "Vườn quốc gia Lò Gò – Xa Mát", "dia_chi": "Tân Lập, Tân Châu, tỉnh Tây Ninh (gần biên giới Campuchia)", "lat": 11.31568, "lon": 106.09184, "gio": "", "dienthoai": "", "gia": "", "mota": "Hệ động thực vật đa dạng, khám phá sông Vàm Cỏ Đông"}, {"loai": "Điểm du lịch", "ten": "Di tích Căn cứ Trung ương Cục miền Nam", "dia_chi": "Xã Tân Lập, Tân Biên, tỉnh Tây Ninh", "lat": 11.72599, "lon": 106.0437, "gio": "", "dienthoai": "", "gia": "", "mota": "Di tích quốc gia đặc biệt, trụ sở lãnh đạo cách mạng miền Nam; sát giới hạn bounds"}, {"loai": "Điểm du lịch", "ten": "Thung lũng Ma Thiên Lãnh", "dia_chi": "Phường Ninh Sơn, tỉnh Tây Ninh", "lat": 11.38696, "lon": 106.14372, "gio": "", "dienthoai": "", "gia": "", "mota": "Thung lũng giữa núi Bà Đen – núi Heo – dãy Phụng, phong cảnh hoang sơ hùng vĩ"}, {"loai": "Điểm du lịch", "ten": "Tháp cổ Bình Thạnh", "dia_chi": "ĐT786, Xã Phước Bình, Trảng Bàng, tỉnh Tây Ninh", "lat": 11.01877, "lon": 106.22158, "gio": "", "dienthoai": "", "gia": "", "mota": "Tháp gạch văn hóa Óc Eo thế kỷ IX, xây không cần chất kết dính"}, {"loai": "Điểm du lịch", "ten": "Cửa khẩu quốc tế Mộc Bài", "dia_chi": "QL22, Xã Lợi Thuận, Bến Cầu, tỉnh Tây Ninh", "lat": 11.07603, "lon": 106.17317, "gio": "", "dienthoai": "", "gia": "", "mota": "Cửa khẩu Việt Nam – Campuchia, điểm check-in và mua sắm"}, {"loai": "Điểm du lịch", "ten": "Công viên 7 Kỳ Quan (KĐT Cát Tường Phú Sinh)", "dia_chi": "Xã Mỹ Hạnh Bắc, Đức Hòa, tỉnh Tây Ninh", "lat": 10.90006, "lon": 106.46194, "gio": "", "dienthoai": "", "gia": "", "mota": "Mô hình 7 kỳ quan thế giới thu nhỏ, điểm check-in đông khách"}, {"loai": "Điểm du lịch", "ten": "Khu du lịch Long Điền Sơn", "dia_chi": "Phường Ninh Sơn, tỉnh Tây Ninh", "lat": 11.36233, "lon": 106.12661, "gio": "", "dienthoai": "", "gia": "", "mota": "Khu vui chơi giải trí gần núi Bà Đen"}, {"loai": "Gọi xe", "ten": "Taxi Mai Linh Tây Ninh", "dia_chi": "Tây Ninh", "lat": 11.31, "lon": 106.1, "gio": "24/7", "dienthoai": "02763838383 / 02766252888 / 1055", "gia": "~14.000đ/km", "mota": "Tổng đài toàn tỉnh, xe 4-7 chỗ; không có địa chỉ văn phòng cụ thể | Tọa độ ước tính: vị trí trung tâm TP. Tây Ninh — chỉ ghi số tổng đài, chưa xác định văn phòng cụ thể."}, {"loai": "Gọi xe", "ten": "Taxi Vinasun Tây Ninh", "dia_chi": "Tây Ninh", "lat": 11.31, "lon": 106.1, "gio": "24/7", "dienthoai": "02763777888", "gia": "", "mota": "Tổng đài toàn tỉnh; không có địa chỉ văn phòng cụ thể | Tọa độ ước tính: vị trí trung tâm TP. Tây Ninh — chỉ ghi số tổng đài, chưa xác định văn phòng cụ thể."}, {"loai": "Gọi xe", "ten": "Taxi Long Sơn", "dia_chi": "Tây Ninh", "lat": 11.31, "lon": 106.1, "gio": "24/7", "dienthoai": "027636363636", "gia": "~10.000đ/km", "mota": "Mạng lưới phủ khắp Tây Ninh, xe 4-7 chỗ đời mới | Tọa độ ước tính: vị trí trung tâm TP. Tây Ninh — chỉ ghi số tổng đài, chưa xác định văn phòng cụ thể."}, {"loai": "Gọi xe", "ten": "Taxi Sao Đỏ Tây Ninh", "dia_chi": "Tây Ninh", "lat": 11.31, "lon": 106.1, "gio": "24/7", "dienthoai": "02763821888", "gia": "", "mota": "Có ứng dụng đặt xe, phục vụ 24/7 | Tọa độ ước tính: vị trí trung tâm TP. Tây Ninh — chỉ ghi số tổng đài, chưa xác định văn phòng cụ thể."}, {"loai": "Gọi xe", "ten": "Taxi Tây Ninh Sài Gòn", "dia_chi": "Tây Ninh", "lat": 11.31, "lon": 106.1, "gio": "24/7", "dienthoai": "0934633692", "gia": "", "mota": "Xe 4-7 chỗ, tuyến Gò Dầu – Tây Ninh – Sài Gòn | Tọa độ ước tính: vị trí trung tâm TP. Tây Ninh — chỉ ghi số tổng đài, chưa xác định văn phòng cụ thể."}, {"loai": "Gọi xe", "ten": "Taxi Thắng Lợi (Gò Dầu)", "dia_chi": "Tây Ninh", "lat": 11.115, "lon": 106.15, "gio": "24/7", "dienthoai": "0908297277", "gia": "", "mota": "Tổng đài khu vực Gò Dầu, hơn 10 năm kinh nghiệm | Tọa độ ước tính: vị trí trung tâm thị trấn Gò Dầu — chỉ ghi số tổng đài, chưa xác định văn phòng cụ thể."}];
+var map = L.map("map").setView([11.2, 106.25], 9.0);
+var gStreet = L.tileLayer("https://{s}.google.com/vt/lyrs=m&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gHybrid = L.tileLayer("https://{s}.google.com/vt/lyrs=y&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gTerrain = L.tileLayer("https://{s}.google.com/vt/lyrs=p&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"OpenStreetMap"});
+var gTraffic = L.tileLayer("https://{s}.google.com/vt/lyrs=h,traffic&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+gHybrid.addTo(map);
+gTraffic.addTo(map);
+var ICONS = {"Nhà hàng": "🍽️", "Khách sạn": "🏨", "Cà phê": "☕", "Điểm du lịch": "🏞️", "Gọi xe": "🚕"};
+var BADGES = {"Nhà hàng": "nh", "Khách sạn": "ks", "Cà phê": "cf", "Điểm du lịch": "dl", "Gọi xe": "gx"};
+function iconFor(loai){
+  var e = ICONS[loai] || "\uD83D\uDCCD";
+  return L.divIcon({className:"", html:'<div class="poi-icon">'+e+'</div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-14]});
+}
+function badgeCls(loai){
+  return BADGES[loai] || "xx";
+}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function popupHtml(d){
+  var h = '<h3>'+esc(d.ten)+'</h3>';
+  h += '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span></div>';
+  h += '<div>\uD83D\uDCCD '+esc(d.dia_chi)+'</div>';
+  if(d.gio) h += '<div>\uD83D\uDD50 '+esc(d.gio)+'</div>';
+  if(d.dienthoai) h += '<div>\uD83D\uDCDE <a href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">'+esc(d.dienthoai)+'</a></div>';
+  if(d.gia) h += '<div>\uD83D\uDCB0 '+esc(d.gia)+'</div>';
+  if(d.mota) h += '<div style="margin-top:4px;color:#444;">'+esc(d.mota)+'</div>';
+  h += '<div class="btns">';
+  h += '<a class="gm" target="_blank" href="https://www.google.com/maps/search/?api=1&query='+d.lat+','+d.lon+'">M\u1edf tr\u00ean Google Maps</a>';
+  h += '<a class="dir" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+d.lat+','+d.lon+'">D\u1eabn \u0111\u01b0\u1eddng t\u1edbi \u0111\u00e2y</a>';
+  if(d.dienthoai) h += '<a class="tel" href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">G\u1ecdi \u0111i\u1ec7n</a>';
+  h += '</div>';
+  return h;
+}
+var markers = [];
+var listEl = document.getElementById("list");
+var curFilter = "all";
+function render(){
+  listEl.innerHTML = "";
+  markers.forEach(function(m){ map.removeLayer(m); });
+  markers = [];
+  var q = document.getElementById("search").value.toLowerCase();
+  var shown = 0;
+  DATA.forEach(function(d, i){
+    if(curFilter !== "all" && d.loai !== curFilter) return;
+    if(q && (d.ten+" "+d.dia_chi+" "+d.mota).toLowerCase().indexOf(q) < 0) return;
+    shown++;
+    var mk = L.marker([d.lat, d.lon], {icon: iconFor(d.loai)}).addTo(map);
+    mk.bindPopup(popupHtml(d));
+    markers.push(mk);
+    var div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span><span class="t">'+esc(d.ten)+'</span></div><div class="a">'+esc(d.dia_chi)+'</div>';
+    (function(m){ div.onclick = function(){ map.setView(m.getLatLng(), 16); m.openPopup(); }; })(mk);
+    listEl.appendChild(div);
+  });
+  document.getElementById("count").textContent = "Hi\u1ec3n th\u1ecb "+shown+"/"+DATA.length+" \u0111\u1ecba \u0111i\u1ec3m";
+}
+document.getElementById("search").addEventListener("input", render);
+var fbtns = document.querySelectorAll("#filters button");
+fbtns.forEach(function(b){
+  b.addEventListener("click", function(){
+    fbtns.forEach(function(x){ x.classList.remove("active"); });
+    b.classList.add("active");
+    curFilter = b.getAttribute("data-f");
+    render();
+  });
+});
+render();
+//]]>
+
+</script>
+</body>
+</html>
