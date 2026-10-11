@@ -1,0 +1,797 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="vi" lang="vi">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bản đồ Bản đồ du lịch Đồng Nai</title>
+<style type="text/css">
+/*<![CDATA[*/
+
+/* required styles */
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+/* Prevents IE11 from highlighting tiles in blue */
+.leaflet-tile::selection {
+	background: transparent;
+}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */
+.leaflet-container .leaflet-overlay-pane svg {
+	max-width: none !important;
+	max-height: none !important;
+	}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+	max-width: none !important;
+	max-height: none !important;
+	width: auto;
+	padding: 0;
+	}
+
+.leaflet-container img.leaflet-tile {
+	/* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
+	mix-blend-mode: plus-lighter;
+}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	/* Fallback for FF which doesn't support pinch-zoom */
+	touch-action: none;
+	touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	behavior: url(#default#VML);
+	display: inline-block;
+	position: absolute;
+	}
+
+
+/* control positioning */
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+/* zoom and fade animations */
+
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+svg.leaflet-zoom-animated {
+	will-change: transform;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+/* cursors */
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor:         grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor:         grabbing;
+	}
+
+/* marker & overlays interactivity */
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+
+/* visual tweaks */
+
+.leaflet-container {
+	background: #ddd;
+	outline-offset: 1px;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+/* general typography */
+.leaflet-container {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	}
+
+
+/* general toolbar styles */
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+/* zoom control */
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+/* layers control */
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	background-image: url(images/layers.png);
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: url(images/layers-2x.png);
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	font-size: 13px;
+	font-size: 1.08333em;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+/* Default icon URLs */
+.leaflet-default-icon-path { /* used only in path-guessing heuristic, see L.Icon.Default */
+	background-image: url(images/marker-icon.png);
+	}
+
+
+/* attribution and scale controls */
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	line-height: 1.4;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover,
+.leaflet-control-attribution a:focus {
+	text-decoration: underline;
+	}
+.leaflet-attribution-flag {
+	display: inline !important;
+	vertical-align: baseline !important;
+	width: 1em;
+	height: 0.6669em;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px #fff;
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+/* popup */
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 24px 13px 20px;
+	line-height: 1.3;
+	font-size: 13px;
+	font-size: 1.08333em;
+	min-height: 1px;
+	}
+.leaflet-popup-content p {
+	margin: 17px 0;
+	margin: 1.3em 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-top: -1px;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+	pointer-events: auto;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: none;
+	text-align: center;
+	width: 24px;
+	height: 24px;
+	font: 16px/24px Tahoma, Verdana, sans-serif;
+	color: #757575;
+	text-decoration: none;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover,
+.leaflet-container a.leaflet-popup-close-button:focus {
+	color: #585858;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	-ms-zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+/* div icon */
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-interactive {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+
+/* Printing */
+
+@media print {
+	/* Prevent printers from removing background-images of controls. */
+	.leaflet-control {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+		}
+	}
+html,body{margin:0;padding:0;height:100%;font-family:Arial,Helvetica,sans-serif;}
+#wrap{display:flex;height:100vh;}
+#panel{width:330px;min-width:330px;background:#fff;border-right:1px solid #ddd;display:flex;flex-direction:column;z-index:1000;}
+#panel h2{margin:0;padding:12px 14px;background:#1F6F3B;color:#fff;font-size:16px;}
+#panel .sub{padding:8px 14px;font-size:12px;color:#555;border-bottom:1px solid #eee;}
+#search{margin:10px 14px 4px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:14px;}
+#filters{display:flex;gap:6px;padding:8px 14px;flex-wrap:wrap;}
+#filters button{flex:1;padding:7px 4px;border:1px solid #1F6F3B;background:#fff;color:#1F6F3B;border-radius:6px;font-size:13px;cursor:pointer;white-space:nowrap;}
+#filters button.active{background:#1F6F3B;color:#fff;}
+#list{flex:1;overflow-y:auto;padding:0 0 10px;}
+.item{padding:9px 14px;border-bottom:1px solid #f0f0f0;cursor:pointer;}
+.item:hover{background:#f4f9f5;}
+.item .t{font-weight:bold;font-size:14px;}
+.item .a{font-size:12px;color:#666;margin-top:2px;}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;color:#fff;margin-right:6px;}
+.badge.nh{background:#e67e22;} .badge.ks{background:#2980b9;} .badge.dl{background:#27ae60;} .badge.cf{background:#8e5a2b;} .badge.xx{background:#7f8c8d;}
+#map{flex:1;height:100vh;}
+.poi-icon{font-size:22px;text-align:center;line-height:30px;width:30px;height:30px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.4);}
+.leaflet-popup-content{font-size:13px;line-height:1.5;min-width:230px;}
+.leaflet-popup-content h3{margin:0 0 6px;font-size:15px;}
+.btns{margin-top:8px;}
+.btns a{display:inline-block;margin:3px 6px 0 0;padding:7px 12px;border-radius:6px;text-decoration:none;font-size:13px;color:#fff;}
+.btns a.gm{background:#1a73e8;} .btns a.dir{background:#1F6F3B;} .btns a.tel{background:#e67e22;}
+@media (max-width:760px){
+  #wrap{flex-direction:column;}
+  #panel{width:100%;min-width:0;max-height:42vh;border-right:none;border-bottom:1px solid #ddd;}
+  #map{height:58vh;}
+}
+/*]]>*/
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="panel">
+    <h2>🗺️ Bản đồ du lịch Đồng Nai</h2>
+    <div class="sub" id="count"></div>
+    <input id="search" type="text" placeholder="Tìm tên, địa chỉ..." />
+    <div id="filters">
+      <button data-f="all" class="active">Tất cả</button>
+      <button data-f="Nhà hàng">🍽️ Ăn</button>
+      <button data-f="Khách sạn">🏨 Ở</button>
+      <button data-f="Cà phê">☕ Cafe</button>
+      <button data-f="Điểm du lịch">🏞️ Chơi</button>
+      <button data-f="Gọi xe">🚕 Gọi xe</button>
+    </div>
+    <div id="list"></div>
+  </div>
+  <div id="map"></div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="text/javascript">
+
+//<![CDATA[
+var DATA = [{"loai": "Nhà hàng", "ten": "Nhà hàng Cây Dừa", "dia_chi": "23/1A Cách Mạng Tháng 8, phường Hòa Bình, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.9525, "lon": 106.8095, "gio": "", "dienthoai": "", "gia": "", "mota": "Nhà hàng miệt vườn Biên Hòa, nổi tiếng với gà hấp bưởi Tân Triều và đặc sản Đồng Nai."}, {"loai": "Nhà hàng", "ten": "Khu du lịch sinh thái Làng bưởi Năm Huệ", "dia_chi": "109/7 Hương lộ 9, ấp Vĩnh Hiệp, phường Tân Triều, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 11.0112, "lon": 106.8331, "gio": "", "dienthoai": "0251 3965 555", "gia": "", "mota": "Ăn gà hấp bưởi, gỏi bưởi ngay tại vườn bưởi Tân Triều trăm năm. [Lưu ý: tọa độ là trung tâm phường Tân Triều theo Wikipedia, chưa định vị chính xác số nhà]"}, {"loai": "Nhà hàng", "ten": "Quán gỏi cá Tân Mai", "dia_chi": "105/523 Phạm Văn Thuận, phường Tân Mai, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.95646, "lon": 106.8485, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán gỏi cá nước ngọt trứ danh Biên Hòa, cá tươi cuốn rau rừng. [Lưu ý: địa chỉ chính xác theo nguồn web, cơ sở dữ liệu địa điểm ghi tên khác tại địa chỉ này]"}, {"loai": "Nhà hàng", "ten": "Quán Xôi Nếp Chiên Nguyên Khương", "dia_chi": "Tổ 18, khu phố 1, phường Tân Hiệp, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.95945, "lon": 106.85636, "gio": "", "dienthoai": "", "gia": "", "mota": "Xôi chiên phồng giòn rụm ăn kèm gà nướng, công thức gốc từ 1952. [Lưu ý: tọa độ xấp xỉ khu vực phường Tân Hiệp]"}, {"loai": "Nhà hàng", "ten": "Tân Hiệp Quán", "dia_chi": "Quốc lộ 1, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.9652, "lon": 106.86583, "gio": "", "dienthoai": "", "gia": "", "mota": "Nhà hàng trên QL1 nổi tiếng bánh canh đầu cá, xôi chiên phồng. [Lưu ý: tọa độ trung tâm phường Tân Hiệp]"}, {"loai": "Nhà hàng", "ten": "Quán 5 Ri", "dia_chi": "Khóm 5, phường Hòa Bình, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.94879, "lon": 106.80952, "gio": "", "dienthoai": "", "gia": "70.000-100.000đ/nồi lẩu", "mota": "Quán lẩu tôm càng dân dã trong hẻm, giá bình dân. [Lưu ý: tọa độ trung tâm phường Hòa Bình]"}, {"loai": "Nhà hàng", "ten": "Nhà hàng Hương Phù Sa", "dia_chi": "Phường Tân Phú, TP. Đồng Xoài, tỉnh Đồng Nai", "lat": 11.5406, "lon": 106.87756, "gio": "", "dienthoai": "", "gia": "", "mota": "Nhà hàng cơm lam, gà nướng đặc sản vùng Đồng Xoài."}, {"loai": "Nhà hàng", "ten": "Quán Bạn Tôi", "dia_chi": "188 Thích Quảng Đức, phường Xuân An, TP. Long Khánh, tỉnh Đồng Nai", "lat": 10.92567, "lon": 107.25304, "gio": "", "dienthoai": "", "gia": "30.000-45.000đ/suất", "mota": "Quán cơm gà cá mặn Long Khánh, giá bình dân."}, {"loai": "Nhà hàng", "ten": "Gà Nướng Cơm Lam An Phú", "dia_chi": "272 ấp 4/3A Quốc lộ 13, xã Minh Hưng, huyện Chơn Thành, tỉnh Đồng Nai", "lat": 11.48351, "lon": 106.61475, "gio": "", "dienthoai": "", "gia": "Gà nướng 200.000-240.000đ/con; cơm lam 80.000đ/ống", "mota": "Gà nướng than hoa ăn kèm cơm lam ống tre, rau rừng luộc. [Lưu ý: tọa độ đường QL13 xã Minh Hưng]"}, {"loai": "Nhà hàng", "ten": "Gà Nướng Mắm Nhĩ Minh Thức", "dia_chi": "64 Hùng Vương, phường Tân Bình, TP. Đồng Xoài, tỉnh Đồng Nai", "lat": 11.5305, "lon": 106.89051, "gio": "09:00-21:00", "dienthoai": "0968 324 289", "gia": "", "mota": "Gà nướng ướp mắm nhĩ gia truyền hơn 15 năm tại Đồng Xoài. [Lưu ý: tọa độ đường Hùng Vương]"}, {"loai": "Nhà hàng", "ten": "Ẩm thực Nhà Vũ", "dia_chi": "Đường Lý Thường Kiệt, TP. Đồng Xoài, tỉnh Đồng Nai", "lat": 11.54048, "lon": 106.89457, "gio": "", "dienthoai": "0986 779 234", "gia": "", "mota": "Quán nướng BBQ, lẩu và hải sản; nhận đặt tiệc lưu động. [Lưu ý: tọa độ đường Lý Thường Kiệt]"}, {"loai": "Nhà hàng", "ten": "Hội Quán Minh Tuấn", "dia_chi": "Đường Hồ Xuân Hương, phường Tân Phú, TP. Đồng Xoài, tỉnh Đồng Nai", "lat": 11.54279, "lon": 106.89349, "gio": "09:00-22:00", "dienthoai": "0901 944 768", "gia": "", "mota": "Hội quán sân vườn rộng, thực đơn 200+ món nhậu và hải sản. [Lưu ý: tọa độ đường Hồ Xuân Hương]"}, {"loai": "Nhà hàng", "ten": "Quán Hương Việt", "dia_chi": "Đường Cách Mạng Tháng Tám, phường Xuân An, TP. Long Khánh, tỉnh Đồng Nai", "lat": 10.92782, "lon": 107.25029, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán cơm gà cá mặn Long Khánh. [Lưu ý: tọa độ đường Cách Mạng Tháng Tám]"}, {"loai": "Nhà hàng", "ten": "Quán Thanh Mập", "dia_chi": "Đường Nguyễn Văn Bé, phường Xuân Thanh, TP. Long Khánh, tỉnh Đồng Nai", "lat": 10.9254, "lon": 107.25813, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán cơm gà cá mặn, cơm tấm Long Khánh. [Lưu ý: tọa độ khu vực cầu Nguyễn Văn Bé]"}, {"loai": "Nhà hàng", "ten": "Khổ qua rừng Hiệp Vân", "dia_chi": "07 Lê Hồng Phong, khu phố Cẩm Tân, phường Xuân Tân, TP. Long Khánh, tỉnh Đồng Nai", "lat": 10.90755, "lon": 107.23667, "gio": "", "dienthoai": "0933.009.789", "gia": "", "mota": "Đặc sản lẩu lá khổ qua rừng Long Khánh; có bán lá khổ qua mang về."}, {"loai": "Khách sạn", "ten": "The Mira Central Park Hotel", "dia_chi": "1809 Nguyễn Ái Quốc, phường Tân Tiến, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.95978, "lon": 106.83358, "gio": "", "dienthoai": "", "gia": "từ 1.411.200đ/đêm", "mota": "Khách sạn 5 sao lớn nhất Biên Hòa, bể bơi ngoài trời, ngay trung tâm."}, {"loai": "Khách sạn", "ten": "Khách sạn Đồng Nai", "dia_chi": "57 Phạm Văn Thuận, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.95769, "lon": 106.83174, "gio": "", "dienthoai": "094 175 57 57", "gia": "", "mota": "Khách sạn 3 sao trung tâm Biên Hòa, 91 phòng, nhà hàng Âu-Á-Hoa."}, {"loai": "Khách sạn", "ten": "Aurora Hotel Plaza", "dia_chi": "253 Phạm Văn Thuận, khu phố 2, phường Tân Mai, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.95717, "lon": 106.84453, "gio": "", "dienthoai": "0251 3918 888", "gia": "", "mota": "Khách sạn 4 sao đường Phạm Văn Thuận, gần trung tâm Biên Hòa."}, {"loai": "Khách sạn", "ten": "Khách sạn Royal", "dia_chi": "H4/7, khu phố 6, phường Trung Dũng, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.95738, "lon": 106.82338, "gio": "", "dienthoai": "025 1382 5033", "gia": "", "mota": "Khách sạn 2 sao gần sân bay Biên Hòa, chợ đêm Biên Hùng."}, {"loai": "Khách sạn", "ten": "Dương Châu Hotel", "dia_chi": "10/36 Lê Quý Đôn, phường Tân Hiệp, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.95684, "lon": 106.86275, "gio": "", "dienthoai": "", "gia": "", "mota": "Khách sạn 2 sao giá rẻ trung tâm Biên Hòa, phòng sạch sẽ."}, {"loai": "Khách sạn", "ten": "Diamond Resort Biên Hòa", "dia_chi": "TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.92818, "lon": 106.81681, "gio": "", "dienthoai": "", "gia": "", "mota": "Khu nghỉ dưỡng tại Biên Hòa. [Lưu ý: geocode trả về Diamond Hotel tại địa chỉ này, có thể khác cơ sở]"}, {"loai": "Khách sạn", "ten": "Hapyson Hotel", "dia_chi": "50 Phạm Thế Hiển, phường Xuân Thanh, TP. Long Khánh, tỉnh Đồng Nai", "lat": 10.93306, "lon": 107.25684, "gio": "", "dienthoai": "0251 3787 797", "gia": "", "mota": "Khách sạn Long Khánh, thuận tiện đi lại khu vực Long Khánh - Xuân Lộc."}, {"loai": "Khách sạn", "ten": "Suối Mơ Park", "dia_chi": "Ấp 6, xã Trà Cổ, huyện Tân Phú, tỉnh Đồng Nai", "lat": 11.23098, "lon": 107.44, "gio": "", "dienthoai": "025 1369 7025", "gia": "", "mota": "Khu nghỉ dưỡng sinh thái cạnh suối Mơ, Tân Phú."}, {"loai": "Khách sạn", "ten": "Khách sạn Phương Trang", "dia_chi": "18 Quốc lộ 14, khu phố Phú Thanh, phường Tân Phú, TP. Đồng Xoài, tỉnh Đồng Nai", "lat": 11.54195, "lon": 106.88614, "gio": "", "dienthoai": "0963 933 979", "gia": "", "mota": "Khách sạn trung tâm Đồng Xoài, bãi xe rộng, ăn sáng miễn phí."}, {"loai": "Khách sạn", "ten": "Khách sạn Ban Mai", "dia_chi": "49 Lê Duẩn, phường Tân Phú, TP. Đồng Xoài, tỉnh Đồng Nai", "lat": 11.53227, "lon": 106.87742, "gio": "", "dienthoai": "0271 3888 996", "gia": "", "mota": "Khách sạn Đồng Xoài giá hợp lý, wifi miễn phí."}, {"loai": "Khách sạn", "ten": "Khách sạn Đoàn Gia", "dia_chi": "TP. Đồng Xoài, tỉnh Đồng Nai", "lat": 11.53221, "lon": 106.88806, "gio": "", "dienthoai": "", "gia": "", "mota": "Khách sạn tại Đồng Xoài. [Lưu ý: geocode trả về khách sạn Sao Mai cùng khu vực, tên có thể chưa khớp]"}, {"loai": "Khách sạn", "ten": "Khách sạn Hoàng Hùng", "dia_chi": "Đường Hùng Vương, TP. Đồng Xoài, tỉnh Đồng Nai", "lat": 11.5331, "lon": 106.88783, "gio": "", "dienthoai": "", "gia": "", "mota": "Khách sạn trên đường Hùng Vương, Đồng Xoài. [Lưu ý: geocode trả về Hung Vuong Hotel, có thể cùng cơ sở]"}, {"loai": "Cà phê", "ten": "LALALAND Café", "dia_chi": "Khu đô thị Aqua City, Long Hưng, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.84335, "lon": 106.86346, "gio": "T2-T6 8:00-18:00; T7-CN 8:00-17:30", "dienthoai": "", "gia": "từ 50.000đ", "mota": "Cafe phong cách cung điện châu Âu, view sông Đồng Nai. [Lưu ý: tọa độ khu đô thị Aqua City]"}, {"loai": "Cà phê", "ten": "Balconies Coffee", "dia_chi": "184 Nguyễn Văn Trị, phường Hòa Bình, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.95077, "lon": 106.80753, "gio": "7:00-22:30", "dienthoai": "", "gia": "15.000-50.000đ", "mota": "Cafe container ven sông, không gian gỗ ấm cúng."}, {"loai": "Cà phê", "ten": "Cafe Thủy Sơn", "dia_chi": "25 Cách Mạng Tháng 8, phường Quyết Thắng, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.94197, "lon": 106.82239, "gio": "7:00-22:00", "dienthoai": "", "gia": "20.000-50.000đ", "mota": "Cafe sân vườn ven sông thoáng mát, view sông Đồng Nai."}, {"loai": "Cà phê", "ten": "Subi Coffee & Tea", "dia_chi": "209C/A2 Đặng Văn Trơn, phường Hiệp Hòa, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.92615, "lon": 106.83573, "gio": "", "dienthoai": "", "gia": "15.000-50.000đ", "mota": "Cafe ven sông Đồng Nai, ngắm hoàng hôn. [Lưu ý: tọa độ đường Đặng Văn Trơn]"}, {"loai": "Cà phê", "ten": "19… Hồi Ấy Cafe", "dia_chi": "212 Đường 30 Tháng 4, phường Trung Dũng, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.95224, "lon": 106.82329, "gio": "", "dienthoai": "", "gia": "20.000-50.000đ", "mota": "Cafe tông đỏ hoài cổ, ban công nhìn xuống phố."}, {"loai": "Cà phê", "ten": "Phim trường Isara", "dia_chi": "653 Quốc lộ 14, phường Tân Bình, TP. Đồng Xoài, tỉnh Đồng Nai", "lat": 11.53551, "lon": 106.89435, "gio": "08:00-19:00", "dienthoai": "0932.088.903", "gia": "20.000-229.000đ", "mota": "Phim trường cafe phong cách châu Âu, điểm check-in nổi tiếng Đồng Xoài."}, {"loai": "Cà phê", "ten": "The Koi Coffee", "dia_chi": "Đường Nguyễn Huệ, phường Tân Đồng, TP. Đồng Xoài, tỉnh Đồng Nai", "lat": 11.54187, "lon": 106.90879, "gio": "7:00-22:30", "dienthoai": "", "gia": "", "mota": "Cafe hồ cá Koi phong cách Hội An tại Đồng Xoài. [Lưu ý: tọa độ đường Nguyễn Huệ; quán còn có tên An Bình Coffee]"}, {"loai": "Cà phê", "ten": "Hồi Xưa Coffee", "dia_chi": "37 Nguyễn Văn Cừ, TP. Đồng Xoài, tỉnh Đồng Nai", "lat": 10.93253, "lon": 107.24627, "gio": "", "dienthoai": "", "gia": "", "mota": "Cafe hoài cổ tại Đồng Xoài. [Lưu ý: geocode đặt tại Long Khánh, cần kiểm tra lại địa chỉ]"}, {"loai": "Điểm du lịch", "ten": "Vườn quốc gia Cát Tiên", "dia_chi": "Xã Nam Cát Tiên, huyện Tân Phú, tỉnh Đồng Nai", "lat": 11.42348, "lon": 107.43087, "gio": "", "dienthoai": "", "gia": "", "mota": "Vườn quốc gia nổi tiếng với rừng nguyên sinh, thú quý hiếm và tour đêm xem thú."}, {"loai": "Điểm du lịch", "ten": "Thác Giang Điền", "dia_chi": "Xã Giang Điền, huyện Trảng Bom, tỉnh Đồng Nai", "lat": 10.9151, "lon": 106.99297, "gio": "", "dienthoai": "", "gia": "", "mota": "Khu du lịch thác Giang Điền với thác nước và hồ bơi thiên nhiên."}, {"loai": "Điểm du lịch", "ten": "Khu du lịch Bửu Long", "dia_chi": "Phường Bửu Long, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.96114, "lon": 106.78972, "gio": "", "dienthoai": "", "gia": "", "mota": "Khu du lịch Bửu Long với hồ Long Ẩn, núi đá và chùa cổ."}, {"loai": "Điểm du lịch", "ten": "Văn miếu Trấn Biên", "dia_chi": "Phường Hòa Bình, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.95263, "lon": 106.80747, "gio": "", "dienthoai": "", "gia": "", "mota": "Văn miếu Trấn Biên - di tích văn hóa Nho học đầu tiên ở Nam Bộ."}, {"loai": "Điểm du lịch", "ten": "Sóc Bom Bo", "dia_chi": "Xã Bình Minh, huyện Bù Đăng, tỉnh Đồng Nai", "lat": 11.8399, "lon": 107.18801, "gio": "", "dienthoai": "", "gia": "", "mota": "Sóc Bom Bo - di tích lịch sử cách mạng, nơi đồng bào S'tiêng giã gạo nuôi quân."}, {"loai": "Điểm du lịch", "ten": "Vườn quốc gia Bù Gia Mập", "dia_chi": "Xã Bù Gia Mập, huyện Bù Gia Mập, tỉnh Đồng Nai", "lat": 12.08711, "lon": 107.15656, "gio": "", "dienthoai": "", "gia": "", "mota": "Vườn quốc gia Bù Gia Mập với rừng nguyên sinh và trekking khám phá thiên nhiên."}, {"loai": "Điểm du lịch", "ten": "Núi Bà Rá", "dia_chi": "Phường Sơn Giang, thị xã Phước Long, tỉnh Đồng Nai", "lat": 11.82435, "lon": 107.00585, "gio": "", "dienthoai": "", "gia": "", "mota": "Núi Bà Rá với cáp treo, chùa Phật và view toàn cảnh Phước Long."}, {"loai": "Điểm du lịch", "ten": "Thác Đứng", "dia_chi": "Xã Đoàn Kết, huyện Bù Đăng, tỉnh Đồng Nai", "lat": 11.78806, "lon": 107.22982, "gio": "", "dienthoai": "", "gia": "", "mota": "Thác Đứng hoang sơ giữa rừng Bù Đăng."}, {"loai": "Điểm du lịch", "ten": "Khu du lịch Suối Mơ", "dia_chi": "Xã Trà Cổ, huyện Tân Phú, tỉnh Đồng Nai", "lat": 11.23109, "lon": 107.44097, "gio": "", "dienthoai": "", "gia": "", "mota": "Khu du lịch Suối Mơ với hồ bơi thiên nhiên và thác nước mát lạnh."}, {"loai": "Điểm du lịch", "ten": "Rừng Mã Đà (Chiến khu Đ)", "dia_chi": "Xã Mã Đà, huyện Vĩnh Cửu, tỉnh Đồng Nai", "lat": 11.34855, "lon": 107.01221, "gio": "", "dienthoai": "", "gia": "", "mota": "Rừng Mã Đà - căn cứ Chiến khu Đ lịch sử, rừng nguyên sinh ven hồ Trị An. [Lưu ý: tọa độ khu vực cầu Mã Đà, xã Mã Đà]"}, {"loai": "Điểm du lịch", "ten": "Hồ Trị An", "dia_chi": "Huyện Vĩnh Cửu, tỉnh Đồng Nai", "lat": 11.10065, "lon": 107.04474, "gio": "", "dienthoai": "", "gia": "", "mota": "Hồ thủy điện Trị An với làng cá bè và hoàng hôn trên hồ."}, {"loai": "Điểm du lịch", "ten": "Làng bưởi Tân Triều", "dia_chi": "Phường Tân Triều, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.98589, "lon": 106.84655, "gio": "", "dienthoai": "", "gia": "", "mota": "Làng bưởi Tân Triều - miệt vườn trăm năm với bưởi da xanh nổi tiếng."}, {"loai": "Điểm du lịch", "ten": "Thác Đá Hàn", "dia_chi": "Xã Sông Trầu, huyện Trảng Bom, tỉnh Đồng Nai", "lat": 10.984, "lon": 107.01568, "gio": "", "dienthoai": "", "gia": "", "mota": "Thác Đá Hàn - điểm picnic, tắm suối gần Trảng Bom."}, {"loai": "Điểm du lịch", "ten": "Chùa Ông (Thất Phủ Cổ Miếu)", "dia_chi": "Phường Hiệp Hòa, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.92989, "lon": 106.82587, "gio": "", "dienthoai": "", "gia": "", "mota": "Thất Phủ Cổ Miếu (Chùa Ông) - ngôi chùa Hoa hơn 300 năm tại Biên Hòa."}, {"loai": "Điểm du lịch", "ten": "Khu du lịch sinh thái Vườn Xoài", "dia_chi": "476 Đinh Quang Ân, phường Phước Tân, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.91444, "lon": 106.93608, "gio": "", "dienthoai": "", "gia": "", "mota": "Khu du lịch sinh thái Vườn Xoài với vườn cây ăn trái và nhà hàng."}, {"loai": "Gọi xe", "ten": "Taxi Mai Linh Biên Hòa", "dia_chi": "TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.94293, "lon": 106.86424, "gio": "", "dienthoai": "0251.3838.3838", "gia": "12.000đ/km", "mota": "Tổng đài taxi Mai Linh Biên Hòa, xe 4-7 chỗ."}, {"loai": "Gọi xe", "ten": "Vinasun Taxi Biên Hòa", "dia_chi": "TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.90189, "lon": 106.85227, "gio": "", "dienthoai": "0251.3827.2727", "gia": "11.000đ/km", "mota": "Taxi Vinasun Biên Hòa, xe 4-7 chỗ."}, {"loai": "Gọi xe", "ten": "Taxi Lado Biên Hòa", "dia_chi": "TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.9486, "lon": 106.8119, "gio": "", "dienthoai": "0251.666.777", "gia": "14.000đ/km", "mota": "Taxi giá rẻ Lado tại Biên Hòa. [Lưu ý: tọa độ trung tâm TP. Biên Hòa]"}, {"loai": "Gọi xe", "ten": "Taxi Long Thành", "dia_chi": "Huyện Long Thành, tỉnh Đồng Nai", "lat": 10.76933, "lon": 106.96427, "gio": "", "dienthoai": "0251.3.52.52.52", "gia": "10.000đ/km", "mota": "Taxi Long Thành phục vụ khu vực Long Thành - Biên Hòa. [Lưu ý: tọa độ khu vực huyện Long Thành]"}, {"loai": "Gọi xe", "ten": "Xe ôm / Grab Đồng Xoài", "dia_chi": "Đường Lê Duẩn, TP. Đồng Xoài, tỉnh Đồng Nai", "lat": 11.53904, "lon": 106.88888, "gio": "", "dienthoai": "0948314831", "gia": "", "mota": "Tổng đài xe ôm, Grab và taxi khu vực Đồng Xoài. [Lưu ý: tọa độ đường Lê Duẩn]"}, {"loai": "Gọi xe", "ten": "Xe du lịch Hoàng Hà D.L", "dia_chi": "8D Nguyễn Ái Quốc, khu phố 3, phường Quang Vinh, TP. Biên Hòa, tỉnh Đồng Nai", "lat": 10.97086, "lon": 106.89295, "gio": "", "dienthoai": "(0251) 2221778 / 0988 193 959", "gia": "", "mota": "Cho thuê xe du lịch 4-45 chỗ tại Biên Hòa, hơn 10 năm kinh nghiệm."}];
+var map = L.map("map").setView([11.4, 107.05], 8.0);
+var gStreet = L.tileLayer("https://{s}.google.com/vt/lyrs=m&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gHybrid = L.tileLayer("https://{s}.google.com/vt/lyrs=y&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gTerrain = L.tileLayer("https://{s}.google.com/vt/lyrs=p&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"OpenStreetMap"});
+var gTraffic = L.tileLayer("https://{s}.google.com/vt/lyrs=h,traffic&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+gHybrid.addTo(map);
+gTraffic.addTo(map);
+var ICONS = {"Nhà hàng": "🍽️", "Khách sạn": "🏨", "Cà phê": "☕", "Điểm du lịch": "🏞️", "Gọi xe": "🚕"};
+var BADGES = {"Nhà hàng": "nh", "Khách sạn": "ks", "Cà phê": "cf", "Điểm du lịch": "dl", "Gọi xe": "gx"};
+function iconFor(loai){
+  var e = ICONS[loai] || "\uD83D\uDCCD";
+  return L.divIcon({className:"", html:'<div class="poi-icon">'+e+'</div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-14]});
+}
+function badgeCls(loai){
+  return BADGES[loai] || "xx";
+}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function popupHtml(d){
+  var h = '<h3>'+esc(d.ten)+'</h3>';
+  h += '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span></div>';
+  h += '<div>\uD83D\uDCCD '+esc(d.dia_chi)+'</div>';
+  if(d.gio) h += '<div>\uD83D\uDD50 '+esc(d.gio)+'</div>';
+  if(d.dienthoai) h += '<div>\uD83D\uDCDE <a href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">'+esc(d.dienthoai)+'</a></div>';
+  if(d.gia) h += '<div>\uD83D\uDCB0 '+esc(d.gia)+'</div>';
+  if(d.mota) h += '<div style="margin-top:4px;color:#444;">'+esc(d.mota)+'</div>';
+  h += '<div class="btns">';
+  h += '<a class="gm" target="_blank" href="https://www.google.com/maps/search/?api=1&query='+d.lat+','+d.lon+'">M\u1edf tr\u00ean Google Maps</a>';
+  h += '<a class="dir" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+d.lat+','+d.lon+'">D\u1eabn \u0111\u01b0\u1eddng t\u1edbi \u0111\u00e2y</a>';
+  if(d.dienthoai) h += '<a class="tel" href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">G\u1ecdi \u0111i\u1ec7n</a>';
+  h += '</div>';
+  return h;
+}
+var markers = [];
+var listEl = document.getElementById("list");
+var curFilter = "all";
+function render(){
+  listEl.innerHTML = "";
+  markers.forEach(function(m){ map.removeLayer(m); });
+  markers = [];
+  var q = document.getElementById("search").value.toLowerCase();
+  var shown = 0;
+  DATA.forEach(function(d, i){
+    if(curFilter !== "all" && d.loai !== curFilter) return;
+    if(q && (d.ten+" "+d.dia_chi+" "+d.mota).toLowerCase().indexOf(q) < 0) return;
+    shown++;
+    var mk = L.marker([d.lat, d.lon], {icon: iconFor(d.loai)}).addTo(map);
+    mk.bindPopup(popupHtml(d));
+    markers.push(mk);
+    var div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span><span class="t">'+esc(d.ten)+'</span></div><div class="a">'+esc(d.dia_chi)+'</div>';
+    (function(m){ div.onclick = function(){ map.setView(m.getLatLng(), 16); m.openPopup(); }; })(mk);
+    listEl.appendChild(div);
+  });
+  document.getElementById("count").textContent = "Hi\u1ec3n th\u1ecb "+shown+"/"+DATA.length+" \u0111\u1ecba \u0111i\u1ec3m";
+}
+document.getElementById("search").addEventListener("input", render);
+var fbtns = document.querySelectorAll("#filters button");
+fbtns.forEach(function(b){
+  b.addEventListener("click", function(){
+    fbtns.forEach(function(x){ x.classList.remove("active"); });
+    b.classList.add("active");
+    curFilter = b.getAttribute("data-f");
+    render();
+  });
+});
+render();
+//]]>
+
+</script>
+</body>
+</html>
