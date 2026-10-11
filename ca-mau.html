@@ -1,0 +1,796 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="vi" lang="vi">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bản đồ Bản đồ du lịch Cà Mau</title>
+<style type="text/css">
+/*<![CDATA[*/
+
+/* required styles */
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+/* Prevents IE11 from highlighting tiles in blue */
+.leaflet-tile::selection {
+	background: transparent;
+}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */
+.leaflet-container .leaflet-overlay-pane svg {
+	max-width: none !important;
+	max-height: none !important;
+	}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+	max-width: none !important;
+	max-height: none !important;
+	width: auto;
+	padding: 0;
+	}
+
+.leaflet-container img.leaflet-tile {
+	/* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
+	mix-blend-mode: plus-lighter;
+}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	/* Fallback for FF which doesn't support pinch-zoom */
+	touch-action: none;
+	touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	behavior: url(#default#VML);
+	display: inline-block;
+	position: absolute;
+	}
+
+
+/* control positioning */
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+/* zoom and fade animations */
+
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+svg.leaflet-zoom-animated {
+	will-change: transform;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+/* cursors */
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor:         grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor:         grabbing;
+	}
+
+/* marker & overlays interactivity */
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+
+/* visual tweaks */
+
+.leaflet-container {
+	background: #ddd;
+	outline-offset: 1px;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+/* general typography */
+.leaflet-container {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	}
+
+
+/* general toolbar styles */
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+/* zoom control */
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+/* layers control */
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	background-image: url(images/layers.png);
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: url(images/layers-2x.png);
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	font-size: 13px;
+	font-size: 1.08333em;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+/* Default icon URLs */
+.leaflet-default-icon-path { /* used only in path-guessing heuristic, see L.Icon.Default */
+	background-image: url(images/marker-icon.png);
+	}
+
+
+/* attribution and scale controls */
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	line-height: 1.4;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover,
+.leaflet-control-attribution a:focus {
+	text-decoration: underline;
+	}
+.leaflet-attribution-flag {
+	display: inline !important;
+	vertical-align: baseline !important;
+	width: 1em;
+	height: 0.6669em;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px #fff;
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+/* popup */
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 24px 13px 20px;
+	line-height: 1.3;
+	font-size: 13px;
+	font-size: 1.08333em;
+	min-height: 1px;
+	}
+.leaflet-popup-content p {
+	margin: 17px 0;
+	margin: 1.3em 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-top: -1px;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+	pointer-events: auto;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: none;
+	text-align: center;
+	width: 24px;
+	height: 24px;
+	font: 16px/24px Tahoma, Verdana, sans-serif;
+	color: #757575;
+	text-decoration: none;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover,
+.leaflet-container a.leaflet-popup-close-button:focus {
+	color: #585858;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	-ms-zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+/* div icon */
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-interactive {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+
+/* Printing */
+
+@media print {
+	/* Prevent printers from removing background-images of controls. */
+	.leaflet-control {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+		}
+	}
+html,body{margin:0;padding:0;height:100%;font-family:Arial,Helvetica,sans-serif;}
+#wrap{display:flex;height:100vh;}
+#panel{width:330px;min-width:330px;background:#fff;border-right:1px solid #ddd;display:flex;flex-direction:column;z-index:1000;}
+#panel h2{margin:0;padding:12px 14px;background:#1F6F3B;color:#fff;font-size:16px;}
+#panel .sub{padding:8px 14px;font-size:12px;color:#555;border-bottom:1px solid #eee;}
+#search{margin:10px 14px 4px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:14px;}
+#filters{display:flex;gap:6px;padding:8px 14px;flex-wrap:wrap;}
+#filters button{flex:1;padding:7px 4px;border:1px solid #1F6F3B;background:#fff;color:#1F6F3B;border-radius:6px;font-size:13px;cursor:pointer;white-space:nowrap;}
+#filters button.active{background:#1F6F3B;color:#fff;}
+#list{flex:1;overflow-y:auto;padding:0 0 10px;}
+.item{padding:9px 14px;border-bottom:1px solid #f0f0f0;cursor:pointer;}
+.item:hover{background:#f4f9f5;}
+.item .t{font-weight:bold;font-size:14px;}
+.item .a{font-size:12px;color:#666;margin-top:2px;}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;color:#fff;margin-right:6px;}
+.badge.nh{background:#e67e22;} .badge.ks{background:#2980b9;} .badge.dl{background:#27ae60;} .badge.cf{background:#8e5a2b;} .badge.xx{background:#7f8c8d;}
+#map{flex:1;height:100vh;}
+.poi-icon{font-size:22px;text-align:center;line-height:30px;width:30px;height:30px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.4);}
+.leaflet-popup-content{font-size:13px;line-height:1.5;min-width:230px;}
+.leaflet-popup-content h3{margin:0 0 6px;font-size:15px;}
+.btns{margin-top:8px;}
+.btns a{display:inline-block;margin:3px 6px 0 0;padding:7px 12px;border-radius:6px;text-decoration:none;font-size:13px;color:#fff;}
+.btns a.gm{background:#1a73e8;} .btns a.dir{background:#1F6F3B;} .btns a.tel{background:#e67e22;}
+@media (max-width:760px){
+  #wrap{flex-direction:column;}
+  #panel{width:100%;min-width:0;max-height:42vh;border-right:none;border-bottom:1px solid #ddd;}
+  #map{height:58vh;}
+}
+/*]]>*/
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="panel">
+    <h2>🗺️ Bản đồ du lịch Cà Mau</h2>
+    <div class="sub" id="count"></div>
+    <input id="search" type="text" placeholder="Tìm tên, địa chỉ..." />
+    <div id="filters">
+      <button data-f="all" class="active">Tất cả</button>
+      <button data-f="Nhà hàng">🍽️ Ăn</button>
+      <button data-f="Khách sạn">🏨 Ở</button>
+      <button data-f="Cà phê">☕ Cafe</button>
+      <button data-f="Điểm du lịch">🏞️ Chơi</button>
+    </div>
+    <div id="list"></div>
+  </div>
+  <div id="map"></div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="text/javascript">
+
+//<![CDATA[
+var DATA = [{"loai": "Nhà hàng", "ten": "Nhà hàng Cua Thứ Thiệt", "dia_chi": "57 Ngô Gia Tự, phường 5, tỉnh Cà Mau", "lat": 9.18428, "lon": 105.15798, "gio": "10:00–23:00 (T2–T6 từ 14:00)", "dienthoai": "", "gia": "300.000–450.000đ/kg cua đá rang muối", "mota": "Quán cua nổi tiếng, đặc sản cua Cà Mau, hải sản tươi."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Sú Biển", "dia_chi": "264 Trần Hưng Đạo, phường 5, tỉnh Cà Mau", "lat": 9.18484, "lon": 105.16327, "gio": "", "dienthoai": "+84 944 620 422", "gia": "", "mota": "Nhà hàng hải sản được đánh giá cao tại TP Cà Mau."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Biển Cà Mau", "dia_chi": "218 Trần Hưng Đạo, phường 5, tỉnh Cà Mau", "lat": 9.18423, "lon": 105.16218, "gio": "", "dienthoai": "+84 919 381 858", "gia": "", "mota": "Nhà hàng hải sản, chuyên bữa tối."}, {"loai": "Nhà hàng", "ten": "Nhà hàng King Cua", "dia_chi": "Phường Tân Thành, tỉnh Cà Mau", "lat": 9.19261, "lon": 105.17728, "gio": "", "dienthoai": "", "gia": "", "mota": "Nhà hàng cua, được đánh giá cao nhất nhóm hải sản tại Cà Mau."}, {"loai": "Nhà hàng", "ten": "Quán Hoàng Hổ", "dia_chi": "255 Trần Hưng Đạo, phường 5, tỉnh Cà Mau", "lat": 9.18496, "lon": 105.16275, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán ăn địa phương đông khách tại TP Cà Mau."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Tân Tân", "dia_chi": "Nguyễn Đình Chiểu, phường 8, tỉnh Cà Mau", "lat": 9.16374, "lon": 105.14386, "gio": "", "dienthoai": "", "gia": "", "mota": "Chả mực Đất Mũi và các món đặc sản Cà Mau."}, {"loai": "Nhà hàng", "ten": "Quán Thắng Bơm (Thằng Bờm?)", "dia_chi": "Nguyễn Trãi, phường 9, tỉnh Cà Mau", "lat": 9.19269, "lon": 105.15103, "gio": "", "dienthoai": "", "gia": "", "mota": "Nguồn web ghi 'Thắng Bơm' (cua đá rang muối); geocode trả 'Quán Nghêu Ốc Thằng Bờm' — tên hơi khác, cần kiểm tra lại."}, {"loai": "Nhà hàng", "ten": "Bánh Tằm Cari Cay Đạo 484", "dia_chi": "Bùi Thị Xuân, phường 4, tỉnh Cà Mau", "lat": 9.18276, "lon": 105.14841, "gio": "", "dienthoai": "", "gia": "", "mota": "Bánh tằm cari cay — món ăn sáng đặc trưng Cà Mau."}, {"loai": "Nhà hàng", "ten": "Bún Bò Cay Kim Cương", "dia_chi": "598 Trần Phú, phường 7, tỉnh Cà Mau (khu vực Bạc Liêu cũ)", "lat": 9.30655, "lon": 105.72071, "gio": "", "dienthoai": "+84 913 091 311", "gia": "", "mota": "Bún bò cay — món đặc trưng Bạc Liêu. Vị trí chính xác nhưng nằm NGOÀI bounds lịch quét đặt (lon > 105.6) — xem xét nới bounds phía đông."}, {"loai": "Nhà hàng", "ten": "Bánh Xèo A Mật", "dia_chi": "Xã Hiệp Thành, tỉnh Cà Mau (khu vực Bạc Liêu cũ)", "lat": 9.223, "lon": 105.74633, "gio": "", "dienthoai": "", "gia": "", "mota": "Bánh xèo Bạc Liêu đông khách. Vị trí chính xác nhưng NGOÀI bounds (lon > 105.6)."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Gia Lạc", "dia_chi": "Phường 2, tỉnh Cà Mau (khu vực Bạc Liêu cũ)", "lat": 9.27347, "lon": 105.72408, "gio": "", "dienthoai": "", "gia": "", "mota": "Nhà hàng được đánh giá rất cao tại Bạc Liêu. Vị trí chính xác nhưng NGOÀI bounds (lon > 105.6)."}, {"loai": "Nhà hàng", "ten": "Quán 257", "dia_chi": "84 Phan Ngọc Hiển, phường 2, tỉnh Cà Mau", "lat": 9.18216, "lon": 105.14747, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán ăn trong top gợi ý của du khách tại TP Cà Mau."}, {"loai": "Nhà hàng", "ten": "Quán Cơm Phượng 76", "dia_chi": "76 Nguyễn Hữu Lễ, phường 2, tỉnh Cà Mau", "lat": 9.18145, "lon": 105.14614, "gio": "", "dienthoai": "", "gia": "", "mota": "Cơm tấm, bánh tằm, miến — quán cơm bình dân địa phương."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Thăng Long Đất Mũi", "dia_chi": "Xã Đất Mũi, huyện Ngọc Hiển, tỉnh Cà Mau", "lat": 8.57056, "lon": 104.82508, "gio": "", "dienthoai": "", "gia": "", "mota": "Nhà hàng tại khu Đất Mũi phục vụ khách du lịch. Vị trí chính xác nhưng NGOÀI bounds phía nam (lat < 8.9) — giữ tham khảo cho vùng cực Nam."}, {"loai": "Khách sạn", "ten": "Mường Thanh Luxury Cà Mau Hotel", "dia_chi": "Đỗ Thừa Luông, phường 1, tỉnh Cà Mau", "lat": 9.1933, "lon": 105.13435, "gio": "", "dienthoai": "", "gia": "từ ~1.000.000đ/đêm", "mota": "Khách sạn 5 sao, được đánh giá tốt nhất TP Cà Mau."}, {"loai": "Khách sạn", "ten": "Anh Nguyệt Hotel", "dia_chi": "207 Phan Ngọc Hiển, phường 6, tỉnh Cà Mau", "lat": 9.17509, "lon": 105.15751, "gio": "", "dienthoai": "", "gia": "~700.000đ/đêm (nguồn web)", "mota": "Khách sạn 3 sao có nhà hàng, hồ bơi, karaoke."}, {"loai": "Khách sạn", "ten": "THƯ DUY Resort", "dia_chi": "323 Lý Thường Kiệt, phường 6, tỉnh Cà Mau", "lat": 9.1649, "lon": 105.21961, "gio": "", "dienthoai": "", "gia": "", "mota": "Resort có hồ bơi ngoài trời, sân vườn. Geocode khớp đúng địa chỉ nhưng chưa khớp tên — cần kiểm tra lại."}, {"loai": "Khách sạn", "ten": "Ozon Hotel", "dia_chi": "Xã Hàm Rồng, huyện Năm Căn, tỉnh Cà Mau", "lat": 8.80312, "lon": 105.00505, "gio": "", "dienthoai": "", "gia": "", "mota": "Được nền tảng đặt phòng ghi nhận đặt nhiều; geocode định vị tại xã Hàm Rồng, huyện Năm Căn — NGOÀI bounds phía nam (lat < 8.9). Có thể là cơ sở ở Năm Căn, cần xác nhận."}, {"loai": "Khách sạn", "ten": "International Hotel (Quốc Tế)", "dia_chi": "179 Phan Ngọc Hiển, phường 6, tỉnh Cà Mau", "lat": 9.17495, "lon": 105.15701, "gio": "", "dienthoai": "", "gia": "", "mota": "Khách sạn Quốc Tế tại trung tâm TP Cà Mau."}, {"loai": "Khách sạn", "ten": "Khách sạn Á Đông 1", "dia_chi": "Phường 8, tỉnh Cà Mau", "lat": 9.16897, "lon": 105.1458, "gio": "", "dienthoai": "", "gia": "", "mota": "Khách sạn trong nhóm được du khách nhắc đến tại TP Cà Mau."}, {"loai": "Khách sạn", "ten": "Lucky Hotel", "dia_chi": "8 Phan Đình Phùng, phường 3, tỉnh Cà Mau (khu vực Bạc Liêu cũ)", "lat": 9.28755, "lon": 105.72693, "gio": "", "dienthoai": "", "gia": "", "mota": "Khách sạn tại trung tâm Bạc Liêu. Vị trí chính xác nhưng NGOÀI bounds (lon > 105.6)."}, {"loai": "Khách sạn", "ten": "Khách sạn Văn Khang", "dia_chi": "472 Trần Phú, phường 7, tỉnh Cà Mau (khu vực Bạc Liêu cũ)", "lat": 9.30226, "lon": 105.72119, "gio": "", "dienthoai": "", "gia": "", "mota": "Khách sạn sân thượng, wifi và đỗ xe miễn phí. Vị trí chính xác nhưng NGOÀI bounds (lon > 105.6)."}, {"loai": "Khách sạn", "ten": "Cosmo Stars Hotel Bạc Liêu", "dia_chi": "3 Trần Phú, phường 7, tỉnh Cà Mau (khu vực Bạc Liêu cũ)", "lat": 9.28833, "lon": 105.722, "gio": "", "dienthoai": "", "gia": "", "mota": "Khách sạn được đánh giá xuất sắc tại Bạc Liêu. Vị trí chính xác nhưng NGOÀI bounds (lon > 105.6)."}, {"loai": "Khách sạn", "ten": "Khách sạn Diamond Bạc Liêu", "dia_chi": "Phường 8, tỉnh Cà Mau (khu vực Bạc Liêu cũ)", "lat": 9.29298, "lon": 105.71936, "gio": "", "dienthoai": "", "gia": "", "mota": "Khách sạn tại Bạc Liêu. Vị trí chính xác nhưng NGOÀI bounds (lon > 105.6)."}, {"loai": "Cà phê", "ten": "Quán Cà Phê Đào Viên", "dia_chi": "2 Trần Hưng Đạo, phường 5, tỉnh Cà Mau", "lat": 9.17794, "lon": 105.15522, "gio": "", "dienthoai": "(0290) 3838 218", "gia": "", "mota": "Quán cà phê lâu đời, đông khách tại trung tâm TP Cà Mau."}, {"loai": "Cà phê", "ten": "CAFE HOME", "dia_chi": "Xã Lý Văn Lâm, tỉnh Cà Mau", "lat": 9.16081, "lon": 105.14159, "gio": "", "dienthoai": "", "gia": "", "mota": "Cà phê sân vườn, phù hợp làm việc laptop."}, {"loai": "Cà phê", "ten": "Coffee Koi 3", "dia_chi": "16 Bùi Thị Trường, phường 5, tỉnh Cà Mau", "lat": 9.18215, "lon": 105.15295, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán cà phê được đánh giá cao, nhiều lượt review tại Cà Mau."}, {"loai": "Cà phê", "ten": "Huynh Huong Coffee", "dia_chi": "22 Bùi Thị Trường, phường 5, tỉnh Cà Mau", "lat": 9.17829, "lon": 105.15663, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán cà phê đông khách tại trung tâm TP Cà Mau."}, {"loai": "Cà phê", "ten": "Cối Xay Gió Coffee & Tea", "dia_chi": "154 Ngô Quyền, phường 9, tỉnh Cà Mau", "lat": 9.18328, "lon": 105.14113, "gio": "", "dienthoai": "", "gia": "", "mota": "Cối Xay Gió Coffee & Tea — quán cà phê, trà được đánh giá tốt."}, {"loai": "Cà phê", "ten": "Coffee Trung Nguyên Legend Hoa Lư", "dia_chi": "Đường Hoa Lư, phường 9, tỉnh Cà Mau", "lat": 9.18313, "lon": 105.14208, "gio": "", "dienthoai": "", "gia": "", "mota": "Chi nhánh Trung Nguyên Legend tại TP Cà Mau."}, {"loai": "Cà phê", "ten": "Apollo Coffee", "dia_chi": "202 Bà Triệu, phường 3, tỉnh Cà Mau (khu vực Bạc Liêu cũ)", "lat": 9.28605, "lon": 105.72169, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán cà phê được đánh giá tốt tại Bạc Liêu. Vị trí chính xác nhưng NGOÀI bounds (lon > 105.6)."}, {"loai": "Cà phê", "ten": "Cafe Công Tử Bạc Liêu", "dia_chi": "Đường vào KDL Sân Chim, phường Nhà Mát, tỉnh Cà Mau (khu vực Bạc Liêu cũ)", "lat": 9.2414, "lon": 105.71841, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán cà phê gần khu du lịch Sân Chim Bạc Liêu. Vị trí chính xác nhưng NGOÀI bounds (lon > 105.6)."}, {"loai": "Điểm du lịch", "ten": "Mũi Cà Mau", "dia_chi": "Xã Đất Mũi, huyện Ngọc Hiển, tỉnh Cà Mau", "lat": 8.62306, "lon": 104.71, "gio": "", "dienthoai": "", "gia": "", "mota": "Mũi Cà Mau — cực Nam Tổ quốc, cột mốc tọa độ quốc gia GPS 0001. Geocode chỉ khớp cấp xã nên tọa độ lấy từ Wikipedia (8°37′23″N 104°42′36″E) — cần kiểm tra lại. NGOÀI bounds phía nam (lat < 8.9) — điểm BẮT BUỘC, nên nới bounds."}, {"loai": "Điểm du lịch", "ten": "Khu du lịch Đất Mũi", "dia_chi": "Xã Đất Mũi, huyện Ngọc Hiển, tỉnh Cà Mau", "lat": 8.59973, "lon": 104.75603, "gio": "", "dienthoai": "", "gia": "", "mota": "Khu du lịch Đất Mũi: mốc quốc gia, cột cờ Hà Nội, điểm cuối đường Hồ Chí Minh, tượng cua Cà Mau. Tọa độ là trung tâm xã Đất Mũi từ geocode (chỉ khớp cấp xã) — vị trí chính xác khu tham quan cần kiểm tra thêm. NGOÀI bounds phía nam — điểm BẮT BUỘC."}, {"loai": "Điểm du lịch", "ten": "Vườn quốc gia U Minh Hạ", "dia_chi": "Xã Khánh Lâm, huyện U Minh, tỉnh Cà Mau", "lat": 9.29292, "lon": 104.90276, "gio": "", "dienthoai": "", "gia": "", "mota": "Vườn quốc gia U Minh Hạ — rừng tràm ngập nước, hệ sinh thái đất ngập nước đặc trưng."}, {"loai": "Điểm du lịch", "ten": "Hòn Đá Bạc", "dia_chi": "Thị trấn Sông Đốc, huyện Trần Văn Thời, tỉnh Cà Mau", "lat": 9.0307, "lon": 104.8147, "gio": "", "dienthoai": "", "gia": "", "mota": "Hòn Đá Bạc — cụm đảo với đá granit xếp chồng hình thù kỳ lạ, di tích lịch sử cấp quốc gia."}, {"loai": "Điểm du lịch", "ten": "Nhà công tử Bạc Liêu", "dia_chi": "13 Điện Biên Phủ, phường 3, tỉnh Cà Mau (khu vực Bạc Liêu cũ)", "lat": 9.28383, "lon": 105.72359, "gio": "", "dienthoai": "", "gia": "", "mota": "Nhà công tử Bạc Liêu — dinh thự kiến trúc Pháp của Trần Trinh Huy. Vị trí chính xác nhưng NGOÀI bounds (lon > 105.6) — điểm BẮT BUỘC, nên nới bounds phía đông."}, {"loai": "Điểm du lịch", "ten": "Cánh đồng điện gió Bạc Liêu", "dia_chi": "Xã Vĩnh Trạch Đông, tỉnh Cà Mau (khu vực Bạc Liêu cũ)", "lat": 9.24362, "lon": 105.82182, "gio": "", "dienthoai": "", "gia": "", "mota": "Cánh đồng điện gió Bạc Liêu — 62 trụ tuabin cao 80m trên biển, ~200.000 lượt khách/năm. Vị trí chính xác nhưng NGOÀI bounds (lon > 105.6) — điểm BẮT BUỘC."}, {"loai": "Điểm du lịch", "ten": "Chùa Xiêm Cán", "dia_chi": "Xã Vĩnh Trạch Đông, tỉnh Cà Mau (khu vực Bạc Liêu cũ)", "lat": 9.25362, "lon": 105.79808, "gio": "", "dienthoai": "", "gia": "", "mota": "Chùa Xiêm Cán — chùa Khmer hơn 100 năm tuổi, kiến trúc Phật giáo Nam tông. Vị trí chính xác nhưng NGOÀI bounds (lon > 105.6) — điểm BẮT BUỘC."}, {"loai": "Điểm du lịch", "ten": "Đầm Thị Tường", "dia_chi": "Xã Phú Mỹ, huyện Phú Tân, tỉnh Cà Mau", "lat": 9.00476, "lon": 104.92075, "gio": "", "dienthoai": "", "gia": "", "mota": "Đầm Thị Tường — đầm nước tự nhiên lớn nhất đồng bằng sông Cửu Long."}, {"loai": "Điểm du lịch", "ten": "Khu du lịch biển Khai Long", "dia_chi": "Xã Đất Mũi, huyện Ngọc Hiển, tỉnh Cà Mau", "lat": 8.56693, "lon": 104.82872, "gio": "", "dienthoai": "", "gia": "", "mota": "Khu du lịch biển Khai Long — bãi biển cát tại vùng Đất Mũi. Vị trí chính xác nhưng NGOÀI bounds phía nam (lat < 8.9)."}, {"loai": "Điểm du lịch", "ten": "Quan Âm Phật Đài", "dia_chi": "Đường Ven Biển, phường Nhà Mát, tỉnh Cà Mau (khu vực Bạc Liêu cũ)", "lat": 9.20715, "lon": 105.73717, "gio": "", "dienthoai": "", "gia": "", "mota": "Quan Âm Phật Đài — điểm hành hương ven biển Bạc Liêu. Vị trí chính xác nhưng NGOÀI bounds (lon > 105.6)."}, {"loai": "Điểm du lịch", "ten": "Sân chim Bạc Liêu", "dia_chi": "Phường Nhà Mát, tỉnh Cà Mau (khu vực Bạc Liêu cũ)", "lat": 9.2415, "lon": 105.72701, "gio": "", "dienthoai": "", "gia": "", "mota": "Sân chim Bạc Liêu — khu bảo tồn chim tự nhiên. Vị trí chính xác nhưng NGOÀI bounds (lon > 105.6)."}, {"loai": "Điểm du lịch", "ten": "Nhà hát Cao Văn Lầu", "dia_chi": "Phường 1, tỉnh Cà Mau (khu vực Bạc Liêu cũ)", "lat": 9.29423, "lon": 105.72591, "gio": "", "dienthoai": "", "gia": "", "mota": "Nhà hát Cao Văn Lầu — kiến trúc hình nón lá, biểu tượng văn hóa Bạc Liêu. Vị trí chính xác nhưng NGOÀI bounds (lon > 105.6)."}, {"loai": "Điểm du lịch", "ten": "Công viên văn hóa Cà Mau", "dia_chi": "Phường 1, tỉnh Cà Mau", "lat": 9.18551, "lon": 105.13741, "gio": "", "dienthoai": "", "gia": "", "mota": "Công viên văn hóa thể thao — không gian xanh trung tâm TP Cà Mau."}];
+var map = L.map("map").setView([9.0, 105.3], 9.0);
+var gStreet = L.tileLayer("https://{s}.google.com/vt/lyrs=m&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gHybrid = L.tileLayer("https://{s}.google.com/vt/lyrs=y&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gTerrain = L.tileLayer("https://{s}.google.com/vt/lyrs=p&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"OpenStreetMap"});
+var gTraffic = L.tileLayer("https://{s}.google.com/vt/lyrs=h,traffic&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+gHybrid.addTo(map);
+gTraffic.addTo(map);
+var ICONS = {"Nhà hàng": "🍽️", "Khách sạn": "🏨", "Cà phê": "☕", "Điểm du lịch": "🏞️"};
+var BADGES = {"Nhà hàng": "nh", "Khách sạn": "ks", "Cà phê": "cf", "Điểm du lịch": "dl"};
+function iconFor(loai){
+  var e = ICONS[loai] || "\uD83D\uDCCD";
+  return L.divIcon({className:"", html:'<div class="poi-icon">'+e+'</div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-14]});
+}
+function badgeCls(loai){
+  return BADGES[loai] || "xx";
+}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function popupHtml(d){
+  var h = '<h3>'+esc(d.ten)+'</h3>';
+  h += '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span></div>';
+  h += '<div>\uD83D\uDCCD '+esc(d.dia_chi)+'</div>';
+  if(d.gio) h += '<div>\uD83D\uDD50 '+esc(d.gio)+'</div>';
+  if(d.dienthoai) h += '<div>\uD83D\uDCDE <a href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">'+esc(d.dienthoai)+'</a></div>';
+  if(d.gia) h += '<div>\uD83D\uDCB0 '+esc(d.gia)+'</div>';
+  if(d.mota) h += '<div style="margin-top:4px;color:#444;">'+esc(d.mota)+'</div>';
+  h += '<div class="btns">';
+  h += '<a class="gm" target="_blank" href="https://www.google.com/maps/search/?api=1&query='+d.lat+','+d.lon+'">M\u1edf tr\u00ean Google Maps</a>';
+  h += '<a class="dir" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+d.lat+','+d.lon+'">D\u1eabn \u0111\u01b0\u1eddng t\u1edbi \u0111\u00e2y</a>';
+  if(d.dienthoai) h += '<a class="tel" href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">G\u1ecdi \u0111i\u1ec7n</a>';
+  h += '</div>';
+  return h;
+}
+var markers = [];
+var listEl = document.getElementById("list");
+var curFilter = "all";
+function render(){
+  listEl.innerHTML = "";
+  markers.forEach(function(m){ map.removeLayer(m); });
+  markers = [];
+  var q = document.getElementById("search").value.toLowerCase();
+  var shown = 0;
+  DATA.forEach(function(d, i){
+    if(curFilter !== "all" && d.loai !== curFilter) return;
+    if(q && (d.ten+" "+d.dia_chi+" "+d.mota).toLowerCase().indexOf(q) < 0) return;
+    shown++;
+    var mk = L.marker([d.lat, d.lon], {icon: iconFor(d.loai)}).addTo(map);
+    mk.bindPopup(popupHtml(d));
+    markers.push(mk);
+    var div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span><span class="t">'+esc(d.ten)+'</span></div><div class="a">'+esc(d.dia_chi)+'</div>';
+    (function(m){ div.onclick = function(){ map.setView(m.getLatLng(), 16); m.openPopup(); }; })(mk);
+    listEl.appendChild(div);
+  });
+  document.getElementById("count").textContent = "Hi\u1ec3n th\u1ecb "+shown+"/"+DATA.length+" \u0111\u1ecba \u0111i\u1ec3m";
+}
+document.getElementById("search").addEventListener("input", render);
+var fbtns = document.querySelectorAll("#filters button");
+fbtns.forEach(function(b){
+  b.addEventListener("click", function(){
+    fbtns.forEach(function(x){ x.classList.remove("active"); });
+    b.classList.add("active");
+    curFilter = b.getAttribute("data-f");
+    render();
+  });
+});
+render();
+//]]>
+
+</script>
+</body>
+</html>
