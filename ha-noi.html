@@ -1,0 +1,797 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="vi" lang="vi">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bản đồ Bản đồ du lịch Hà Nội</title>
+<style type="text/css">
+/*<![CDATA[*/
+
+/* required styles */
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+/* Prevents IE11 from highlighting tiles in blue */
+.leaflet-tile::selection {
+	background: transparent;
+}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */
+.leaflet-container .leaflet-overlay-pane svg {
+	max-width: none !important;
+	max-height: none !important;
+	}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+	max-width: none !important;
+	max-height: none !important;
+	width: auto;
+	padding: 0;
+	}
+
+.leaflet-container img.leaflet-tile {
+	/* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
+	mix-blend-mode: plus-lighter;
+}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	/* Fallback for FF which doesn't support pinch-zoom */
+	touch-action: none;
+	touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	behavior: url(#default#VML);
+	display: inline-block;
+	position: absolute;
+	}
+
+
+/* control positioning */
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+/* zoom and fade animations */
+
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+svg.leaflet-zoom-animated {
+	will-change: transform;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+/* cursors */
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor:         grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor:         grabbing;
+	}
+
+/* marker & overlays interactivity */
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+
+/* visual tweaks */
+
+.leaflet-container {
+	background: #ddd;
+	outline-offset: 1px;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+/* general typography */
+.leaflet-container {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	}
+
+
+/* general toolbar styles */
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+/* zoom control */
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+/* layers control */
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	background-image: url(images/layers.png);
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: url(images/layers-2x.png);
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	font-size: 13px;
+	font-size: 1.08333em;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+/* Default icon URLs */
+.leaflet-default-icon-path { /* used only in path-guessing heuristic, see L.Icon.Default */
+	background-image: url(images/marker-icon.png);
+	}
+
+
+/* attribution and scale controls */
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	line-height: 1.4;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover,
+.leaflet-control-attribution a:focus {
+	text-decoration: underline;
+	}
+.leaflet-attribution-flag {
+	display: inline !important;
+	vertical-align: baseline !important;
+	width: 1em;
+	height: 0.6669em;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px #fff;
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+/* popup */
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 24px 13px 20px;
+	line-height: 1.3;
+	font-size: 13px;
+	font-size: 1.08333em;
+	min-height: 1px;
+	}
+.leaflet-popup-content p {
+	margin: 17px 0;
+	margin: 1.3em 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-top: -1px;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+	pointer-events: auto;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: none;
+	text-align: center;
+	width: 24px;
+	height: 24px;
+	font: 16px/24px Tahoma, Verdana, sans-serif;
+	color: #757575;
+	text-decoration: none;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover,
+.leaflet-container a.leaflet-popup-close-button:focus {
+	color: #585858;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	-ms-zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+/* div icon */
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-interactive {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+
+/* Printing */
+
+@media print {
+	/* Prevent printers from removing background-images of controls. */
+	.leaflet-control {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+		}
+	}
+html,body{margin:0;padding:0;height:100%;font-family:Arial,Helvetica,sans-serif;}
+#wrap{display:flex;height:100vh;}
+#panel{width:330px;min-width:330px;background:#fff;border-right:1px solid #ddd;display:flex;flex-direction:column;z-index:1000;}
+#panel h2{margin:0;padding:12px 14px;background:#1F6F3B;color:#fff;font-size:16px;}
+#panel .sub{padding:8px 14px;font-size:12px;color:#555;border-bottom:1px solid #eee;}
+#search{margin:10px 14px 4px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:14px;}
+#filters{display:flex;gap:6px;padding:8px 14px;flex-wrap:wrap;}
+#filters button{flex:1;padding:7px 4px;border:1px solid #1F6F3B;background:#fff;color:#1F6F3B;border-radius:6px;font-size:13px;cursor:pointer;white-space:nowrap;}
+#filters button.active{background:#1F6F3B;color:#fff;}
+#list{flex:1;overflow-y:auto;padding:0 0 10px;}
+.item{padding:9px 14px;border-bottom:1px solid #f0f0f0;cursor:pointer;}
+.item:hover{background:#f4f9f5;}
+.item .t{font-weight:bold;font-size:14px;}
+.item .a{font-size:12px;color:#666;margin-top:2px;}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;color:#fff;margin-right:6px;}
+.badge.nh{background:#e67e22;} .badge.ks{background:#2980b9;} .badge.dl{background:#27ae60;} .badge.cf{background:#8e5a2b;} .badge.xx{background:#7f8c8d;}
+#map{flex:1;height:100vh;}
+.poi-icon{font-size:22px;text-align:center;line-height:30px;width:30px;height:30px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.4);}
+.leaflet-popup-content{font-size:13px;line-height:1.5;min-width:230px;}
+.leaflet-popup-content h3{margin:0 0 6px;font-size:15px;}
+.btns{margin-top:8px;}
+.btns a{display:inline-block;margin:3px 6px 0 0;padding:7px 12px;border-radius:6px;text-decoration:none;font-size:13px;color:#fff;}
+.btns a.gm{background:#1a73e8;} .btns a.dir{background:#1F6F3B;} .btns a.tel{background:#e67e22;}
+@media (max-width:760px){
+  #wrap{flex-direction:column;}
+  #panel{width:100%;min-width:0;max-height:42vh;border-right:none;border-bottom:1px solid #ddd;}
+  #map{height:58vh;}
+}
+/*]]>*/
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="panel">
+    <h2>🗺️ Bản đồ du lịch Hà Nội</h2>
+    <div class="sub" id="count"></div>
+    <input id="search" type="text" placeholder="Tìm tên, địa chỉ..." />
+    <div id="filters">
+      <button data-f="all" class="active">Tất cả</button>
+      <button data-f="Nhà hàng">🍽️ Ăn</button>
+      <button data-f="Cà phê">☕ Cafe</button>
+      <button data-f="Khách sạn">🏨 Ở</button>
+      <button data-f="Gọi xe">🚕 Gọi xe</button>
+      <button data-f="Điểm du lịch">🏞️ Chơi</button>
+    </div>
+    <div id="list"></div>
+  </div>
+  <div id="map"></div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="text/javascript">
+
+//<![CDATA[
+var DATA = [{"loai": "Nhà hàng", "ten": "Phở Bát Đàn", "dia_chi": "49 Bát Đàn, Hoàn Kiếm, Hà Nội", "lat": 21.03365, "lon": 105.84656, "gio": "6h-10h & 18h30-20h30", "dienthoai": "", "gia": "30.000 - 55.000đ/bát", "mota": "Phở bò gia truyền hơn 50 năm, khách phải xếp hàng; nước dùng ngọt vị xương ninh 8 tiếng."}, {"loai": "Nhà hàng", "ten": "Phở Thìn", "dia_chi": "13 Lò Đúc, Hai Bà Trưng, Hà Nội", "lat": 21.01805, "lon": 105.85532, "gio": "6h-21h", "dienthoai": "097 159 81 82", "gia": "40.000 - 60.000đ/bát", "mota": "Phở tái lăn hơn 30 năm, thịt bò xào lửa lớn, nổi bật với nhiều hành lá tươi."}, {"loai": "Nhà hàng", "ten": "Phở 10 Lý Quốc Sư", "dia_chi": "10 Lý Quốc Sư, Hoàn Kiếm, Hà Nội", "lat": 21.03049, "lon": 105.84883, "gio": "6h-22h", "dienthoai": "", "gia": "50.000 - 80.000đ/bát", "mota": "Phở bò nước dùng đậm đà, thịt mềm ngọt, thêm phở gà ta tươi."}, {"loai": "Nhà hàng", "ten": "Bún chả Hương Liên", "dia_chi": "24 Lê Văn Hưu, Hai Bà Trưng, Hà Nội", "lat": 21.01788, "lon": 105.854, "gio": "8h-20h30", "dienthoai": "024 3943 4106", "gia": "40.000 - 60.000đ/suất", "mota": "Quán \"bún chả Obama\" từ năm 2016, chả viên mềm thơm, nước chấm vị chua giấm đặc trưng."}, {"loai": "Nhà hàng", "ten": "Bún chả Đắc Kim", "dia_chi": "1 Hàng Mành, Hoàn Kiếm, Hà Nội", "lat": 21.03233, "lon": 105.84817, "gio": "8h30-21h", "dienthoai": "", "gia": "40.000 - 60.000đ/suất", "mota": "Tô bún chả to ú ụ, thịt nướng mềm thơm, đậm vị bún chả truyền thống."}, {"loai": "Nhà hàng", "ten": "Chả cá Lã Vọng", "dia_chi": "14 Chả Cá, Hoàn Kiếm, Hà Nội", "lat": 21.03571, "lon": 105.84915, "gio": "9h-23h", "dienthoai": "024 3825 3929", "gia": "170.000đ/suất", "mota": "Quán gốc gần 150 năm của nhà họ Đoàn, cá lăng nướng rán lại trên chảo mỡ tại bàn với mắm tôm."}, {"loai": "Nhà hàng", "ten": "Chả cá Vọng Ngư", "dia_chi": "29 Nguyễn Chí Thanh, Ba Đình, Hà Nội", "lat": 21.02859, "lon": 105.81274, "gio": "10h-21h", "dienthoai": "024 3831 9966", "gia": "50.000 - 499.000đ/món", "mota": "Chuyên các món cá lăng tươi: chả cá lăng, cá lăng bóp thấu, cá lăng hấp mắm gừng."}, {"loai": "Nhà hàng", "ten": "Bún thang Bà Đức", "dia_chi": "48 Cầu Gỗ, Hoàn Kiếm, Hà Nội", "lat": 21.03228, "lon": 105.85288, "gio": "7h-23h", "dienthoai": "", "gia": "30.000 - 55.000đ/bát", "mota": "Bún thang hơn 30 năm với 12-20 nguyên liệu, nước dùng ngọt thanh, trình bày đẹp như bông hoa ngũ sắc."}, {"loai": "Nhà hàng", "ten": "Bánh cuốn Bà Hoành", "dia_chi": "66 Tô Hiến Thành, Hoàn Kiếm, Hà Nội", "lat": 21.01349, "lon": 105.84969, "gio": "6h-22h", "dienthoai": "", "gia": "30.000 - 60.000đ/suất", "mota": "Bánh cuốn Thanh Trì mỏng dẻo, nhân thịt mộc nhĩ đầy đặn, nước chấm vừa miệng."}, {"loai": "Nhà hàng", "ten": "Bánh cuốn Thanh Trì Đại Đồng", "dia_chi": "21 Đại Đồng, Hoàng Mai, Hà Nội", "lat": 20.99731, "lon": 105.88192, "gio": "6h-10h", "dienthoai": "", "gia": "15.000 - 25.000đ/suất", "mota": "Bánh cuốn ăn kèm thịt nướng thay chả, chan nước chấm riêng, chỉ mở buổi sáng sớm."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Bánh tôm Hồ Tây", "dia_chi": "1 Thanh Niên, Tây Hồ, Hà Nội", "lat": 21.04731, "lon": 105.83754, "gio": "9h-21h", "dienthoai": "024 3829 3737", "gia": "80.000 - 130.000đ", "mota": "Bánh tôm vàng rụm giòn tan, nhà hàng lâu đời view Hồ Tây đối diện chùa Trấn Quốc."}, {"loai": "Nhà hàng", "ten": "Bún đậu mắm tôm cô Tuyến", "dia_chi": "31 ngõ 29 Hàng Khay, Hoàn Kiếm, Hà Nội", "lat": 21.02579, "lon": 105.8521, "gio": "7h-21h", "dienthoai": "", "gia": "45.000 - 65.000đ/suất", "mota": "Mẹt bún đậu 25 năm tuổi, đậu rán giòn khi gọi, mắm tôm pha theo bí quyết gia truyền."}, {"loai": "Nhà hàng", "ten": "Cốm làng Vòng bà Cận", "dia_chi": "19 ngõ 85 Xuân Thủy, Cầu Giấy, Hà Nội", "lat": 21.0359, "lon": 105.78734, "gio": "6h-23h", "dienthoai": "0989 070 781", "gia": "8.000 - 250.000đ", "mota": "Cốm tươi, bánh cốm, chả cốm truyền thống làng Vòng, gói hai lớp lá giữ màu xanh non."}, {"loai": "Nhà hàng", "ten": "Bánh cốm Nguyên Ninh", "dia_chi": "11 Dốc Phố Hàng Than, Hoàn Kiếm, Hà Nội", "lat": 21.04273, "lon": 105.84722, "gio": "8h-21h", "dienthoai": "0981 107 310", "gia": "60.000đ/10 cái", "mota": "Thương hiệu bánh cốm Hàng Than từ 1865, làm trong ngày không chất bảo quản."}, {"loai": "Nhà hàng", "ten": "Phở cuốn Hưng Bền", "dia_chi": "118 Trấn Vũ, Ba Đình, Hà Nội", "lat": 21.0447, "lon": 105.84095, "gio": "9h-23h", "dienthoai": "0916 764 141", "gia": "100.000 - 150.000đ/người", "mota": "Phở cuốn Ngũ Xã nhân thịt bò rau sống cuộn mềm, kèm phở chiên phồng và phở chiên trứng."}, {"loai": "Cà phê", "ten": "Cà phê Giảng", "dia_chi": "39 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội", "lat": 21.03363, "lon": 105.85448, "gio": "7h-22h", "dienthoai": "0989 892 298", "gia": "25.000 - 50.000đ", "mota": "Cái nôi cà phê trứng từ năm 1946, quán cổ kính nằm trong ngõ Nguyễn Hữu Huân."}, {"loai": "Cà phê", "ten": "Cà phê Đinh", "dia_chi": "Tầng 2, 13 Đinh Tiên Hoàng, Hoàn Kiếm, Hà Nội", "lat": 21.03192, "lon": 105.85218, "gio": "7h-22h", "dienthoai": "", "gia": "25.000đ", "mota": "Quán cà phê lâu đời cùng gốc cụ Giảng, ban công view Hồ Gươm, cà phê trứng béo ngậy."}, {"loai": "Cà phê", "ten": "Cà phê Lâm", "dia_chi": "60 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội", "lat": 21.03265, "lon": 105.85445, "gio": "7h-23h", "dienthoai": "", "gia": "20.000 - 25.000đ", "mota": "Quán lâu đời treo nhiều tranh quý, nổi tiếng cà phê rang đặc trưng và cà phê trứng."}, {"loai": "Cà phê", "ten": "Café Phố Cổ", "dia_chi": "11 Hàng Gai, Hoàn Kiếm, Hà Nội", "lat": 21.03228, "lon": 105.85114, "gio": "", "dienthoai": "", "gia": "40.000đ", "mota": "Quán ẩn mình sau tiệm lụa phố Hàng Gai, sân thượng ngắm Hồ Gươm, cà phê trứng béo thơm."}, {"loai": "Cà phê", "ten": "Café Cộng Lê Thái Tổ", "dia_chi": "1 Lê Thái Tổ, Hoàn Kiếm, Hà Nội", "lat": 21.03108, "lon": 105.85087, "gio": "", "dienthoai": "", "gia": "", "mota": "Chi nhánh Cộng đối diện Hồ Gươm, view Tháp Rùa, phong cách bao cấp hoài niệm."}, {"loai": "Cà phê", "ten": "Cộng Cà Phê Cầu Gỗ", "dia_chi": "116 Cầu Gỗ, Hoàn Kiếm, Hà Nội", "lat": 21.03235, "lon": 105.85144, "gio": "", "dienthoai": "", "gia": "", "mota": "Hướng thẳng đài phun nước và mặt hồ Gươm, không gian bao cấp đặc trưng của Cộng."}, {"loai": "Cà phê", "ten": "The Summit Lounge", "dia_chi": "Tầng 20, Pan Pacific Hanoi, 1 Thanh Niên, Ba Đình, Hà Nội", "lat": 21.04969, "lon": 105.83988, "gio": "16h-0h", "dienthoai": "024 3823 8888", "gia": "", "mota": "Lounge tầng 20 của khách sạn Pan Pacific, view toàn cảnh Hồ Tây, không gian ngoài trời lộng gió."}, {"loai": "Cà phê", "ten": "Yên Cafe", "dia_chi": "184 Quán Thánh, Ba Đình, Hà Nội", "lat": 21.04293, "lon": 105.83911, "gio": "", "dienthoai": "", "gia": "35.000 - 45.000đ", "mota": "Không gian yên tĩnh, cà phê Arabica Đà Lạt rang xay thủ công, kem trứng ngọt thanh không tanh."}, {"loai": "Khách sạn", "ten": "Hanoi Queen Hotel", "dia_chi": "116 Hàng Bạc, phường Hàng Bạc, quận Hoàn Kiếm, TP. Hà Nội", "lat": 21.03413, "lon": 105.85118, "gio": "", "dienthoai": "", "gia": "Từ ~555.000đ/đêm", "mota": "Khách sạn bình dân phố cổ trên phố Hàng Bạc, phòng sạch sẽ, giá hợp lý, tiện đi bộ ra hồ Hoàn Kiếm."}, {"loai": "Khách sạn", "ten": "Golden Charm Hotel", "dia_chi": "24 Hàng Quạt, phường Hàng Gai, quận Hoàn Kiếm, TP. Hà Nội", "lat": 21.0329, "lon": 105.84969, "gio": "", "dienthoai": "", "gia": "Từ ~700.000đ/đêm", "mota": "Khách sạn 3 sao phong cách châu Âu ngay trung tâm phố cổ, có ban công ngắm phố, phù hợp du lịch và công tác."}, {"loai": "Khách sạn", "ten": "Khách sạn Prince 2", "dia_chi": "35-37 Hàng Bạc, quận Hoàn Kiếm, TP. Hà Nội", "lat": 21.0338, "lon": 105.85316, "gio": "", "dienthoai": "", "gia": "", "mota": "Khách sạn bình dân phố cổ gần hồ Hoàn Kiếm và Nhà hát Lớn, phòng sạch sẽ, giá phải chăng."}, {"loai": "Khách sạn", "ten": "InterContinental Hanoi Westlake", "dia_chi": "05 Từ Hoa, phường Quảng An, quận Tây Hồ, TP. Hà Nội", "lat": 21.05931, "lon": 105.8328, "gio": "Nhận phòng 15:00, trả phòng 12:00", "dienthoai": "024 6270 8888", "gia": "Từ ~3.200.000đ/đêm", "mota": "Khách sạn 5 sao biểu tượng nằm nổi trên mặt hồ Tây, ngắm hoàng hôn đẹp nhất Hà Nội, ẩm thực từng đoạt giải thưởng."}, {"loai": "Khách sạn", "ten": "Sheraton Hanoi Hotel", "dia_chi": "K5 Nghi Tàm, 11 Xuân Diệu, phường Quảng An, quận Tây Hồ, TP. Hà Nội", "lat": 21.05978, "lon": 105.83166, "gio": "Nhận phòng 14:00, trả phòng 12:00", "dienthoai": "024 3719 9000", "gia": "3.800.000-9.300.000đ/đêm", "mota": "Khách sạn 5 sao ven hồ Tây với 299 phòng view hồ và sông Hồng, 2 nhà hàng Michelin, tổ chức sự kiện hàng đầu."}, {"loai": "Khách sạn", "ten": "Westlake Tây Hồ Hotel", "dia_chi": "696 Lạc Long Quân, phường Nhật Tân, quận Tây Hồ, TP. Hà Nội", "lat": 21.07936, "lon": 105.81686, "gio": "", "dienthoai": "024 3661 8555", "gia": "~368.000đ/đêm", "mota": "Khách sạn 3 sao gần hồ Tây, có ban công ngắm cảnh thư thái, giá bình dân cho lưu trú ngắn ngày."}, {"loai": "Khách sạn", "ten": "Sofitel Legend Metropole Hà Nội", "dia_chi": "15 Ngô Quyền, phường Tràng Tiền, quận Hoàn Kiếm, TP. Hà Nội", "lat": 21.02584, "lon": 105.85555, "gio": "Nhận phòng 14:00, trả phòng 12:00", "dienthoai": "024 3826 6919", "gia": "Từ ~6.300.000đ/đêm", "mota": "Khách sạn 5 sao huyền thoại từ năm 1901, kiến trúc Pháp cổ quý hiếm, từng đón nhiều nguyên thủ và nhân vật nổi tiếng."}, {"loai": "Khách sạn", "ten": "Khách sạn Apricot Hà Nội", "dia_chi": "136 Hàng Trống, quận Hoàn Kiếm, TP. Hà Nội", "lat": 21.0303, "lon": 105.84987, "gio": "", "dienthoai": "", "gia": "Từ 2.990.000đ/đêm", "mota": "Khách sạn 5 sao boutique view phố cổ, thiết kế phong cách Pháp với tranh chủ đề văn hóa Việt Nam, hồ bơi tầng 9."}, {"loai": "Khách sạn", "ten": "Meliá Hà Nội", "dia_chi": "44 Lý Thường Kiệt, phường Trần Hưng Đạo, quận Hoàn Kiếm, TP. Hà Nội", "lat": 21.02381, "lon": 105.84907, "gio": "", "dienthoai": "024 3934 3343", "gia": "", "mota": "Khách sạn 5 sao quốc tế gần Nhà hát Lớn, phòng sang trọng, đầy đủ tiện ích spa, hồ bơi, ẩm thực Á-Âu."}, {"loai": "Khách sạn", "ten": "JW Marriott Hotel Hanoi", "dia_chi": "8 Đỗ Đức Dục, phường Mễ Trì, quận Nam Từ Liêm, TP. Hà Nội", "lat": 21.00691, "lon": 105.78301, "gio": "", "dienthoai": "024 3833 5588", "gia": "", "mota": "Khách sạn 5 sao kiến trúc rồng nổi tiếng khu Mỹ Đình, ẩm thực Pháp-Nhật cao cấp, gần Bảo tàng Hà Nội."}, {"loai": "Khách sạn", "ten": "Grand Plaza Hotel Hà Nội", "dia_chi": "117 Trần Duy Hưng, phường Trung Hòa, quận Cầu Giấy, TP. Hà Nội", "lat": 21.00743, "lon": 105.7968, "gio": "", "dienthoai": "024 3555 1000", "gia": "Từ ~2.500.000đ/đêm", "mota": "Khách sạn 5 sao với 618 phòng gần Trung tâm Hội nghị Quốc gia, thế mạnh hội nghị, tiệc, spa và hồ bơi."}, {"loai": "Khách sạn", "ten": "Khách sạn Lotte Hà Nội", "dia_chi": "54 Liễu Giai, phường Cống Vị, quận Ba Đình, TP. Hà Nội", "lat": 21.03212, "lon": 105.81311, "gio": "", "dienthoai": "024 3333 1000", "gia": "", "mota": "Khách sạn 5 sao trong tòa tháp Lotte, view toàn cảnh thành phố, tiện lợi mua sắm và giải trí."}, {"loai": "Gọi xe", "ten": "Taxi Mai Linh", "dia_chi": "41 Phùng Chí Kiên, phường Nghĩa Đô, quận Cầu Giấy, TP. Hà Nội", "lat": 21.04222, "lon": 105.80351, "gio": "24/7", "dienthoai": "1055 / 024 38 333 333", "gia": "Xe 4 chỗ: mở cửa 5.000đ, ~16.000-20.000đ/km", "mota": "Hãng taxi quốc dân, đặt xe qua tổng đài toàn quốc 1055 hoặc app Mai Linh, đội xe 4-7 chỗ phủ khắp Hà Nội."}, {"loai": "Gọi xe", "ten": "Taxi Group", "dia_chi": "15 Phạm Hùng, phường Mỹ Đình 2, quận Nam Từ Liêm, TP. Hà Nội", "lat": 21.02898, "lon": 105.77988, "gio": "24/7", "dienthoai": "024 38 53 53 53", "gia": "Xe Vios: mở cửa 10.000đ/0,3km, ~14.800đ/km", "mota": "Liên minh 6 hãng taxi uy tín, xe Toyota đời mới, tài xế chuyên nghiệp, đặt xe qua app hoặc tổng đài."}, {"loai": "Gọi xe", "ten": "Taxi Sao Mai", "dia_chi": "La Khê, quận Hà Đông, TP. Hà Nội", "lat": 20.97056, "lon": 105.75011, "gio": "24/7", "dienthoai": "024 38 272 727", "gia": "", "mota": "Hơn 2000 đầu xe hoạt động khắp các quận Hà Nội, tài xế giàu kinh nghiệm, trung thực, giá cước minh bạch."}, {"loai": "Gọi xe", "ten": "Taxi Thành Công", "dia_chi": "Số 1 ngõ 69 Hoàng Như Tiếp, phường Bồ Đề, quận Long Biên, TP. Hà Nội", "lat": 21.04204, "lon": 105.87688, "gio": "24/7", "dienthoai": "024 32 57 57 57", "gia": "Nội Bài - Hà Nội từ ~250.000đ/lượt xe 4 chỗ", "mota": "Chuyên tuyến sân bay Nội Bài giá trọn gói, có ưu đãi giảm giá chiều về cho hành trình trên 40km."}, {"loai": "Gọi xe", "ten": "Xe điện du lịch phố cổ & Hồ Tây", "dia_chi": "Bến xe điện Bờ Hồ, Đinh Tiên Hoàng, quận Hoàn Kiếm, TP. Hà Nội", "lat": 21.03188, "lon": 105.85304, "gio": "7:00-23:00", "dienthoai": "", "gia": "~245.000đ/xe/7 khách (tuyến Hoàn Kiếm - Hoàng thành); vé lẻ ~20.000đ/khách", "mota": "Xe điện du lịch tham quan phố cổ, hồ Gươm và Hoàng thành Thăng Long, phương tiện xanh thân thiện môi trường."}, {"loai": "Gọi xe", "ten": "Nắng Vàng - Thuê xe du lịch Hà Nội", "dia_chi": "97 Quan Hoa, quận Cầu Giấy, TP. Hà Nội", "lat": 21.03325, "lon": 105.80349, "gio": "", "dienthoai": "0989 567 299", "gia": "Xe 4 chỗ ~1.100.000đ/ngày; xe 16 chỗ ~1.600.000đ/ngày", "mota": "Cho thuê xe du lịch 4-45 chỗ có lái xe, phục vụ tour nội thành và các tỉnh miền Bắc, đưa đón sân bay."}, {"loai": "Điểm du lịch", "ten": "Hồ Gươm", "dia_chi": "Hồ Hoàn Kiếm, quận Hoàn Kiếm, TP. Hà Nội", "lat": 21.02838, "lon": 105.85425, "gio": "Mở 24/7; phố đi bộ quanh hồ mở cuối tuần (T6–CN)", "dienthoai": "", "gia": "Miễn phí", "mota": "Trái tim của Thủ đô với đền Ngọc Sơn và Tháp Rùa, điểm hẹn văn hóa và dạo bộ của người Hà Nội."}, {"loai": "Điểm du lịch", "ten": "Phố cổ Hà Nội", "dia_chi": "Khu 36 phố phường, quận Hoàn Kiếm, TP. Hà Nội", "lat": 21.03389, "lon": 105.84895, "gio": "Mở 24/7; chợ đêm phố cổ T6–CN", "dienthoai": "", "gia": "Miễn phí", "mota": "Khu 36 phố phường nghìn năm với nhà ống, hội quán cổ và ẩm thực đường phố đặc trưng Hà Nội."}, {"loai": "Điểm du lịch", "ten": "Văn Miếu – Quốc Tử Giám", "dia_chi": "58 Quốc Tử Giám, TP. Hà Nội", "lat": 21.02716, "lon": 105.83605, "gio": "8:00–17:00 hàng ngày (mùa hè 7:30–17:30)", "dienthoai": "024 3747 2566", "gia": "70.000 VNĐ/người lớn (học sinh, sinh viên, người trên 60 tuổi giảm 50%)", "mota": "Trường đại học đầu tiên của Việt Nam với 82 bia tiến sĩ, biểu tượng tôn sư trọng đạo của Thủ đô."}, {"loai": "Điểm du lịch", "ten": "Hoàng thành Thăng Long", "dia_chi": "19C Hoàng Diệu, TP. Hà Nội", "lat": 21.03304, "lon": 105.83911, "gio": "8:00–11:30 và 14:00–17:00 các ngày trừ thứ 2", "dienthoai": "024 3734 5427", "gia": "100.000 VNĐ/người lớn (tham khảo, theo thông báo chính thức 2026)", "mota": "Di sản UNESCO hơn 1.300 năm với Đoan Môn, điện Kính Thiên và Cột cờ Hà Nội."}, {"loai": "Điểm du lịch", "ten": "Chùa Hương (Mỹ Đức)", "dia_chi": "Xã Hương Sơn, huyện Mỹ Đức, TP. Hà Nội", "lat": 20.61168, "lon": 105.77753, "gio": "", "dienthoai": "19001207 (hotline lễ hội)", "gia": "230.000 VNĐ/người lớn (vé thắng cảnh + xuồng đò tuyến Hương Tích, lễ hội 2026)", "mota": "Quần thể chùa động linh thiêng nổi tiếng với lễ hội xuân kéo dài 3 tháng đầu năm."}, {"loai": "Điểm du lịch", "ten": "Làng cổ Đường Lâm (Sơn Tây)", "dia_chi": "Sơn Tây, TP. Hà Nội", "lat": 21.15741, "lon": 105.47258, "gio": "8:00–17:00 hàng ngày", "dienthoai": "02433 832 222", "gia": "20.000 VNĐ/người", "mota": "Làng cổ hơn 1.200 năm tuổi với cổng làng Mông Phụ, nhà đá ong, quê hương hai vua Phùng Hưng – Ngô Quyền."}, {"loai": "Điểm du lịch", "ten": "Lăng Chủ tịch Hồ Chí Minh", "dia_chi": "2 Hùng Vương, Ba Đình, TP. Hà Nội", "lat": 21.03688, "lon": 105.83467, "gio": "Sáng T3–T5 (mùa nóng 7:30–10:30, mùa lạnh 8:00–11:00), T7–CN 7:30–11:00; nghỉ T2, T6 và đợt duy tu 05/09–03/11/2026", "dienthoai": "", "gia": "Miễn phí (công dân Việt Nam)", "mota": "Nơi an nghỉ của Bác Hồ giữa Quảng trường Ba Đình lịch sử, điểm đến thiêng liêng nhất của Thủ đô. Lưu ý: đang đợt duy tu từ 05/09 đến 03/11/2026, kiểm tra lại trước khi đến."}, {"loai": "Điểm du lịch", "ten": "Chùa Một Cột", "dia_chi": "Ba Đình, TP. Hà Nội", "lat": 21.03571, "lon": 105.83375, "gio": "", "dienthoai": "", "gia": "Miễn phí", "mota": "Ngôi chùa độc trụ kiến trúc hoa sen độc đáo, biểu tượng văn hóa Phật giáo thời Lý của Hà Nội."}, {"loai": "Điểm du lịch", "ten": "Chùa Trấn Quốc", "dia_chi": "Đường Thanh Niên, Tây Hồ, TP. Hà Nội", "lat": 21.04819, "lon": 105.8378, "gio": "Ngày thường 8:00–16:00; rằm và mùng 1 âm lịch 6:00–20:00", "dienthoai": "", "gia": "5.000 VNĐ/lượt", "mota": "Ngôi chùa cổ gần 1.500 năm tuổi trên đảo Hồ Tây, trung tâm Phật giáo của kinh thành Thăng Long xưa."}, {"loai": "Điểm du lịch", "ten": "Hồ Tây", "dia_chi": "Quận Tây Hồ, TP. Hà Nội", "lat": 21.0483, "lon": 105.83772, "gio": "Mở 24/7", "dienthoai": "", "gia": "Miễn phí", "mota": "Hồ nước tự nhiên lớn nhất Hà Nội với đường ven hồ thơ mộng, điểm đạp xe, ngắm hoàng hôn lý tưởng."}, {"loai": "Điểm du lịch", "ten": "Nhà hát Lớn Hà Nội", "dia_chi": "1 Tràng Tiền, Hoàn Kiếm, TP. Hà Nội", "lat": 21.02422, "lon": 105.85768, "gio": "Tour tham quan 10:30–12:00 (theo lịch chương trình)", "dienthoai": "", "gia": "Tour tham quan + biểu diễn \"Hồn Việt\": 400.000 VNĐ/người", "mota": "Công trình kiến trúc Pháp đầu thế kỷ 20, trung tâm nghệ thuật lớn với các show diễn quốc tế."}, {"loai": "Điểm du lịch", "ten": "Bảo tàng Dân tộc học Việt Nam", "dia_chi": "1 Nguyễn Văn Huyên, Cầu Giấy, TP. Hà Nội", "lat": 21.04062, "lon": 105.79874, "gio": "8:30–17:30, thứ 3–Chủ Nhật (nghỉ thứ 2)", "dienthoai": "024 3836 0352", "gia": "40.000 VNĐ/người lớn (sinh viên 15.000, học sinh 10.000)", "mota": "Nơi lưu giữ văn hóa 54 dân tộc Việt Nam với hàng nghìn hiện vật và nhà sàn ngoài trời."}, {"loai": "Điểm du lịch", "ten": "Làng gốm Bát Tràng (Gia Lâm)", "dia_chi": "Xã Bát Tràng, huyện Gia Lâm, TP. Hà Nội", "lat": 20.97738, "lon": 105.91365, "gio": "8:00–18:00 hàng ngày", "dienthoai": "", "gia": "Tham quan bảo tàng: 50.000 VNĐ; trải nghiệm nặn gốm: 70.000 VNĐ/người lớn", "mota": "Làng nghề gốm hơn 700 năm với chợ gốm sầm uất và trải nghiệm tự tay nặn gốm."}, {"loai": "Điểm du lịch", "ten": "Vườn quốc gia Ba Vì", "dia_chi": "Xã Tản Lĩnh, huyện Ba Vì, TP. Hà Nội", "lat": 21.1009, "lon": 105.40911, "gio": "Mùa hè 7:00–17:30, mùa đông 7:30–16:30, hàng ngày", "dienthoai": "02433 881 205", "gia": "60.000 VNĐ/người lớn (sinh viên 20.000, học sinh 10.000)", "mota": "Khu rừng nguyên sinh trên núi Ba Vì với đỉnh Vua, đền Thượng, nhà thờ cổ Pháp và mùa hoa dã quỳ."}, {"loai": "Điểm du lịch", "ten": "Phủ Tây Hồ", "dia_chi": "Đường Đặng Thai Mai, Tây Hồ, TP. Hà Nội", "lat": 21.05984, "lon": 105.82343, "gio": "", "dienthoai": "", "gia": "Miễn phí", "mota": "Đền thờ Mẫu Liễu Hạnh bên Hồ Tây, điểm hành hương cầu an nhộn nhịp bậc nhất Hà Nội."}];
+var map = L.map("map").setView([21.0, 105.78], 10.0);
+var gStreet = L.tileLayer("https://{s}.google.com/vt/lyrs=m&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gHybrid = L.tileLayer("https://{s}.google.com/vt/lyrs=y&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gTerrain = L.tileLayer("https://{s}.google.com/vt/lyrs=p&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"OpenStreetMap"});
+var gTraffic = L.tileLayer("https://{s}.google.com/vt/lyrs=h,traffic&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+gHybrid.addTo(map);
+gTraffic.addTo(map);
+var ICONS = {"Nhà hàng": "🍽️", "Cà phê": "☕", "Khách sạn": "🏨", "Gọi xe": "🚕", "Điểm du lịch": "🏞️"};
+var BADGES = {"Nhà hàng": "nh", "Cà phê": "cf", "Khách sạn": "ks", "Gọi xe": "gx", "Điểm du lịch": "dl"};
+function iconFor(loai){
+  var e = ICONS[loai] || "\uD83D\uDCCD";
+  return L.divIcon({className:"", html:'<div class="poi-icon">'+e+'</div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-14]});
+}
+function badgeCls(loai){
+  return BADGES[loai] || "xx";
+}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function popupHtml(d){
+  var h = '<h3>'+esc(d.ten)+'</h3>';
+  h += '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span></div>';
+  h += '<div>\uD83D\uDCCD '+esc(d.dia_chi)+'</div>';
+  if(d.gio) h += '<div>\uD83D\uDD50 '+esc(d.gio)+'</div>';
+  if(d.dienthoai) h += '<div>\uD83D\uDCDE <a href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">'+esc(d.dienthoai)+'</a></div>';
+  if(d.gia) h += '<div>\uD83D\uDCB0 '+esc(d.gia)+'</div>';
+  if(d.mota) h += '<div style="margin-top:4px;color:#444;">'+esc(d.mota)+'</div>';
+  h += '<div class="btns">';
+  h += '<a class="gm" target="_blank" href="https://www.google.com/maps/search/?api=1&query='+d.lat+','+d.lon+'">M\u1edf tr\u00ean Google Maps</a>';
+  h += '<a class="dir" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+d.lat+','+d.lon+'">D\u1eabn \u0111\u01b0\u1eddng t\u1edbi \u0111\u00e2y</a>';
+  if(d.dienthoai) h += '<a class="tel" href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">G\u1ecdi \u0111i\u1ec7n</a>';
+  h += '</div>';
+  return h;
+}
+var markers = [];
+var listEl = document.getElementById("list");
+var curFilter = "all";
+function render(){
+  listEl.innerHTML = "";
+  markers.forEach(function(m){ map.removeLayer(m); });
+  markers = [];
+  var q = document.getElementById("search").value.toLowerCase();
+  var shown = 0;
+  DATA.forEach(function(d, i){
+    if(curFilter !== "all" && d.loai !== curFilter) return;
+    if(q && (d.ten+" "+d.dia_chi+" "+d.mota).toLowerCase().indexOf(q) < 0) return;
+    shown++;
+    var mk = L.marker([d.lat, d.lon], {icon: iconFor(d.loai)}).addTo(map);
+    mk.bindPopup(popupHtml(d));
+    markers.push(mk);
+    var div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span><span class="t">'+esc(d.ten)+'</span></div><div class="a">'+esc(d.dia_chi)+'</div>';
+    (function(m){ div.onclick = function(){ map.setView(m.getLatLng(), 16); m.openPopup(); }; })(mk);
+    listEl.appendChild(div);
+  });
+  document.getElementById("count").textContent = "Hi\u1ec3n th\u1ecb "+shown+"/"+DATA.length+" \u0111\u1ecba \u0111i\u1ec3m";
+}
+document.getElementById("search").addEventListener("input", render);
+var fbtns = document.querySelectorAll("#filters button");
+fbtns.forEach(function(b){
+  b.addEventListener("click", function(){
+    fbtns.forEach(function(x){ x.classList.remove("active"); });
+    b.classList.add("active");
+    curFilter = b.getAttribute("data-f");
+    render();
+  });
+});
+render();
+//]]>
+
+</script>
+</body>
+</html>
