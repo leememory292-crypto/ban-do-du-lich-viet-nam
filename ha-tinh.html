@@ -1,0 +1,797 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="vi" lang="vi">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bản đồ Bản đồ du lịch Hà Tĩnh</title>
+<style type="text/css">
+/*<![CDATA[*/
+
+/* required styles */
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+/* Prevents IE11 from highlighting tiles in blue */
+.leaflet-tile::selection {
+	background: transparent;
+}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */
+.leaflet-container .leaflet-overlay-pane svg {
+	max-width: none !important;
+	max-height: none !important;
+	}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+	max-width: none !important;
+	max-height: none !important;
+	width: auto;
+	padding: 0;
+	}
+
+.leaflet-container img.leaflet-tile {
+	/* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
+	mix-blend-mode: plus-lighter;
+}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	/* Fallback for FF which doesn't support pinch-zoom */
+	touch-action: none;
+	touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	behavior: url(#default#VML);
+	display: inline-block;
+	position: absolute;
+	}
+
+
+/* control positioning */
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+/* zoom and fade animations */
+
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+svg.leaflet-zoom-animated {
+	will-change: transform;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+/* cursors */
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor:         grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor:         grabbing;
+	}
+
+/* marker & overlays interactivity */
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+
+/* visual tweaks */
+
+.leaflet-container {
+	background: #ddd;
+	outline-offset: 1px;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+/* general typography */
+.leaflet-container {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	}
+
+
+/* general toolbar styles */
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+/* zoom control */
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+/* layers control */
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	background-image: url(images/layers.png);
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: url(images/layers-2x.png);
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	font-size: 13px;
+	font-size: 1.08333em;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+/* Default icon URLs */
+.leaflet-default-icon-path { /* used only in path-guessing heuristic, see L.Icon.Default */
+	background-image: url(images/marker-icon.png);
+	}
+
+
+/* attribution and scale controls */
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	line-height: 1.4;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover,
+.leaflet-control-attribution a:focus {
+	text-decoration: underline;
+	}
+.leaflet-attribution-flag {
+	display: inline !important;
+	vertical-align: baseline !important;
+	width: 1em;
+	height: 0.6669em;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px #fff;
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+/* popup */
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 24px 13px 20px;
+	line-height: 1.3;
+	font-size: 13px;
+	font-size: 1.08333em;
+	min-height: 1px;
+	}
+.leaflet-popup-content p {
+	margin: 17px 0;
+	margin: 1.3em 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-top: -1px;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+	pointer-events: auto;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: none;
+	text-align: center;
+	width: 24px;
+	height: 24px;
+	font: 16px/24px Tahoma, Verdana, sans-serif;
+	color: #757575;
+	text-decoration: none;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover,
+.leaflet-container a.leaflet-popup-close-button:focus {
+	color: #585858;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	-ms-zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+/* div icon */
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-interactive {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+
+/* Printing */
+
+@media print {
+	/* Prevent printers from removing background-images of controls. */
+	.leaflet-control {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+		}
+	}
+html,body{margin:0;padding:0;height:100%;font-family:Arial,Helvetica,sans-serif;}
+#wrap{display:flex;height:100vh;}
+#panel{width:330px;min-width:330px;background:#fff;border-right:1px solid #ddd;display:flex;flex-direction:column;z-index:1000;}
+#panel h2{margin:0;padding:12px 14px;background:#1F6F3B;color:#fff;font-size:16px;}
+#panel .sub{padding:8px 14px;font-size:12px;color:#555;border-bottom:1px solid #eee;}
+#search{margin:10px 14px 4px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:14px;}
+#filters{display:flex;gap:6px;padding:8px 14px;flex-wrap:wrap;}
+#filters button{flex:1;padding:7px 4px;border:1px solid #1F6F3B;background:#fff;color:#1F6F3B;border-radius:6px;font-size:13px;cursor:pointer;white-space:nowrap;}
+#filters button.active{background:#1F6F3B;color:#fff;}
+#list{flex:1;overflow-y:auto;padding:0 0 10px;}
+.item{padding:9px 14px;border-bottom:1px solid #f0f0f0;cursor:pointer;}
+.item:hover{background:#f4f9f5;}
+.item .t{font-weight:bold;font-size:14px;}
+.item .a{font-size:12px;color:#666;margin-top:2px;}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;color:#fff;margin-right:6px;}
+.badge.nh{background:#e67e22;} .badge.ks{background:#2980b9;} .badge.dl{background:#27ae60;} .badge.cf{background:#8e5a2b;} .badge.xx{background:#7f8c8d;}
+#map{flex:1;height:100vh;}
+.poi-icon{font-size:22px;text-align:center;line-height:30px;width:30px;height:30px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.4);}
+.leaflet-popup-content{font-size:13px;line-height:1.5;min-width:230px;}
+.leaflet-popup-content h3{margin:0 0 6px;font-size:15px;}
+.btns{margin-top:8px;}
+.btns a{display:inline-block;margin:3px 6px 0 0;padding:7px 12px;border-radius:6px;text-decoration:none;font-size:13px;color:#fff;}
+.btns a.gm{background:#1a73e8;} .btns a.dir{background:#1F6F3B;} .btns a.tel{background:#e67e22;}
+@media (max-width:760px){
+  #wrap{flex-direction:column;}
+  #panel{width:100%;min-width:0;max-height:42vh;border-right:none;border-bottom:1px solid #ddd;}
+  #map{height:58vh;}
+}
+/*]]>*/
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="panel">
+    <h2>🗺️ Bản đồ du lịch Hà Tĩnh</h2>
+    <div class="sub" id="count"></div>
+    <input id="search" type="text" placeholder="Tìm tên, địa chỉ..." />
+    <div id="filters">
+      <button data-f="all" class="active">Tất cả</button>
+      <button data-f="Nhà hàng">🍽️ Ăn</button>
+      <button data-f="Gọi xe">🚕 Gọi xe</button>
+      <button data-f="Khách sạn">🏨 Ở</button>
+      <button data-f="Cà phê">☕ Cafe</button>
+      <button data-f="Điểm du lịch">🏞️ Chơi</button>
+    </div>
+    <div id="list"></div>
+  </div>
+  <div id="map"></div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="text/javascript">
+
+//<![CDATA[
+var DATA = [{"loai": "Nhà hàng", "ten": "Nhà hàng Thanh Nhàn", "dia_chi": "Cảng Vũng Áng, xã Kỳ Lợi, TX. Kỳ Anh, tỉnh Hà Tĩnh", "lat": 18.08816, "lon": 106.4031, "gio": "", "dienthoai": "0979 672 609", "gia": "Mực nhảy 500.000–700.000đ/kg", "mota": "Nhà hàng hải sản nổi tiếng cảng Vũng Áng, chuyên mực nhảy tươi bắt mỗi ngày, có dịch vụ câu mực trên biển."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Độ Tuyết", "dia_chi": "Cảng Vũng Áng, xã Kỳ Lợi, TX. Kỳ Anh, tỉnh Hà Tĩnh", "lat": 18.08816, "lon": 106.4031, "gio": "", "dienthoai": "0386 578 397", "gia": "Mực nhảy 500.000–700.000đ/kg", "mota": "Nhà hàng trên nhà bè tại cảng Vũng Áng, view thẳng ra biển, chuyên mực nhảy và hải sản tươi sống."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Đàn Tuyết", "dia_chi": "Cảng Vũng Áng, xã Kỳ Lợi, TX. Kỳ Anh, tỉnh Hà Tĩnh", "lat": 18.08816, "lon": 106.4031, "gio": "", "dienthoai": "0378 635 362", "gia": "Mực nhảy 500.000–700.000đ/kg", "mota": "Nhà hàng hải sản hơn 15 năm tại cảng Vũng Áng, chuyên các món mực nhảy được đông đảo thực khách kiểm chứng."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Bà Châu", "dia_chi": "Bên cổng khách sạn Công Đoàn, đường Liên Thành, Thiên Cầm, tỉnh Hà Tĩnh", "lat": 18.27153, "lon": 106.0938, "gio": "06:00–23:00", "dienthoai": "", "gia": "Từ 50.000đ/món", "mota": "Hải sản tươi cách biển Thiên Cầm chưa đầy 100m, nổi bật mực nhảy, tôm hùm, cá mú và nước chấm chẻo đạt chuẩn OCOP."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Đại Hương Biển", "dia_chi": "140 Hàm Nghi, phường Hà Huy Tập, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.33485, "lon": 105.89104, "gio": "06:00–23:00", "dienthoai": "0983 862 215", "gia": "180.000–400.000đ/khách", "mota": "Hệ thống nhà hàng hải sản tươi sống có cơ sở tại TP. Hà Tĩnh và bãi biển Thiên Cầm, phục vụ cơm tour và đoàn khách."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Biển Vàng", "dia_chi": "Thôn Chùa, khu du lịch Thiên Cầm, tỉnh Hà Tĩnh", "lat": 18.27582, "lon": 106.09946, "gio": "", "dienthoai": "0842 756 888", "gia": "", "mota": "Nhà hàng sát biển Thiên Cầm, hải sản tươi sống giá hợp lý, sức chứa gần 200 khách cho tiệc và sự kiện."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Yến Tín - Hậu Tú", "dia_chi": "Bãi biển Thiên Cầm, tỉnh Hà Tĩnh", "lat": 18.27582, "lon": 106.09946, "gio": "", "dienthoai": "0382 916 522", "gia": "", "mota": "Hải sản tươi đánh bắt trong ngày tại bãi biển Thiên Cầm: hàu, mực ống, bề bề; không gian rộng cho gia đình, đoàn."}, {"loai": "Nhà hàng", "ten": "Bánh mướt ram Cô Lan", "dia_chi": "65 Phú Hào, phường Hà Huy Tập, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.32725, "lon": 105.90355, "gio": "", "dienthoai": "", "gia": "20.000–55.000đ/suất", "mota": "Quán ăn sáng gần chục năm nổi tiếng bánh mướt tráng tay cuốn ram giòn, chấm mắm hành phi đặc trưng Hà Tĩnh."}, {"loai": "Nhà hàng", "ten": "Quán bánh ướt cuốn ram 70 Nguyễn Công Trứ", "dia_chi": "70 Nguyễn Công Trứ, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.3415, "lon": 105.90309, "gio": "", "dienthoai": "", "gia": "", "mota": "Bánh ướt dẻo dai cuốn ram thịt rán giòn, ăn kèm rau sống chấm mắm tỏi ớt — món sáng dân dã Hà Tĩnh."}, {"loai": "Nhà hàng", "ten": "Bánh cuốn 37", "dia_chi": "525 Trần Phú, xã Thạch Trung, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.3541, "lon": 105.88005, "gio": "", "dienthoai": "", "gia": "25.000–35.000đ/suất", "mota": "Quán bánh cuốn nóng Hà Tĩnh giá bình dân, lựa chọn ăn sáng quen thuộc của người dân địa phương."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Ngọc Anh (bún bò Đò Trai Cầu Phủ)", "dia_chi": "8 Phan Khắc Hòa, phường Tân Giang, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.34509, "lon": 105.90195, "gio": "Sáng 5h–14h, chiều 17h–21h", "dienthoai": "", "gia": "30.000–50.000đ/phần", "mota": "Quán bún bò Đò Trai Cầu Phủ nức tiếng (nay tại Phan Khắc Hòa), sợi bún thủ công màu hoa cau ăn kèm bánh đa giòn."}, {"loai": "Nhà hàng", "ten": "Bún bò Đò Trai Bà Nhị", "dia_chi": "382 Nguyễn Ái Quốc, Hồng Lĩnh, tỉnh Hà Tĩnh", "lat": 18.54928, "lon": 105.69989, "gio": "7h–22h", "dienthoai": "", "gia": "30.000–60.000đ/phần", "mota": "Quán bún bò Đò Trai nổi tiếng ở Hồng Lĩnh: nước lèo ngọt thanh, thịt bò tươi, tô đầy đặn ăn kèm sung muối."}, {"loai": "Nhà hàng", "ten": "Cháo Canh Cá Bắc Hà", "dia_chi": "Đường Phan Kính, phường Thành Sen, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.33265, "lon": 105.92146, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán món dân dã Hà Tĩnh: cháo canh cá lóc và các món từ hến sông La theo mùa."}, {"loai": "Nhà hàng", "ten": "Canh cá lóc Dung Thanh", "dia_chi": "301 Nguyễn Du, phường Nguyễn Du, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.35111, "lon": 105.89954, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán canh cá lóc (cháo canh) được nhiều thực khách nhắc đến tại TP. Hà Tĩnh."}, {"loai": "Nhà hàng", "ten": "Bến Hến (làng nghề hến sông La)", "dia_chi": "Bờ sông La, thôn Bến Hến, xã Trường Sơn, tỉnh Hà Tĩnh", "lat": 18.55048, "lon": 105.58232, "gio": "", "dienthoai": "", "gia": "", "mota": "Làng nghề cào hến hơn 300 năm ven sông La, các quán dân dã phục vụ hến xúc bánh đa, canh hến, cháo hến tươi trong ngày."}, {"loai": "Gọi xe", "ten": "Taxi Mai Linh Hà Tĩnh", "dia_chi": "Đường Nguyễn Hoành Từ, phường Đại Nài, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.31619, "lon": 105.90721, "gio": "24/7", "dienthoai": "0239 3 89 89 89", "gia": "", "mota": "Hãng taxi quốc gia, tổng đài hoạt động 24/7, hệ thống xe đời mới phủ khắp Hà Tĩnh."}, {"loai": "Gọi xe", "ten": "Taxi Lam Hồng", "dia_chi": "118 Xuân Diệu, phường Bắc Hà, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.347, "lon": 105.89648, "gio": "", "dienthoai": "0239 3 777 888", "gia": "", "mota": "Hãng taxi địa phương Hà Tĩnh được khách đánh giá cao, phục vụ nội thành và các huyện."}, {"loai": "Gọi xe", "ten": "Taxi Rồng Việt", "dia_chi": "Đường Hàm Nghi, phường Hà Huy Tập, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.33788, "lon": 105.89555, "gio": "", "dienthoai": "0239 3 883 883", "gia": "", "mota": "Hãng taxi Hà Tĩnh, phủ sóng TP. Hà Tĩnh và các tuyến liên huyện."}, {"loai": "Gọi xe", "ten": "Taxi Hoa Sim", "dia_chi": "Ngã 3 Formosa, phường Kỳ Liên, TX. Kỳ Anh, tỉnh Hà Tĩnh", "lat": 18.02179, "lon": 106.40589, "gio": "", "dienthoai": "0239 3 78 78 78", "gia": "", "mota": "Hãng taxi phục vụ khu vực Kỳ Anh – Vũng Áng – Formosa, thuận tiện di chuyển khi ăn mực nhảy cảng."}, {"loai": "Gọi xe", "ten": "Taxi Mận Vũ", "dia_chi": "Số 8 Lê Quảng Ý, phường Hưng Trí, TX. Kỳ Anh, tỉnh Hà Tĩnh", "lat": 18.03521, "lon": 106.28899, "gio": "", "dienthoai": "0239 3 730 730", "gia": "", "mota": "Hãng taxi tại Kỳ Anh, phục vụ khu vực Kỳ Anh và vùng lân cận."}, {"loai": "Gọi xe", "ten": "Taxi Open99", "dia_chi": "381 Trần Phú, phường Thạch Linh, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.34975, "lon": 105.88429, "gio": "", "dienthoai": "0239 3 838 383", "gia": "", "mota": "Hãng taxi TP. Hà Tĩnh, giá cạnh tranh, đặt xe nhanh qua tổng đài."}, {"loai": "Gọi xe", "ten": "Xe điện du lịch Thiên Cầm", "dia_chi": "Khu du lịch biển Thiên Cầm, tỉnh Hà Tĩnh", "lat": 18.27582, "lon": 106.09946, "gio": "", "dienthoai": "", "gia": "50.000đ/vòng (7–8 người)", "mota": "Xe điện dạo một vòng quanh khu du lịch Thiên Cầm: làng chài, bãi biển và các chùa."}, {"loai": "Khách sạn", "ten": "Melia Vinpearl Hà Tĩnh", "dia_chi": "Ngã tư Hà Huy Tập, phường Hà Huy Tập, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.33713, "lon": 105.89522, "gio": "", "dienthoai": "02393638866", "gia": "Từ 850.000đ/đêm", "mota": "Khách sạn 5 sao đầu tiên của Hà Tĩnh, kiến trúc hình đóa hoa sen, nhà hàng Skyview tầng 36 view panorama."}, {"loai": "Khách sạn", "ten": "Melia Vinpearl Cua Sot Beach Resort", "dia_chi": "Bãi biển Xuân Hải, xã Thịnh Lộc, huyện Lộc Hà, tỉnh Hà Tĩnh", "lat": 18.48968, "lon": 105.8923, "gio": "", "dienthoai": "0284 458 1718", "gia": "Từ 2.070.000đ/đêm", "mota": "Khu nghỉ dưỡng 5 sao kiến trúc châu Âu bên bãi biển Xuân Hải, cách TP. Hà Tĩnh khoảng 15km."}, {"loai": "Khách sạn", "ten": "Mường Thanh Hà Tĩnh", "dia_chi": "Quốc lộ 1A, ngã tư Khu kinh tế Vũng Áng, huyện Kỳ Anh, tỉnh Hà Tĩnh", "lat": 18.05067, "lon": 106.35706, "gio": "", "dienthoai": "1900 5454 40", "gia": "Từ 600.000đ/đêm", "mota": "Khách sạn 4 sao 246 phòng tại cửa ngõ Khu kinh tế Vũng Áng, có hồ bơi, spa, hội trường lớn."}, {"loai": "Khách sạn", "ten": "Tre Nguồn Thiên Cầm Resort", "dia_chi": "Bãi biển Thiên Cầm, xã Thiên Cầm, huyện Cẩm Xuyên, tỉnh Hà Tĩnh", "lat": 18.2758, "lon": 106.08147, "gio": "", "dienthoai": "02393 757 888", "gia": "", "mota": "Resort 3 sao bungalow hướng biển ngay mặt bãi tắm trung tâm Thiên Cầm, không gian xanh yên tĩnh."}, {"loai": "Khách sạn", "ten": "Seabird Hotel Thiên Cầm", "dia_chi": "Đường Phúc Hải, xã Thiên Cầm, huyện Cẩm Xuyên, tỉnh Hà Tĩnh", "lat": 18.27648, "lon": 106.09648, "gio": "", "dienthoai": "", "gia": "Từ 1.590.000đ/đêm", "mota": "Khách sạn bãi biển 167 phòng cách bãi Thiên Cầm 5 phút, có hồ bơi ngoài trời và 2 nhà hàng."}, {"loai": "Khách sạn", "ten": "Thiên Cầm Xanh Hotel", "dia_chi": "Đường Nguyễn Thị Bích Châu (bờ kè), xã Thiên Cầm, huyện Cẩm Xuyên, tỉnh Hà Tĩnh", "lat": 18.27209, "lon": 106.10655, "gio": "", "dienthoai": "", "gia": "1.135.000–1.935.000đ/đêm", "mota": "Khách sạn ngay sát biển Thiên Cầm, lý tưởng ngắm bình minh và hoàng hôn."}, {"loai": "Khách sạn", "ten": "Mường Thanh Luxury Xuân Thành", "dia_chi": "Thôn Thành Vân, xã Xuân Thành, huyện Nghi Xuân, tỉnh Hà Tĩnh", "lat": 18.62987, "lon": 105.8112, "gio": "", "dienthoai": "", "gia": "Từ 1.313.000đ/đêm", "mota": "Khách sạn 4.5 sao trong quần thể biển Xuân Thành, gần sân golf, dịch vụ đẳng cấp."}, {"loai": "Khách sạn", "ten": "Quỳnh Viên Resort", "dia_chi": "Thôn Bắc Hải, xã Thạch Hải, huyện Thạch Hà, tỉnh Hà Tĩnh", "lat": 18.39049, "lon": 105.88995, "gio": "", "dienthoai": "0868 355 955", "gia": "", "mota": "Resort biển gần TP. Hà Tĩnh với không gian sân vườn yên tĩnh, bãi biển riêng."}, {"loai": "Khách sạn", "ten": "BMC Plaza Hà Tĩnh", "dia_chi": "06 Phan Đình Phùng, phường Bắc Hà, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.33918, "lon": 105.89973, "gio": "", "dienthoai": "", "gia": "Từ 527.000đ/đêm", "mota": "Khách sạn 4 sao trung tâm TP. Hà Tĩnh, tiện nghi hiện đại, giá tốt."}, {"loai": "Khách sạn", "ten": "Khách sạn Eagle", "dia_chi": "268 Trần Phú, phường Nguyễn Du, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.35103, "lon": 105.88371, "gio": "", "dienthoai": "", "gia": "Từ 689.000đ/đêm", "mota": "Khách sạn 3.5 sao trung tâm thành phố, có bồn tắm nước nóng và quầy bar bên hồ bơi."}, {"loai": "Khách sạn", "ten": "Khách sạn Hồng Lĩnh", "dia_chi": "43 Trần Phú, phường Bắc Hồng, thị xã Hồng Lĩnh, tỉnh Hà Tĩnh", "lat": 18.52906, "lon": 105.6966, "gio": "", "dienthoai": "", "gia": "Từ 727.000đ/đêm", "mota": "Khách sạn trung tâm thị xã Hồng Lĩnh, thuận tiện đi chùa Hương Tích."}, {"loai": "Khách sạn", "ten": "Khách sạn Hương Sen", "dia_chi": "2 Nguyễn Tất Thành, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.34887, "lon": 105.897, "gio": "", "dienthoai": "", "gia": "200.000–500.000đ/đêm", "mota": "Khách sạn bình dân 25 phòng giữa trung tâm TP. Hà Tĩnh, sạch sẽ, nhân viên nhiệt tình."}, {"loai": "Cà phê", "ten": "Highlands Coffee Vincom Hà Tĩnh", "dia_chi": "Vincom Hà Tĩnh, Hà Huy Tập, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.33038, "lon": 105.90269, "gio": "6:00–22:30", "dienthoai": "1900 1755", "gia": "29.000–65.000đ", "mota": "Chuỗi cà phê nổi tiếng tại vị trí đẹp nhất Vincom Hà Tĩnh, nhiều góc check-in xinh."}, {"loai": "Cà phê", "ten": "Cà phê Mộc", "dia_chi": "40 Nguyễn Huy Oánh, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.3509, "lon": 105.89341, "gio": "6:00–22:30", "dienthoai": "0961 516 678", "gia": "", "mota": "Quán nổi tiếng với cà phê cốt dừa, nội thất gỗ sang trọng, không gian ấm cúng hợp nhóm bạn."}, {"loai": "Cà phê", "ten": "Happy House Coffee", "dia_chi": "02A Xuân Diệu, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.34041, "lon": 105.89794, "gio": "", "dienthoai": "0239 3886866", "gia": "", "mota": "Quán view đẹp, rộng như wonderland của Hà Tĩnh, có khu vui chơi cho trẻ em và góc yên tĩnh làm việc."}, {"loai": "Cà phê", "ten": "Tiệm cà phê 1977", "dia_chi": "17 Hà Huy Tập, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.3368, "lon": 105.8973, "gio": "", "dienthoai": "0773331977", "gia": "", "mota": "Quán phong cách hoài cổ thập niên 70, ban ngày yên tĩnh đọc sách, tối có acoustic."}, {"loai": "Cà phê", "ten": "King Sales Coffee & Tea", "dia_chi": "262 Trần Phú, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.35042, "lon": 105.88415, "gio": "", "dienthoai": "084 990 9999", "gia": "", "mota": "Quán 2 tầng với hồ cá koi rộng, tầng 2 decor phong cách Hồng Kông, nhiều góc sống ảo."}, {"loai": "Cà phê", "ten": "Mochi Garden Coffee", "dia_chi": "33 Võ Liêm Sơn, phường Nam Hà, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.3358, "lon": 105.90038, "gio": "", "dienthoai": "0813351335", "gia": "", "mota": "Quán sân vườn yên tĩnh với nhiều tiểu cảnh xanh, thích hợp thư giãn và chụp ảnh."}, {"loai": "Cà phê", "ten": "King Koi Coffee", "dia_chi": "01 Trường Chinh, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.34171, "lon": 105.88778, "gio": "7:00–23:00", "dienthoai": "091 194 39 99", "gia": "30.000–100.000đ", "mota": "Quán cà phê cá koi phong cách Nhật, hồ cá koi lớn, đồ uống đa dạng."}, {"loai": "Cà phê", "ten": "VOCO Coffee", "dia_chi": "316 Nguyễn Du, TP. Hà Tĩnh, tỉnh Hà Tĩnh", "lat": 18.35863, "lon": 105.89906, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán cà phê được cộng đồng TikTok giới trẻ Hà Tĩnh rỉ tai check-in."}, {"loai": "Điểm du lịch", "ten": "Bãi biển Thiên Cầm", "dia_chi": "xã Thiên Cầm, tỉnh Hà Tĩnh", "lat": 18.27582, "lon": 106.09946, "gio": "Mở cả ngày", "dienthoai": "", "gia": "Miễn phí", "mota": "Bãi biển đẹp nhất Hà Tĩnh với bờ cát trắng mịn, nước trong xanh hình cánh cung ôm chân núi Thiên Cầm và núi Đầu Voi."}, {"loai": "Điểm du lịch", "ten": "Khu di tích lịch sử Ngã ba Đồng Lộc", "dia_chi": "xã Đồng Lộc, tỉnh Hà Tĩnh", "lat": 18.40213, "lon": 105.73928, "gio": "07:00–18:00", "dienthoai": "02393 844 010", "gia": "10.000đ/người; trẻ em miễn phí; xe điện 10.000đ/lượt", "mota": "Di tích quốc gia đặc biệt tưởng niệm 10 nữ thanh niên xung phong hy sinh ngày 24/07/1968 trong kháng chiến chống Mỹ."}, {"loai": "Điểm du lịch", "ten": "Chùa Hương Tích", "dia_chi": "xã Thiên Lộc, tỉnh Hà Tĩnh", "lat": 18.47131, "lon": 105.76625, "gio": "Mở cửa quanh năm", "dienthoai": "", "gia": "Vé cổng 20.000đ/người; cáp treo khứ hồi 160.000–200.000đ; xe điện khứ hồi ~70.000đ", "mota": "Chùa cổ từ thế kỷ XIII trên đỉnh Hương Tích của dãy Hồng Lĩnh (cao 650m), được mệnh danh 'Hoan Châu đệ nhất danh lam'."}, {"loai": "Điểm du lịch", "ten": "Khu di tích Đại thi hào Nguyễn Du", "dia_chi": "xã Tiên Điền, tỉnh Hà Tĩnh", "lat": 18.66498, "lon": 105.76636, "gio": "", "dienthoai": "02393 826 599", "gia": "", "mota": "Quần thể di tích quốc gia đặc biệt quê hương Nguyễn Du với đền thờ họ Nguyễn, bảo tàng, nhà lưu niệm và khu mộ đại thi hào."}, {"loai": "Điểm du lịch", "ten": "Bãi biển Xuân Thành", "dia_chi": "xã Xuân Thành, tỉnh Hà Tĩnh", "lat": 18.64213, "lon": 105.80717, "gio": "Mở cả ngày", "dienthoai": "", "gia": "Miễn phí", "mota": "Bãi biển hoang sơ dài 6km với sông nước ngọt Mỹ Dương chảy song song, hàng phi lao xanh và làng chài nguyên sơ."}, {"loai": "Điểm du lịch", "ten": "Hồ Kẻ Gỗ", "dia_chi": "xã Cẩm Mỹ, tỉnh Hà Tĩnh", "lat": 18.22232, "lon": 105.93107, "gio": "Mở cả ngày", "dienthoai": "", "gia": "Miễn phí", "mota": "Hồ nước nhân tạo lớn nhất Hà Tĩnh nằm trong khu bảo tồn thiên nhiên Kẻ Gỗ, cảnh hoang sơ thơ mộng, phù hợp cắm trại."}, {"loai": "Điểm du lịch", "ten": "Núi Hồng Lĩnh", "dia_chi": "xã Thiên Lộc, tỉnh Hà Tĩnh", "lat": 18.48462, "lon": 105.75501, "gio": "", "dienthoai": "", "gia": "", "mota": "Dãy núi 99 đỉnh (cao nhất 678m) trải dài 30km², biểu tượng văn hóa tâm linh Hà Tĩnh với hàng trăm đền, chùa, miếu."}, {"loai": "Điểm du lịch", "ten": "Chùa Chân Tiên", "dia_chi": "xã Thịnh Lộc, tỉnh Hà Tĩnh", "lat": 18.52221, "lon": 105.86025, "gio": "", "dienthoai": "", "gia": "", "mota": "Chùa cổ thời Trần (thế kỷ XIII) trên đỉnh Tiên An, nổi tiếng với tảng đá mang dấu 'chân tiên' và rừng thông xanh, di tích quốc gia từ 1992."}, {"loai": "Điểm du lịch", "ten": "Đền Cả", "dia_chi": "xóm Phú Ích, xã Ích Hậu, huyện Lộc Hà (cũ), tỉnh Hà Tĩnh", "lat": 18.43693, "lon": 105.8354, "gio": "", "dienthoai": "", "gia": "", "mota": "Ngôi đền cổ từ năm 1475 thờ Tam Tòa Đại Vương nhà Lý (Lý Nhật Quang, Lý Đạo Thành, Lý Thái Giai), nổi tiếng linh thiêng bậc nhất Hà Tĩnh."}, {"loai": "Điểm du lịch", "ten": "Đền Củi (Đền thờ Quan Hoàng Mười)", "dia_chi": "xã Xuân Hồng, tỉnh Hà Tĩnh", "lat": 18.60518, "lon": 105.69182, "gio": "07:00–18:00", "dienthoai": "", "gia": "Miễn phí", "mota": "Ngôi đền thờ Đức Quan Hoàng Mười, địa chỉ tâm linh nổi tiếng bậc nhất Hà Tĩnh với kiến trúc cổ kính."}, {"loai": "Điểm du lịch", "ten": "Khu lưu niệm cố Tổng Bí thư Trần Phú", "dia_chi": "xã Đức Thọ (trước đây xã Tùng Ảnh), tỉnh Hà Tĩnh", "lat": 18.52878, "lon": 105.56541, "gio": "", "dienthoai": "", "gia": "", "mota": "Khu di tích quốc gia gồm khu mộ, nhà thờ và nhà trưng bày về cuộc đời Tổng Bí thư đầu tiên của Đảng Trần Phú."}, {"loai": "Điểm du lịch", "ten": "Khu kinh tế Vũng Áng", "dia_chi": "phường Vũng Áng, tỉnh Hà Tĩnh", "lat": 18.06548, "lon": 106.30139, "gio": "", "dienthoai": "", "gia": "", "mota": "Khu kinh tế trọng điểm Bắc Trung Bộ với cụm cảng nước sâu Vũng Áng – Sơn Dương, gần bãi biển Kỳ Xuân và đèo Ngang."}, {"loai": "Điểm du lịch", "ten": "Đèo Ngang", "dia_chi": "phường Hoành Sơn, tỉnh Hà Tĩnh (ranh giới Hà Tĩnh – Quảng Trị)", "lat": 18.01018, "lon": 106.44841, "gio": "", "dienthoai": "", "gia": "", "mota": "Con đèo dài 6km trên dãy Hoành Sơn (đỉnh cao ~250m), ranh giới tự nhiên Hà Tĩnh – Quảng Trị, còn dấu tích Hoành Sơn Quan (1833)."}, {"loai": "Điểm du lịch", "ten": "Làng cá Cửa Sót", "dia_chi": "xã Thạch Kim, huyện Lộc Hà (cũ), tỉnh Hà Tĩnh", "lat": 18.45112, "lon": 105.92016, "gio": "Chợ cá nhộn nhịp nhất khoảng 05:00 sáng", "dienthoai": "", "gia": "", "mota": "Cảng cá – chợ đầu mối hải sản lớn nhất Hà Tĩnh, nơi trải nghiệm nhịp sống nhộn nhịp của làng chài Thạch Kim."}, {"loai": "Điểm du lịch", "ten": "Quần thể di tích Hải Thượng Lãn Ông Lê Hữu Trác", "dia_chi": "thôn Hải Thượng, xã Hương Sơn (trước đây xã Sơn Trung), tỉnh Hà Tĩnh", "lat": 18.5295, "lon": 105.43351, "gio": "Cả ngày", "dienthoai": "", "gia": "Miễn phí", "mota": "Quần thể di tích quốc gia đặc biệt (khu mộ, tượng đài, chùa Tượng Sơn, nhà thờ) tôn vinh Đại danh y Lê Hữu Trác."}];
+var map = L.map("map").setView([18.4, 105.85], 10.0);
+var gStreet = L.tileLayer("https://{s}.google.com/vt/lyrs=m&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gHybrid = L.tileLayer("https://{s}.google.com/vt/lyrs=y&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gTerrain = L.tileLayer("https://{s}.google.com/vt/lyrs=p&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"OpenStreetMap"});
+var gTraffic = L.tileLayer("https://{s}.google.com/vt/lyrs=h,traffic&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+gHybrid.addTo(map);
+gTraffic.addTo(map);
+var ICONS = {"Nhà hàng": "🍽️", "Gọi xe": "🚕", "Khách sạn": "🏨", "Cà phê": "☕", "Điểm du lịch": "🏞️"};
+var BADGES = {"Nhà hàng": "nh", "Gọi xe": "gx", "Khách sạn": "ks", "Cà phê": "cf", "Điểm du lịch": "dl"};
+function iconFor(loai){
+  var e = ICONS[loai] || "\uD83D\uDCCD";
+  return L.divIcon({className:"", html:'<div class="poi-icon">'+e+'</div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-14]});
+}
+function badgeCls(loai){
+  return BADGES[loai] || "xx";
+}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function popupHtml(d){
+  var h = '<h3>'+esc(d.ten)+'</h3>';
+  h += '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span></div>';
+  h += '<div>\uD83D\uDCCD '+esc(d.dia_chi)+'</div>';
+  if(d.gio) h += '<div>\uD83D\uDD50 '+esc(d.gio)+'</div>';
+  if(d.dienthoai) h += '<div>\uD83D\uDCDE <a href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">'+esc(d.dienthoai)+'</a></div>';
+  if(d.gia) h += '<div>\uD83D\uDCB0 '+esc(d.gia)+'</div>';
+  if(d.mota) h += '<div style="margin-top:4px;color:#444;">'+esc(d.mota)+'</div>';
+  h += '<div class="btns">';
+  h += '<a class="gm" target="_blank" href="https://www.google.com/maps/search/?api=1&query='+d.lat+','+d.lon+'">M\u1edf tr\u00ean Google Maps</a>';
+  h += '<a class="dir" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+d.lat+','+d.lon+'">D\u1eabn \u0111\u01b0\u1eddng t\u1edbi \u0111\u00e2y</a>';
+  if(d.dienthoai) h += '<a class="tel" href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">G\u1ecdi \u0111i\u1ec7n</a>';
+  h += '</div>';
+  return h;
+}
+var markers = [];
+var listEl = document.getElementById("list");
+var curFilter = "all";
+function render(){
+  listEl.innerHTML = "";
+  markers.forEach(function(m){ map.removeLayer(m); });
+  markers = [];
+  var q = document.getElementById("search").value.toLowerCase();
+  var shown = 0;
+  DATA.forEach(function(d, i){
+    if(curFilter !== "all" && d.loai !== curFilter) return;
+    if(q && (d.ten+" "+d.dia_chi+" "+d.mota).toLowerCase().indexOf(q) < 0) return;
+    shown++;
+    var mk = L.marker([d.lat, d.lon], {icon: iconFor(d.loai)}).addTo(map);
+    mk.bindPopup(popupHtml(d));
+    markers.push(mk);
+    var div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span><span class="t">'+esc(d.ten)+'</span></div><div class="a">'+esc(d.dia_chi)+'</div>';
+    (function(m){ div.onclick = function(){ map.setView(m.getLatLng(), 16); m.openPopup(); }; })(mk);
+    listEl.appendChild(div);
+  });
+  document.getElementById("count").textContent = "Hi\u1ec3n th\u1ecb "+shown+"/"+DATA.length+" \u0111\u1ecba \u0111i\u1ec3m";
+}
+document.getElementById("search").addEventListener("input", render);
+var fbtns = document.querySelectorAll("#filters button");
+fbtns.forEach(function(b){
+  b.addEventListener("click", function(){
+    fbtns.forEach(function(x){ x.classList.remove("active"); });
+    b.classList.add("active");
+    curFilter = b.getAttribute("data-f");
+    render();
+  });
+});
+render();
+//]]>
+
+</script>
+</body>
+</html>

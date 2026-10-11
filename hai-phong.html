@@ -1,0 +1,797 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="vi" lang="vi">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bản đồ Bản đồ du lịch Hải Phòng</title>
+<style type="text/css">
+/*<![CDATA[*/
+
+/* required styles */
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+/* Prevents IE11 from highlighting tiles in blue */
+.leaflet-tile::selection {
+	background: transparent;
+}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */
+.leaflet-container .leaflet-overlay-pane svg {
+	max-width: none !important;
+	max-height: none !important;
+	}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+	max-width: none !important;
+	max-height: none !important;
+	width: auto;
+	padding: 0;
+	}
+
+.leaflet-container img.leaflet-tile {
+	/* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
+	mix-blend-mode: plus-lighter;
+}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	/* Fallback for FF which doesn't support pinch-zoom */
+	touch-action: none;
+	touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	behavior: url(#default#VML);
+	display: inline-block;
+	position: absolute;
+	}
+
+
+/* control positioning */
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+/* zoom and fade animations */
+
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+svg.leaflet-zoom-animated {
+	will-change: transform;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+/* cursors */
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor:         grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor:         grabbing;
+	}
+
+/* marker & overlays interactivity */
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+
+/* visual tweaks */
+
+.leaflet-container {
+	background: #ddd;
+	outline-offset: 1px;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+/* general typography */
+.leaflet-container {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	}
+
+
+/* general toolbar styles */
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+/* zoom control */
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+/* layers control */
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	background-image: url(images/layers.png);
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: url(images/layers-2x.png);
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	font-size: 13px;
+	font-size: 1.08333em;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+/* Default icon URLs */
+.leaflet-default-icon-path { /* used only in path-guessing heuristic, see L.Icon.Default */
+	background-image: url(images/marker-icon.png);
+	}
+
+
+/* attribution and scale controls */
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	line-height: 1.4;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover,
+.leaflet-control-attribution a:focus {
+	text-decoration: underline;
+	}
+.leaflet-attribution-flag {
+	display: inline !important;
+	vertical-align: baseline !important;
+	width: 1em;
+	height: 0.6669em;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px #fff;
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+/* popup */
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 24px 13px 20px;
+	line-height: 1.3;
+	font-size: 13px;
+	font-size: 1.08333em;
+	min-height: 1px;
+	}
+.leaflet-popup-content p {
+	margin: 17px 0;
+	margin: 1.3em 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-top: -1px;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+	pointer-events: auto;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: none;
+	text-align: center;
+	width: 24px;
+	height: 24px;
+	font: 16px/24px Tahoma, Verdana, sans-serif;
+	color: #757575;
+	text-decoration: none;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover,
+.leaflet-container a.leaflet-popup-close-button:focus {
+	color: #585858;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	-ms-zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+/* div icon */
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-interactive {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+
+/* Printing */
+
+@media print {
+	/* Prevent printers from removing background-images of controls. */
+	.leaflet-control {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+		}
+	}
+html,body{margin:0;padding:0;height:100%;font-family:Arial,Helvetica,sans-serif;}
+#wrap{display:flex;height:100vh;}
+#panel{width:330px;min-width:330px;background:#fff;border-right:1px solid #ddd;display:flex;flex-direction:column;z-index:1000;}
+#panel h2{margin:0;padding:12px 14px;background:#1F6F3B;color:#fff;font-size:16px;}
+#panel .sub{padding:8px 14px;font-size:12px;color:#555;border-bottom:1px solid #eee;}
+#search{margin:10px 14px 4px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:14px;}
+#filters{display:flex;gap:6px;padding:8px 14px;flex-wrap:wrap;}
+#filters button{flex:1;padding:7px 4px;border:1px solid #1F6F3B;background:#fff;color:#1F6F3B;border-radius:6px;font-size:13px;cursor:pointer;white-space:nowrap;}
+#filters button.active{background:#1F6F3B;color:#fff;}
+#list{flex:1;overflow-y:auto;padding:0 0 10px;}
+.item{padding:9px 14px;border-bottom:1px solid #f0f0f0;cursor:pointer;}
+.item:hover{background:#f4f9f5;}
+.item .t{font-weight:bold;font-size:14px;}
+.item .a{font-size:12px;color:#666;margin-top:2px;}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;color:#fff;margin-right:6px;}
+.badge.nh{background:#e67e22;} .badge.ks{background:#2980b9;} .badge.dl{background:#27ae60;} .badge.cf{background:#8e5a2b;} .badge.xx{background:#7f8c8d;}
+#map{flex:1;height:100vh;}
+.poi-icon{font-size:22px;text-align:center;line-height:30px;width:30px;height:30px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.4);}
+.leaflet-popup-content{font-size:13px;line-height:1.5;min-width:230px;}
+.leaflet-popup-content h3{margin:0 0 6px;font-size:15px;}
+.btns{margin-top:8px;}
+.btns a{display:inline-block;margin:3px 6px 0 0;padding:7px 12px;border-radius:6px;text-decoration:none;font-size:13px;color:#fff;}
+.btns a.gm{background:#1a73e8;} .btns a.dir{background:#1F6F3B;} .btns a.tel{background:#e67e22;}
+@media (max-width:760px){
+  #wrap{flex-direction:column;}
+  #panel{width:100%;min-width:0;max-height:42vh;border-right:none;border-bottom:1px solid #ddd;}
+  #map{height:58vh;}
+}
+/*]]>*/
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="panel">
+    <h2>🗺️ Bản đồ du lịch Hải Phòng</h2>
+    <div class="sub" id="count"></div>
+    <input id="search" type="text" placeholder="Tìm tên, địa chỉ..." />
+    <div id="filters">
+      <button data-f="all" class="active">Tất cả</button>
+      <button data-f="Nhà hàng">🍽️ Ăn</button>
+      <button data-f="Cà phê">☕ Cafe</button>
+      <button data-f="Khách sạn">🏨 Ở</button>
+      <button data-f="Gọi xe">🚕 Gọi xe</button>
+      <button data-f="Điểm du lịch">🏞️ Chơi</button>
+    </div>
+    <div id="list"></div>
+  </div>
+  <div id="map"></div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="text/javascript">
+
+//<![CDATA[
+var DATA = [{"loai": "Nhà hàng", "ten": "Nhà hàng Hải Sản Biển Đông", "dia_chi": "6 Núi Ngọc, thị trấn Cát Bà, TP. Hải Phòng", "lat": 20.72643, "lon": 107.05128, "gio": "", "dienthoai": "", "gia": "~180.000đ/khách", "mota": "Nhà hàng hải sản sạch sẽ, khang trang, giá tốt gần bãi tắm Cát Cò."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Viễn Dương", "dia_chi": "26 Núi Ngọc, thị trấn Cát Bà, TP. Hải Phòng", "lat": 20.72626, "lon": 107.05137, "gio": "07:00–23:59", "dienthoai": "0383 434 443", "gia": "~220.000đ/người", "mota": "Hải sản thả bể tươi sống, khách tự chọn tại bể rồi chế biến theo yêu cầu."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Hải Yến", "dia_chi": "258 đường 1 Tháng 4 (đường Một Tháng Tư), thị trấn Cát Bà, TP. Hải Phòng", "lat": 20.72421, "lon": 107.05023, "gio": "", "dienthoai": "098 276 86 78", "gia": "", "mota": "Hải sản tươi sống bắt tại bể, giá niêm yết, có xe đưa đón tại khách sạn. Tọa độ chỉ là vị trí ước lượng trên đường 1 Tháng 4, cần kiểm tra lại."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Nổi 559 (Hùng Mạnh 559)", "dia_chi": "268 đường 1 Tháng 4, thị trấn Cát Bà, TP. Hải Phòng", "lat": 20.72098, "lon": 107.05126, "gio": "09:00–22:00", "dienthoai": "", "gia": "100.000–300.000đ", "mota": "Nhà bè nổi view vịnh Cái Bèo, kết hợp mô hình nuôi cá lồng bè, hải sản độc lạ."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Sam Hoàng Anh", "dia_chi": "Vạn Hương, Bến Thốc, Đồ Sơn, TP. Hải Phòng", "lat": 20.68384, "lon": 106.79718, "gio": "06:00–22:00", "dienthoai": "", "gia": "từ 50.000đ", "mota": "Nổi tiếng với các món sam (gỏi sam, chả sam...) và hải sản tươi sống bình dân."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Tằng Hậu", "dia_chi": "Bến Thốc, Khu 1, Đồ Sơn, TP. Hải Phòng", "lat": 20.69708, "lon": 106.79278, "gio": "09:00–22:00", "dienthoai": "0313 861 509", "gia": "", "mota": "Không gian rộng, phù hợp đoàn đông, hải sản tươi ngon."}, {"loai": "Nhà hàng", "ten": "TomKang Buffet Hải Sản", "dia_chi": "Đồi Tiên, ngã 3 Bến Nghiêng, Khu 3, phường Vạn Hương, Đồ Sơn, TP. Hải Phòng", "lat": 20.68253, "lon": 106.79917, "gio": "10:00–23:45", "dienthoai": "0982 301 050", "gia": "", "mota": "Buffet hải sản ngoài trời đầu tiên tại Đồ Sơn, phong cách Santorini trên đồi, view thẳng biển."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Trí Hường", "dia_chi": "12 Yết Kiêu, Đồ Sơn, TP. Hải Phòng", "lat": 20.7002, "lon": 106.79014, "gio": "09:00–22:00", "dienthoai": "0313 861 244", "gia": "phải chăng", "mota": "Hải sản mới về mỗi ngày, sức chứa tới 500 khách, ẩm thực biển truyền thống Đồ Sơn."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Tam Dương", "dia_chi": "3 Vạn Hoa, phường Vạn Hương, Đồ Sơn, TP. Hải Phòng", "lat": 20.68476, "lon": 106.79399, "gio": "09:00–23:00", "dienthoai": "", "gia": "~100.000đ/người", "mota": "View đẹp, thực đơn hải sản đa dạng, giá bình dân."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Gió Biển", "dia_chi": "Trung tâm bãi biển Khu 1 – Khu 2, Đồ Sơn, TP. Hải Phòng", "lat": 20.6874, "lon": 106.79477, "gio": "09:00–21:00", "dienthoai": "", "gia": "300.000–2.000.000đ", "mota": "Ngay trung tâm bãi biển Đồ Sơn, vừa ăn hải sản vừa ngắm biển mát."}, {"loai": "Nhà hàng", "ten": "Bánh đa cua Bà Cụ", "dia_chi": "179 Cầu Đất, trung tâm TP. Hải Phòng", "lat": 20.85264, "lon": 106.68551, "gio": "07:00–22:00", "dienthoai": "0904 666 053", "gia": "40.000–50.000đ", "mota": "Quán bánh đa cua đầu tiên ở Hải Phòng, hơn 50 năm, thêm nem cua bể, bánh đa cua bể."}, {"loai": "Nhà hàng", "ten": "Bánh đa cua 48 Lạch Tray", "dia_chi": "48 Lạch Tray, trung tâm TP. Hải Phòng", "lat": 20.84866, "lon": 106.6896, "gio": "", "dienthoai": "", "gia": "", "mota": "Bánh đa cua trứ danh, gạch cua vàng óng, topping đầy đủ tôm, chả lá lốt, bề bề."}, {"loai": "Nhà hàng", "ten": "Quán Thuận Yến", "dia_chi": "88 Trần Nhật Duật, trung tâm TP. Hải Phòng", "lat": 20.85534, "lon": 106.68278, "gio": "", "dienthoai": "", "gia": "", "mota": "Nem cua bể vuông vức giòn rụm, nhân cua tôm đậm đà, gần chợ Cố Đạo."}, {"loai": "Nhà hàng", "ten": "Bún cá cay Lê Lợi", "dia_chi": "66 Lê Lợi, trung tâm TP. Hải Phòng", "lat": 20.85874, "lon": 106.6928, "gio": "", "dienthoai": "", "gia": "", "mota": "Bún cá cay Hải Phòng: nước dùng ngọt từ xương cá, cá trắm chiên giòn, cay đậm đà."}, {"loai": "Nhà hàng", "ten": "Ốc Cảng", "dia_chi": "10 Lê Hồng Phong, trung tâm TP. Hải Phòng", "lat": 20.85289, "lon": 106.70483, "gio": "10:00–14:00, 16:00–23:00", "dienthoai": "0866 439 799", "gia": "20.000–150.000đ/món", "mota": "Quán ốc có tiếng, ốc xào nước sốt hảo hạng và lẩu ốc, decor hiện đại."}, {"loai": "Cà phê", "ten": "Tsunami Cafe & Camping", "dia_chi": "243 Cái Bèo, thị trấn Cát Bà, TP. Hải Phòng", "lat": 20.73228, "lon": 107.0587, "gio": "", "dienthoai": "", "gia": "", "mota": "Cafe camping lưng tựa núi mặt hướng biển, view vịnh Lan Hạ, không gian chill cho nhóm bạn."}, {"loai": "Cà phê", "ten": "Coffe Lepont Bungalow", "dia_chi": "309 Núi Ngọc, thị trấn Cát Bà, TP. Hải Phòng (đường ra bãi tắm Cát Cò 3)", "lat": 20.71786, "lon": 107.04733, "gio": "", "dienthoai": "", "gia": "", "mota": "View hoàng hôn trên biển, yên bình giữa sóng vỗ và thuyền ra vào."}, {"loai": "Cà phê", "ten": "Cat Ba Oasis Bar & Restaurant", "dia_chi": "228 đường 1 Tháng 4, thị trấn Cát Bà, TP. Hải Phòng", "lat": 20.72382, "lon": 107.05012, "gio": "06:30–02:00", "dienthoai": "", "gia": "25.000–150.000đ", "mota": "Bar & cafe phong cách biển, đèn lung linh, nhạc du dương, đồ uống và món ăn nhẹ."}, {"loai": "Cà phê", "ten": "Min&Mup Coffee Tea", "dia_chi": "25 Núi Ngọc, thị trấn Cát Bà, TP. Hải Phòng", "lat": 20.7254, "lon": 107.05004, "gio": "", "dienthoai": "", "gia": "", "mota": "Decor bàn ghế gỗ độc đáo, view biển trước mặt là bãi tắm Cát Cò và Tùng Thu."}, {"loai": "Cà phê", "ten": "Sky Bar", "dia_chi": "đường Hà Nội, phường Hồng Bàng, TP. Hải Phòng", "lat": 20.87036, "lon": 106.65537, "gio": "08:00–23:00", "dienthoai": "", "gia": "40.000–1.000.000đ", "mota": "Sky bar sang trọng trên cao, ngắm toàn cảnh thành phố Hải Phòng về đêm. Geocode chỉ khớp cấp đường, chưa khớp chính xác quán, cần kiểm tra lại."}, {"loai": "Cà phê", "ten": "Délices Coffee", "dia_chi": "23 Minh Khai, Hồng Bàng, TP. Hải Phòng", "lat": 20.86147, "lon": 106.6856, "gio": "", "dienthoai": "", "gia": "45.000–100.000đ", "mota": "Quán cafe nổi tiếng bậc nhất Hải Phòng, không gian sang trọng, tối có nhạc acoustic live. Geocode khớp tên quán ở 43 Điện Biên Phủ, khác địa chỉ nguồn (23 Minh Khai), cần kiểm tra lại."}, {"loai": "Cà phê", "ten": "Bắc Việt Coffee", "dia_chi": "207 Lạch Tray, trung tâm TP. Hải Phòng", "lat": 20.83818, "lon": 106.69525, "gio": "", "dienthoai": "", "gia": "15.000–30.000đ", "mota": "View đẹp ngay nút giao cầu vượt Lạch Tray, decor tỉ mỉ, đồ uống rẻ."}, {"loai": "Cà phê", "ten": "Vivaria Coffee & Trees", "dia_chi": "4B4 lô 26BC Lê Hồng Phong, trung tâm TP. Hải Phòng", "lat": 20.85516, "lon": 106.69775, "gio": "07:00–23:00", "dienthoai": "", "gia": "25.000–45.000đ", "mota": "Quán cafe cây xanh như Đà Lạt thu nhỏ, không gian vườn nhiệt đới, nhiều góc check-in."}, {"loai": "Khách sạn", "ten": "Flamingo Cát Bà Beach Resort", "dia_chi": "Bãi Cát Cò 1-2, xã Đặc khu Cát Hải, TP. Hải Phòng", "lat": 20.72496, "lon": 107.04992, "gio": "", "dienthoai": "", "gia": "", "mota": "Khu nghỉ dưỡng 5 sao gồm 3 tòa ven biển Cát Cò, thiết kế vườn treo xanh, hồ bơi vô cực, tắm khoáng Onsen, spa và view vịnh Lan Hạ."}, {"loai": "Khách sạn", "ten": "The May Legend Cát Bà Beach Resort & Spa", "dia_chi": "Đường Cát Tiên, xã Đặc khu Cát Hải, TP. Hải Phòng", "lat": 20.71827, "lon": 107.05182, "gio": "", "dienthoai": "", "gia": "", "mota": "Resort 5 sao nép mình bên vách núi đảo Cát Bà, phòng và bungalow hướng biển, hồ bơi vô cực, spa, nhà hàng hướng biển, gần bãi Cát Cò."}, {"loai": "Khách sạn", "ten": "Cát Bà Green Hotel", "dia_chi": "225 đường Núi Ngọc, xã Đặc khu Cát Hải, TP. Hải Phòng", "lat": 20.72459, "lon": 107.05302, "gio": "", "dienthoai": "", "gia": "", "mota": "Khách sạn 2 sao giá rẻ giữa trung tâm thị trấn Cát Bà, gần bãi biển Cát Cò và vịnh Lan Hạ, phòng hiện đại, có sân thượng ngắm cảnh."}, {"loai": "Khách sạn", "ten": "Cat Ba Wonder Hotel", "dia_chi": "16 lô 2 đường Núi Ngọc, xã Đặc khu Cát Hải, TP. Hải Phòng", "lat": 20.72633, "lon": 107.05366, "gio": "", "dienthoai": "", "gia": "Từ ~476.000đ/đêm", "mota": "Khách sạn giá rẻ ngay trung tâm Cát Bà, cách bãi biển Cát Cò vài phút đi bộ, có hồ bơi ngoài trời, nhà hàng, phòng gym, ăn sáng phục vụ."}, {"loai": "Khách sạn", "ten": "Dream Dragon Resort", "dia_chi": "Đường Lý Thái Tổ, phường Đồ Sơn, TP. Hải Phòng", "lat": 20.70002, "lon": 106.78015, "gio": "", "dienthoai": "", "gia": "Từ ~2.300.000đ/đêm", "mota": "Resort sang trọng sát biển Đồ Sơn, hồ bơi rộng hướng biển, phòng thiết kế tinh tế, thuận tiện đi Đồi Rồng, Dinh Vua Bảo Đại, đảo Hòn Dấu."}, {"loai": "Khách sạn", "ten": "Tecco Đồ Sơn Hotel & Spa", "dia_chi": "Khu 3, phường Vạn Hương, TP. Hải Phòng", "lat": 20.67931, "lon": 106.80562, "gio": "", "dienthoai": "089 925 00 80", "gia": "", "mota": "Khách sạn 4 sao trong khu du lịch quốc tế Hòn Dấu, kiến trúc tân cổ điển hướng biển, khoảng 100 phòng, nhà hàng và spa, cách bãi biển vài bước chân."}, {"loai": "Khách sạn", "ten": "Hòn Dấu Resort", "dia_chi": "Khu 3, phường Vạn Hương, TP. Hải Phòng", "lat": 20.69383, "lon": 106.79279, "gio": "", "dienthoai": "0225 3864 678", "gia": "1–7 triệu/đêm", "mota": "Resort yên bình trong khu du lịch Hòn Dấu với bể bơi, khu vui chơi, nhà hàng đa dạng ẩm thực, được ví như Đà Lạt thu nhỏ giữa lòng Đồ Sơn."}, {"loai": "Khách sạn", "ten": "Vinpearl Hotel Imperia Hải Phòng", "dia_chi": "Đường Hà Nội, Vinhomes Imperia, phường Hồng Bàng, TP. Hải Phòng", "lat": 20.8614, "lon": 106.67747, "gio": "", "dienthoai": "0225 3266 888", "gia": "", "mota": "Khách sạn 5 sao cao 45 tầng với 352 phòng trong khu đô thị Vinhomes Imperia, vị trí trung tâm, có bar tầng 43 nhìn toàn cảnh thành phố."}, {"loai": "Khách sạn", "ten": "Viet 4 Seasons Hotel", "dia_chi": "275 đường Lạch Tray, phường Ngô Quyền, TP. Hải Phòng", "lat": 20.8335, "lon": 106.69752, "gio": "Mở cửa cả ngày", "dienthoai": "0225 3769 999", "gia": "", "mota": "Khách sạn 4 sao trên trục Lạch Tray sầm uất, phòng ốc tiện nghi hiện đại, có dịch vụ đưa đón sân bay, thuận tiện khám phá ẩm thực trung tâm."}, {"loai": "Khách sạn", "ten": "The Shine Hotel", "dia_chi": "Số 1, lô 22 đường Lê Hồng Phong, phường Ngô Quyền, TP. Hải Phòng", "lat": 20.85373, "lon": 106.70129, "gio": "Mở cửa cả ngày", "dienthoai": "0934 216 889", "gia": "", "mota": "Khách sạn 4 sao quốc tế ngay trung tâm Hải Phòng, 146 phòng nghỉ hiện đại, hệ thống spa hơn 20 phòng, nhà hàng Âu-Á, cách sân bay Cát Bi khoảng 4km."}, {"loai": "Khách sạn", "ten": "Avani Harbour View Hải Phòng", "dia_chi": "12 đường Trần Phú, phường Ngô Quyền, TP. Hải Phòng", "lat": 20.86388, "lon": 106.68925, "gio": "", "dienthoai": "", "gia": "", "mota": "Khách sạn 4 sao phong cách cổ điển Pháp ở vị trí đắc địa trung tâm, hội trường lớn nhất Hải Phòng, chuyên phục vụ hội nghị, sự kiện quy mô lớn."}, {"loai": "Khách sạn", "ten": "Somerset Central TD Haiphong City", "dia_chi": "Tháp A, TD Plaza, lô 20A, đường Lê Hồng Phong, phường Ngô Quyền, TP. Hải Phòng", "lat": 20.84645, "lon": 106.70694, "gio": "", "dienthoai": "", "gia": "Từ ~1.720.000đ/đêm", "mota": "Khách sạn căn hộ 4 sao trong trung tâm thương mại TD Plaza, phòng có bếp và ban công, hồ bơi ngoài trời, gym, rạp chiếu phim, tiện ích mua sắm ngay dưới sảnh."}, {"loai": "Gọi xe", "ten": "Taxi Nam Phát Hải Phòng", "dia_chi": "Xã Lại Xuân, Thủy Nguyên, TP. Hải Phòng", "lat": 21.00526, "lon": 106.5913, "gio": "", "dienthoai": "02253 86 86 86", "gia": "Xe 4 chỗ: mở cửa 14.000đ, ~9.500–13.000đ/km; xe 7 chỗ: mở cửa 20.000đ, ~15.500–18.500đ/km", "mota": "Hãng taxi lâu năm tại Hải Phòng, nổi bật dịch vụ đưa đón sân bay Cát Bi, tổng đài đặt xe 02253.86.86.86, đặt xe qua fanpage và trực tiếp tại các bến xe."}, {"loai": "Gọi xe", "ten": "Taxi Én Vàng Hải Phòng", "dia_chi": "Số 12+13, lô B6, đường Lê Hồng Phong, TP. Hải Phòng", "lat": 20.83771, "lon": 106.71501, "gio": "", "dienthoai": "0225 3777 999", "gia": "Xe 4 chỗ: mở cửa 9.000đ, 15.000đ/km (dưới 16km); xe 7 chỗ: mở cửa 11.000đ, 16.000đ/km (dưới 16km)", "mota": "Hãng taxi màu vàng đặc trưng tại Hải Phòng, có ứng dụng đặt xe HPGo thanh toán đa kênh, tuyến Hải Phòng - Đồ Sơn bao chuyến từ 260.000đ."}, {"loai": "Gọi xe", "ten": "Taxi Hoàng Anh Hải Phòng", "dia_chi": "619 đường Nguyễn Bỉnh Khiêm, phường Đông Hải, TP. Hải Phòng", "lat": 20.84581, "lon": 106.71377, "gio": "", "dienthoai": "0225 3 222 222", "gia": "Xe 5 chỗ hạng A: mở cửa 12.000đ/0,4km, 13.000đ/km tiếp theo; hạng B: 14.000đ/km", "mota": "Hãng taxi xe màu hồng thân thiện, xe đời mới, tổng đài 0225 3 222 222, mạng lưới chi nhánh nhiều tỉnh thành trên cả nước."}, {"loai": "Gọi xe", "ten": "Taxi Vũ Gia Hải Phòng", "dia_chi": "46 đường Trần Nhân Tông, phường Kiến An, TP. Hải Phòng", "lat": 20.81238, "lon": 106.6443, "gio": "Mở cửa cả ngày", "dienthoai": "02253 778 778", "gia": "Xe 4 chỗ: 10.000đ (0-2km), 14.000đ/km (2-5km), 12.000đ/km (trên 5km); xe 7 chỗ: 15.000đ (0-2km), 16.000đ/km (2-5km)", "mota": "Hãng taxi Hải Phòng hoạt động 24/7 với xe 4 và 7 chỗ, tổng đài chung 02253.778.778, có ứng dụng đặt xe trực tuyến, nhận đặt xe trước."}, {"loai": "Gọi xe", "ten": "Xe điện du lịch Cát Bà", "dia_chi": "Trung tâm thị trấn Cát Bà, xã Đặc khu Cát Hải, TP. Hải Phòng", "lat": 20.73623, "lon": 107.03449, "gio": "", "dienthoai": "", "gia": "10.000đ/người/lượt", "mota": "Dịch vụ xe điện chở khách tham quan quanh trung tâm đảo Cát Bà, 10.000đ mỗi người mỗi lượt, tiện cho du khách không có phương tiện cá nhân."}, {"loai": "Gọi xe", "ten": "Công ty TNHH TM & DL Hiệp Hải", "dia_chi": "D9 Đổng Quốc Bình, phường Ngô Quyền, TP. Hải Phòng", "lat": 20.84039, "lon": 106.69579, "gio": "", "dienthoai": "085 609 8888", "gia": "Liên hệ", "mota": "Công ty cho thuê xe du lịch từ 4 đến 45 chỗ tại Hải Phòng, xe mới, giá cạnh tranh, tài xế giàu kinh nghiệm, điều xe trong 15-30 phút nội thành."}, {"loai": "Điểm du lịch", "ten": "Vịnh Lan Hạ", "dia_chi": "Đặc khu Cát Hải, TP. Hải Phòng", "lat": 20.72361, "lon": 107.04639, "gio": "Các chuyến tàu ghép: 7h00, 9h00, 13h30, 15h30", "dienthoai": "", "gia": "Vé tham quan 120.000đ/người lớn; tàu ghép 350.000–650.000đ/khách", "mota": "Vịnh biển với hơn 400 đảo đá vôi được ví như 'đóa hoa lan giáng trần', nổi tiếng với chèo kayak và các làng chài nổi."}, {"loai": "Điểm du lịch", "ten": "Đảo Cát Bà", "dia_chi": "Đặc khu Cát Hải, TP. Hải Phòng", "lat": 20.783, "lon": 106.933, "gio": "", "dienthoai": "", "gia": "", "mota": "'Hòn ngọc' của Vịnh Bắc Bộ, đảo lớn thứ ba Việt Nam, thành phần Di sản thiên nhiên thế giới Vịnh Hạ Long – Quần đảo Cát Bà (UNESCO 2023)."}, {"loai": "Điểm du lịch", "ten": "Đồ Sơn (Khu du lịch biển Đồ Sơn)", "dia_chi": "Phường Đồ Sơn, TP. Hải Phòng", "lat": 20.70876, "lon": 106.79401, "gio": "Cả ngày", "dienthoai": "", "gia": "Miễn phí", "mota": "Khu du lịch biển lâu đời nhất miền Bắc với bãi tắm, núi đá và lễ hội chọi trâu truyền thống."}, {"loai": "Điểm du lịch", "ten": "Khu di tích Côn Sơn – Kiếp Bạc", "dia_chi": "Phường Trần Hưng Đạo, TP. Hải Phòng", "lat": 21.133, "lon": 106.383, "gio": "", "dienthoai": "02203.882.400", "gia": "", "mota": "Di tích quốc gia đặc biệt gắn với Trần Hưng Đạo và Nguyễn Trãi; thành phần Di sản thế giới UNESCO (2025)."}, {"loai": "Điểm du lịch", "ten": "Vườn quốc gia Cát Bà", "dia_chi": "Đặc khu Cát Hải, TP. Hải Phòng (cổng chính trên đường xuyên đảo)", "lat": 20.78514, "lon": 107.00463, "gio": "6h30–17h00 hàng ngày (tham khảo)", "dienthoai": "", "gia": "40.000đ/khách Việt Nam; 80.000đ/khách nước ngoài", "mota": "Khu dự trữ sinh quyển thế giới của UNESCO với rừng nguyên sinh trên núi đá vôi, nơi sinh sống của voọc Cát Bà quý hiếm."}, {"loai": "Điểm du lịch", "ten": "Làng chài Cái Bèo", "dia_chi": "Đặc khu Cát Hải, TP. Hải Phòng", "lat": 20.72995, "lon": 107.05279, "gio": "", "dienthoai": "", "gia": "Thuê tàu riêng khoảng 1,2–1,5 triệu đồng/chuyến", "mota": "Làng chài nổi cổ nhất Việt Nam (di chỉ khảo cổ 4.000–7.000 năm), hàng trăm nhà bè nuôi cá lồng giữa vịnh."}, {"loai": "Điểm du lịch", "ten": "Bãi tắm Cát Cò 1", "dia_chi": "Đặc khu Cát Hải, TP. Hải Phòng", "lat": 20.71803, "lon": 107.05247, "gio": "", "dienthoai": "", "gia": "Miễn phí", "mota": "Bãi tắm đẹp với nước trong, cát mịn, ôm bởi núi đá vôi, nối với Cát Cò 2 bằng cầu gỗ ven biển."}, {"loai": "Điểm du lịch", "ten": "Bãi tắm Cát Cò 2", "dia_chi": "Đặc khu Cát Hải, TP. Hải Phòng", "lat": 20.71947, "lon": 107.05347, "gio": "", "dienthoai": "", "gia": "Miễn phí", "mota": "Bãi tắm hoang sơ giữa hai vách núi đá, lý tưởng để tắm biển và ngắm hoàng hôn."}, {"loai": "Điểm du lịch", "ten": "Bãi tắm Cát Cò 3", "dia_chi": "Đặc khu Cát Hải, TP. Hải Phòng", "lat": 20.71558, "lon": 107.04936, "gio": "", "dienthoai": "", "gia": "Miễn phí", "mota": "Bãi tắm mới, hiện đại, kín gió trong lòng vách núi đá vôi."}, {"loai": "Điểm du lịch", "ten": "Đảo Hòn Dấu (Hải đăng Hòn Dấu)", "dia_chi": "Phường Đồ Sơn, TP. Hải Phòng", "lat": 20.66636, "lon": 106.81641, "gio": "Tàu ra đảo: 6h00–18h00", "dienthoai": "", "gia": "Vé tàu khứ hồi khoảng 100.000đ/người", "mota": "Đảo nhỏ hoang sơ ngoài khơi Đồ Sơn với ngọn hải đăng cổ và đền thờ Nam Hải Thần Vương."}, {"loai": "Điểm du lịch", "ten": "Chùa Hang Đồ Sơn", "dia_chi": "Phường Đồ Sơn, TP. Hải Phòng", "lat": 20.70718, "lon": 106.792, "gio": "Cả ngày", "dienthoai": "", "gia": "50.000đ/người lớn (tham khảo)", "mota": "Ngôi chùa thiên tạo trong hang đá, lưng tựa núi mặt hướng biển, được xem là nơi khởi nguồn Phật giáo Việt Nam."}, {"loai": "Điểm du lịch", "ten": "Biệt thự Bảo Đại Đồ Sơn", "dia_chi": "Đồi Vung, khu 2, phường Đồ Sơn, TP. Hải Phòng", "lat": 20.68748, "lon": 106.79308, "gio": "", "dienthoai": "", "gia": "20.000đ/người", "mota": "Dinh thự kiến trúc Pháp trên đồi Vung (xây năm 1928), nơi nghỉ dưỡng của vua Bảo Đại khi ra Bắc."}, {"loai": "Điểm du lịch", "ten": "Nhà hát Lớn Hải Phòng", "dia_chi": "28 Trần Hưng Đạo, phường Hồng Bàng, TP. Hải Phòng", "lat": 20.85703, "lon": 106.68252, "gio": "Theo lịch biểu diễn", "dienthoai": "", "gia": "Tùy suất diễn", "mota": "Công trình kiến trúc Pháp cổ (hoàn thành 1912), Di tích quốc gia, biểu tượng văn hóa của thành phố Cảng."}, {"loai": "Điểm du lịch", "ten": "Chợ Cát Bi", "dia_chi": "34 Lý Hồng Nhật, phường Hải An, TP. Hải Phòng", "lat": 20.82713, "lon": 106.70899, "gio": "8h00–19h00", "dienthoai": "", "gia": "", "mota": "'Thiên đường ăn vặt' nổi tiếng đất Cảng với bánh đa cua, bánh bèo, chè và đặc sản Hải Phòng giá bình dân."}, {"loai": "Điểm du lịch", "ten": "Pháo đài Thần Công (Cứ điểm 177)", "dia_chi": "239 Đường Cái Bèo, đặc khu Cát Hải, TP. Hải Phòng", "lat": 20.73228, "lon": 107.0587, "gio": "8h00–17h00", "dienthoai": "", "gia": "80.000đ/người lớn; 20.000đ/trẻ em", "mota": "Di tích pháo đài Pháp (1940) trên đỉnh cao 177m, điểm ngắm toàn cảnh quần đảo Cát Bà đẹp nhất."}];
+var map = L.map("map").setView([20.86, 106.68], 10.0);
+var gStreet = L.tileLayer("https://{s}.google.com/vt/lyrs=m&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gHybrid = L.tileLayer("https://{s}.google.com/vt/lyrs=y&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gTerrain = L.tileLayer("https://{s}.google.com/vt/lyrs=p&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"OpenStreetMap"});
+var gTraffic = L.tileLayer("https://{s}.google.com/vt/lyrs=h,traffic&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+gHybrid.addTo(map);
+gTraffic.addTo(map);
+var ICONS = {"Nhà hàng": "🍽️", "Cà phê": "☕", "Khách sạn": "🏨", "Gọi xe": "🚕", "Điểm du lịch": "🏞️"};
+var BADGES = {"Nhà hàng": "nh", "Cà phê": "cf", "Khách sạn": "ks", "Gọi xe": "gx", "Điểm du lịch": "dl"};
+function iconFor(loai){
+  var e = ICONS[loai] || "\uD83D\uDCCD";
+  return L.divIcon({className:"", html:'<div class="poi-icon">'+e+'</div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-14]});
+}
+function badgeCls(loai){
+  return BADGES[loai] || "xx";
+}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function popupHtml(d){
+  var h = '<h3>'+esc(d.ten)+'</h3>';
+  h += '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span></div>';
+  h += '<div>\uD83D\uDCCD '+esc(d.dia_chi)+'</div>';
+  if(d.gio) h += '<div>\uD83D\uDD50 '+esc(d.gio)+'</div>';
+  if(d.dienthoai) h += '<div>\uD83D\uDCDE <a href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">'+esc(d.dienthoai)+'</a></div>';
+  if(d.gia) h += '<div>\uD83D\uDCB0 '+esc(d.gia)+'</div>';
+  if(d.mota) h += '<div style="margin-top:4px;color:#444;">'+esc(d.mota)+'</div>';
+  h += '<div class="btns">';
+  h += '<a class="gm" target="_blank" href="https://www.google.com/maps/search/?api=1&query='+d.lat+','+d.lon+'">M\u1edf tr\u00ean Google Maps</a>';
+  h += '<a class="dir" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+d.lat+','+d.lon+'">D\u1eabn \u0111\u01b0\u1eddng t\u1edbi \u0111\u00e2y</a>';
+  if(d.dienthoai) h += '<a class="tel" href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">G\u1ecdi \u0111i\u1ec7n</a>';
+  h += '</div>';
+  return h;
+}
+var markers = [];
+var listEl = document.getElementById("list");
+var curFilter = "all";
+function render(){
+  listEl.innerHTML = "";
+  markers.forEach(function(m){ map.removeLayer(m); });
+  markers = [];
+  var q = document.getElementById("search").value.toLowerCase();
+  var shown = 0;
+  DATA.forEach(function(d, i){
+    if(curFilter !== "all" && d.loai !== curFilter) return;
+    if(q && (d.ten+" "+d.dia_chi+" "+d.mota).toLowerCase().indexOf(q) < 0) return;
+    shown++;
+    var mk = L.marker([d.lat, d.lon], {icon: iconFor(d.loai)}).addTo(map);
+    mk.bindPopup(popupHtml(d));
+    markers.push(mk);
+    var div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span><span class="t">'+esc(d.ten)+'</span></div><div class="a">'+esc(d.dia_chi)+'</div>';
+    (function(m){ div.onclick = function(){ map.setView(m.getLatLng(), 16); m.openPopup(); }; })(mk);
+    listEl.appendChild(div);
+  });
+  document.getElementById("count").textContent = "Hi\u1ec3n th\u1ecb "+shown+"/"+DATA.length+" \u0111\u1ecba \u0111i\u1ec3m";
+}
+document.getElementById("search").addEventListener("input", render);
+var fbtns = document.querySelectorAll("#filters button");
+fbtns.forEach(function(b){
+  b.addEventListener("click", function(){
+    fbtns.forEach(function(x){ x.classList.remove("active"); });
+    b.classList.add("active");
+    curFilter = b.getAttribute("data-f");
+    render();
+  });
+});
+render();
+//]]>
+
+</script>
+</body>
+</html>
