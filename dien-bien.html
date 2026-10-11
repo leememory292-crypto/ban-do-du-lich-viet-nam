@@ -1,0 +1,797 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="vi" lang="vi">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bản đồ Bản đồ du lịch Điện Biên</title>
+<style type="text/css">
+/*<![CDATA[*/
+
+/* required styles */
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+/* Prevents IE11 from highlighting tiles in blue */
+.leaflet-tile::selection {
+	background: transparent;
+}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */
+.leaflet-container .leaflet-overlay-pane svg {
+	max-width: none !important;
+	max-height: none !important;
+	}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+	max-width: none !important;
+	max-height: none !important;
+	width: auto;
+	padding: 0;
+	}
+
+.leaflet-container img.leaflet-tile {
+	/* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
+	mix-blend-mode: plus-lighter;
+}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	/* Fallback for FF which doesn't support pinch-zoom */
+	touch-action: none;
+	touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	behavior: url(#default#VML);
+	display: inline-block;
+	position: absolute;
+	}
+
+
+/* control positioning */
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+/* zoom and fade animations */
+
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+svg.leaflet-zoom-animated {
+	will-change: transform;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+/* cursors */
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor:         grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor:         grabbing;
+	}
+
+/* marker & overlays interactivity */
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+
+/* visual tweaks */
+
+.leaflet-container {
+	background: #ddd;
+	outline-offset: 1px;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+/* general typography */
+.leaflet-container {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	}
+
+
+/* general toolbar styles */
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+/* zoom control */
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+/* layers control */
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	background-image: url(images/layers.png);
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: url(images/layers-2x.png);
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	font-size: 13px;
+	font-size: 1.08333em;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+/* Default icon URLs */
+.leaflet-default-icon-path { /* used only in path-guessing heuristic, see L.Icon.Default */
+	background-image: url(images/marker-icon.png);
+	}
+
+
+/* attribution and scale controls */
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	line-height: 1.4;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover,
+.leaflet-control-attribution a:focus {
+	text-decoration: underline;
+	}
+.leaflet-attribution-flag {
+	display: inline !important;
+	vertical-align: baseline !important;
+	width: 1em;
+	height: 0.6669em;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px #fff;
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+/* popup */
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 24px 13px 20px;
+	line-height: 1.3;
+	font-size: 13px;
+	font-size: 1.08333em;
+	min-height: 1px;
+	}
+.leaflet-popup-content p {
+	margin: 17px 0;
+	margin: 1.3em 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-top: -1px;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+	pointer-events: auto;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: none;
+	text-align: center;
+	width: 24px;
+	height: 24px;
+	font: 16px/24px Tahoma, Verdana, sans-serif;
+	color: #757575;
+	text-decoration: none;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover,
+.leaflet-container a.leaflet-popup-close-button:focus {
+	color: #585858;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	-ms-zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+/* div icon */
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-interactive {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+
+/* Printing */
+
+@media print {
+	/* Prevent printers from removing background-images of controls. */
+	.leaflet-control {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+		}
+	}
+html,body{margin:0;padding:0;height:100%;font-family:Arial,Helvetica,sans-serif;}
+#wrap{display:flex;height:100vh;}
+#panel{width:330px;min-width:330px;background:#fff;border-right:1px solid #ddd;display:flex;flex-direction:column;z-index:1000;}
+#panel h2{margin:0;padding:12px 14px;background:#1F6F3B;color:#fff;font-size:16px;}
+#panel .sub{padding:8px 14px;font-size:12px;color:#555;border-bottom:1px solid #eee;}
+#search{margin:10px 14px 4px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:14px;}
+#filters{display:flex;gap:6px;padding:8px 14px;flex-wrap:wrap;}
+#filters button{flex:1;padding:7px 4px;border:1px solid #1F6F3B;background:#fff;color:#1F6F3B;border-radius:6px;font-size:13px;cursor:pointer;white-space:nowrap;}
+#filters button.active{background:#1F6F3B;color:#fff;}
+#list{flex:1;overflow-y:auto;padding:0 0 10px;}
+.item{padding:9px 14px;border-bottom:1px solid #f0f0f0;cursor:pointer;}
+.item:hover{background:#f4f9f5;}
+.item .t{font-weight:bold;font-size:14px;}
+.item .a{font-size:12px;color:#666;margin-top:2px;}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;color:#fff;margin-right:6px;}
+.badge.nh{background:#e67e22;} .badge.ks{background:#2980b9;} .badge.dl{background:#27ae60;} .badge.cf{background:#8e5a2b;} .badge.xx{background:#7f8c8d;}
+#map{flex:1;height:100vh;}
+.poi-icon{font-size:22px;text-align:center;line-height:30px;width:30px;height:30px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.4);}
+.leaflet-popup-content{font-size:13px;line-height:1.5;min-width:230px;}
+.leaflet-popup-content h3{margin:0 0 6px;font-size:15px;}
+.btns{margin-top:8px;}
+.btns a{display:inline-block;margin:3px 6px 0 0;padding:7px 12px;border-radius:6px;text-decoration:none;font-size:13px;color:#fff;}
+.btns a.gm{background:#1a73e8;} .btns a.dir{background:#1F6F3B;} .btns a.tel{background:#e67e22;}
+@media (max-width:760px){
+  #wrap{flex-direction:column;}
+  #panel{width:100%;min-width:0;max-height:42vh;border-right:none;border-bottom:1px solid #ddd;}
+  #map{height:58vh;}
+}
+/*]]>*/
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="panel">
+    <h2>🗺️ Bản đồ du lịch Điện Biên</h2>
+    <div class="sub" id="count"></div>
+    <input id="search" type="text" placeholder="Tìm tên, địa chỉ..." />
+    <div id="filters">
+      <button data-f="all" class="active">Tất cả</button>
+      <button data-f="Nhà hàng">🍽️ Ăn</button>
+      <button data-f="Khách sạn">🏨 Ở</button>
+      <button data-f="Cà phê">☕ Cafe</button>
+      <button data-f="Điểm du lịch">🏞️ Chơi</button>
+      <button data-f="Gọi xe">🚕 Gọi xe</button>
+    </div>
+    <div id="list"></div>
+  </div>
+  <div id="map"></div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="text/javascript">
+
+//<![CDATA[
+var DATA = [{"loai": "Nhà hàng", "ten": "Dân Tộc Quán", "dia_chi": "Tổ 5, phường Thanh Trường, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38645, "lon": 103.01152, "gio": "08:00–00:00", "dienthoai": "0912575405", "gia": "70.000–200.000 đồng/món", "mota": "Món dân tộc Thái: gà Tủa Chùa nướng, lợn bản, pa pỉnh tộp, lạp trâu, xôi nếp nương; không gian nhà sàn ấm cúng."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Hương Đồng Nội", "dia_chi": "68B tổ 6, phường Thanh Trường, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38764, "lon": 103.0071, "gio": "", "dienthoai": "", "gia": "110.000–150.000 đồng/món pa pỉnh tộp", "mota": "Pa pỉnh tộp (cá nướng mắc khén), đặc sản Tây Bắc."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Thanh Mai", "dia_chi": "Cạnh cây xăng cầu A1, tổ 5, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38171, "lon": 103.01376, "gio": "08:00–23:00", "dienthoai": "0918075042", "gia": "", "mota": "Dê núi, lợn bản, đặc sản Tây Bắc; nhà gỗ 2 tầng sang trọng."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Hoa Ban Núi", "dia_chi": "Phố 5, phường Thanh Trường, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38338, "lon": 103.01103, "gio": "08:00–24:00", "dienthoai": "0888487222", "gia": "", "mota": "Đặc sản Tây Bắc; 2 tầng, không gian thoáng đãng, phù hợp tiệc liên hoan."}, {"loai": "Nhà hàng", "ten": "Nhà hàng ẩm thực dân tộc Văn Phong", "dia_chi": "06 bản Noong Chứn, phường Nam Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.36889, "lon": 103.00902, "gio": "09:00–22:00", "dienthoai": "0967111232", "gia": "900.000–1.500.000 đồng/mâm", "mota": "Nhà sàn dân tộc Thái; rau rừng, sườn nướng, gà bản; có biểu diễn múa xoè."}, {"loai": "Nhà hàng", "ten": "Lẩu Then quán", "dia_chi": "Phường Nam Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.37876, "lon": 103.02699, "gio": "07:00–23:00", "dienthoai": "0767216666", "gia": "500.000–800.000 đồng/mâm", "mota": "Lẩu đặc sản; đánh giá Google 4.1/5."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Liên Tươi", "dia_chi": "64 Hoàng Văn Thái, phường Mường Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38232, "lon": 103.02033, "gio": "", "dienthoai": "", "gia": "", "mota": "Đặc sản Điện Biên dân dã, giá bình dân."}, {"loai": "Nhà hàng", "ten": "Nhà sàn Lò Bảo Châu", "dia_chi": "Quốc lộ 12, bản Mển, xã Thanh Nưa, huyện Điện Biên, tỉnh Điện Biên", "lat": 21.43038, "lon": 103.00462, "gio": "", "dienthoai": "0366048989", "gia": "", "mota": "Nhà sàn dân tộc Thái; món ăn bản địa Tây Bắc."}, {"loai": "Nhà hàng", "ten": "Tây Bắc Quán", "dia_chi": "Bản Pom Loi, phường Nam Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.37964, "lon": 103.02635, "gio": "", "dienthoai": "", "gia": "", "mota": "Gà đồi, dê núi, lợn mán, gà đen; lẩu, nướng; nhận làm cơm đặt."}, {"loai": "Nhà hàng", "ten": "Vua Cá Tầm Điện Biên", "dia_chi": "Bản Pom Loi, phường Nam Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.37874, "lon": 103.02669, "gio": "", "dienthoai": "0985515174", "gia": "", "mota": "Cá tầm, cá hồi, lẩu, thắng cố ngựa; ẩm thực Tây Bắc."}, {"loai": "Nhà hàng", "ten": "Quán dê Minh Bục", "dia_chi": "12 Phan Đình Giót, phường Mường Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38631, "lon": 103.01658, "gio": "", "dienthoai": "", "gia": "", "mota": "Dê núi đặc sản Điện Biên."}, {"loai": "Nhà hàng", "ten": "Miến ngan Minh Anh", "dia_chi": "Đường Nguyễn Chí Thanh, phường Tân Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38866, "lon": 103.01448, "gio": "Bán đêm và buổi sáng", "dienthoai": "", "gia": "", "mota": "Miến ngan nóng hổi, bán tới khuya."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Song Hỷ", "dia_chi": "236 Nguyễn Chí Thanh, phường Mường Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38484, "lon": 103.01408, "gio": "", "dienthoai": "", "gia": "", "mota": "Nhà hàng ăn uống khu trung tâm thành phố."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Tây Hồ", "dia_chi": "Phường Thanh Trường, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.41788, "lon": 103.00778, "gio": "", "dienthoai": "0973371998", "gia": "", "mota": "Đặc sản Tây Bắc."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Ngọc Mai", "dia_chi": "5 Trần Can, phường Tân Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38873, "lon": 103.01664, "gio": "", "dienthoai": "", "gia": "", "mota": "Nhà hàng cơm, món ăn Việt."}, {"loai": "Khách sạn", "ten": "Mường Thanh Grand Điện Biên Phủ", "dia_chi": "514 Võ Nguyên Giáp, phường Him Lam, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.40066, "lon": 103.02261, "gio": "", "dienthoai": "", "gia": "1.000.000–1.500.000 đồng/đêm", "mota": "Khách sạn 4 sao; hồ bơi ngoài trời, spa, phòng hội nghị; sát đồi A1, hầm Đờ Cát."}, {"loai": "Khách sạn", "ten": "Khách sạn A1", "dia_chi": "3 Hoàng Công Chất, phường Mường Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38462, "lon": 103.01787, "gio": "", "dienthoai": "02153952999", "gia": "", "mota": "Ngay chân đồi A1; 45 phòng tiêu chuẩn 3 sao; massage, nhà hàng."}, {"loai": "Khách sạn", "ten": "Khách sạn Hải Vân", "dia_chi": "488 Võ Nguyên Giáp, phường Him Lam, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.40136, "lon": 103.02282, "gio": "", "dienthoai": "02153828488", "gia": "", "mota": "Cách sân bay Điện Biên Phủ hơn 2km; phòng hiện đại, tiện nghi."}, {"loai": "Khách sạn", "ten": "Khách sạn Long Giang", "dia_chi": "518 Võ Nguyên Giáp, phường Him Lam, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.40048, "lon": 103.02277, "gio": "", "dienthoai": "02153888999", "gia": "", "mota": "Thiết kế hiện đại, ấm cúng; dịch vụ ăn uống, thuê xe, hướng dẫn du lịch."}, {"loai": "Khách sạn", "ten": "Phương Nam Hotel", "dia_chi": "Đường Võ Nguyên Giáp, phường Tân Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.39707, "lon": 103.01924, "gio": "", "dienthoai": "", "gia": "", "mota": "Cách bảo tàng Chiến thắng ~1km, đồi A1 ~2km; phòng đơn đến phòng gia đình."}, {"loai": "Khách sạn", "ten": "Hồng Kỳ Boutique Hotel", "dia_chi": "60 Hoàng Công Chất, phường Mường Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38527, "lon": 103.01887, "gio": "", "dienthoai": "0912259179", "gia": "~300.000 đồng/đêm", "mota": "Gần đồi A1, đi bộ tham quan các di tích; kèm café và nhà hàng; nhân viên nói tiếng Anh."}, {"loai": "Khách sạn", "ten": "Phadin Hotel", "dia_chi": "63 tổ 3, đường Trần Đăng Ninh, phường Thanh Bình, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.39248, "lon": 103.01161, "gio": "", "dienthoai": "", "gia": "", "mota": "Kèm Phadin Coffee & Dessert phong cách châu Âu."}, {"loai": "Khách sạn", "ten": "Him Lam Hotel", "dia_chi": "6 Tô Vĩnh Diện, phường Him Lam, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.40291, "lon": 103.02801, "gio": "", "dienthoai": "", "gia": "", "mota": "74 phòng; gần khu du lịch sinh thái Him Lam."}, {"loai": "Khách sạn", "ten": "Ruby Hotel", "dia_chi": "43 tổ 11, đường Nguyễn Chí Thanh, phường Mường Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.39054, "lon": 103.01487, "gio": "", "dienthoai": "02153835568", "gia": "~700.000 đồng/đêm", "mota": "Khách sạn 3 sao; cách đồi A1 ~1.1km; có cho thuê xe tự lái."}, {"loai": "Khách sạn", "ten": "Đức Thắng Guest House", "dia_chi": "Đường Lò Văn Hoặc, phường Thanh Bình, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.39287, "lon": 103.01105, "gio": "", "dienthoai": "", "gia": "", "mota": "15 phòng; cách cầu Mường Thanh và bảo tàng 5 phút xe; xe đưa đón sân bay."}, {"loai": "Khách sạn", "ten": "Pharma Hotel (Coffee Dược)", "dia_chi": "813 Võ Nguyên Giáp, phường Tân Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.39316, "lon": 103.01649, "gio": "", "dienthoai": "0862629882", "gia": "", "mota": "Kèm quán Coffee Dược view đẹp."}, {"loai": "Khách sạn", "ten": "Thành Nam Hotel", "dia_chi": "11 Hoàng Văn Thái, phường Mường Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38267, "lon": 103.02021, "gio": "", "dienthoai": "", "gia": "", "mota": "Vị trí trung tâm, gần bảo tàng và đồi A1."}, {"loai": "Cà phê", "ten": "Coffee Dược", "dia_chi": "813 Võ Nguyên Giáp, phường Tân Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên (trong Pharma Hotel)", "lat": 21.39316, "lon": 103.01649, "gio": "08:00–23:00", "dienthoai": "0862629882", "gia": "", "mota": "Café trong Pharma Hotel; view đẹp."}, {"loai": "Cà phê", "ten": "Kê Nênh Mountain view coffee", "dia_chi": "Kê Nênh, xã Thanh Minh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38834, "lon": 103.06309, "gio": "07:00–22:00", "dienthoai": "0898087556", "gia": "", "mota": "View núi, thung lũng ruộng bậc thang; sáng săn mây, chiều ngắm hoàng hôn."}, {"loai": "Cà phê", "ten": "King Coffee", "dia_chi": "Trung tâm TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.3867, "lon": 103.02102, "gio": "", "dienthoai": "", "gia": "", "mota": "Quán nổi tiếng, view đẹp, phong cách check-in độc đáo."}, {"loai": "Cà phê", "ten": "Café 56", "dia_chi": "133 Trường Chinh, phường Tân Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.39525, "lon": 103.02377, "gio": "", "dienthoai": "", "gia": "20.000–170.000 đồng", "mota": "Phong cách vintage ấm cúng; có khu vui chơi cho trẻ em."}, {"loai": "Cà phê", "ten": "Café nhạc sống Nét Xưa", "dia_chi": "Đường Trường Chinh (gần trường THCS Tân Bình), phường Tân Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.39606, "lon": 103.0232, "gio": "", "dienthoai": "", "gia": "20.000–40.000 đồng", "mota": "Café nhạc sống, không gian hoài cổ, yên tĩnh."}, {"loai": "Cà phê", "ten": "Phadin Coffee & Dessert", "dia_chi": "Đường Trần Đăng Ninh, phường Tân Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.39224, "lon": 103.01178, "gio": "", "dienthoai": "", "gia": "25.000–60.000 đồng", "mota": "Phong cách châu Âu sang trọng; bánh tráng miệng ngon."}, {"loai": "Cà phê", "ten": "Phương Huyền Café", "dia_chi": "Tổ 5, phường Thanh Bình, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.39641, "lon": 103.02192, "gio": "", "dienthoai": "", "gia": "20.000–40.000 đồng", "mota": "Không gian mở, nhiều cây xanh; hồ cá chép giữa quán."}, {"loai": "Cà phê", "ten": "Cafe Window", "dia_chi": "71 Nguyễn Chí Thanh, phường Tân Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38985, "lon": 103.01478, "gio": "", "dienthoai": "", "gia": "", "mota": "Café khu trung tâm thành phố."}, {"loai": "Điểm du lịch", "ten": "Đồi A1", "dia_chi": "Phường Mường Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38112, "lon": 103.01624, "gio": "", "dienthoai": "", "gia": "", "mota": "Cứ điểm quan trọng nhất của Pháp; nghĩa trang liệt sĩ, hố bom, xe tăng."}, {"loai": "Điểm du lịch", "ten": "Hầm Đờ Cát (hầm de Castries)", "dia_chi": "Phường Thanh Trường, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38473, "lon": 103.01075, "gio": "", "dienthoai": "", "gia": "", "mota": "Hầm chỉ huy tập đoàn cứ điểm Pháp của tướng De Castries."}, {"loai": "Điểm du lịch", "ten": "Tượng đài chiến thắng Điện Biên Phủ", "dia_chi": "Đồi D1, phường Tân Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.39216, "lon": 103.01625, "gio": "", "dienthoai": "", "gia": "", "mota": "Tượng đài trên đồi D1, biểu tượng chiến thắng 1954."}, {"loai": "Điểm du lịch", "ten": "Bảo tàng chiến thắng Điện Biên Phủ", "dia_chi": "Đường Võ Nguyên Giáp, phường Mường Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38093, "lon": 103.01558, "gio": "", "dienthoai": "", "gia": "", "mota": "Lưu giữ hiện vật, tư liệu chiến dịch Điện Biên Phủ 1954."}, {"loai": "Điểm du lịch", "ten": "Cầu Mường Thanh", "dia_chi": "Đường Bế Văn Đàn, phường Mường Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.3865, "lon": 103.01163, "gio": "", "dienthoai": "", "gia": "", "mota": "Cầu lịch sử bắc qua sông Nậm Rốm."}, {"loai": "Điểm du lịch", "ten": "Sở chỉ huy chiến dịch Điện Biên Phủ – Mường Phăng", "dia_chi": "Xã Mường Phăng, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.44525, "lon": 103.1579, "gio": "", "dienthoai": "", "gia": "", "mota": "Sở chỉ huy của Đại tướng Võ Nguyên Giáp; lán, bếp Hoàng Cầm; cách trung tâm ~25km."}, {"loai": "Điểm du lịch", "ten": "Cực Tây A Pa Chải", "dia_chi": "Xã Sín Thầu, huyện Mường Nhé, tỉnh Điện Biên", "lat": 22.38602, "lon": 102.23904, "gio": "", "dienthoai": "", "gia": "", "mota": "Ngã ba biên giới Việt – Lào – Trung; cột mốc số 0; 'một con gà gáy ba nước đều nghe'."}, {"loai": "Điểm du lịch", "ten": "Suối khoáng nóng Hua Pe", "dia_chi": "Xã Thanh Luông, huyện Điện Biên, tỉnh Điện Biên", "lat": 21.40058, "lon": 102.94161, "gio": "", "dienthoai": "", "gia": "", "mota": "Nguồn nước nóng ~60°C; tắm khoáng, nghỉ dưỡng; cạnh hồ Pe Luông; cách TP ~5km."}, {"loai": "Điểm du lịch", "ten": "Bản văn hóa Thái Him Lam (Khu du lịch sinh thái Him Lam)", "dia_chi": "Quốc lộ 279, phường Nam Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.36575, "lon": 103.00873, "gio": "", "dienthoai": "", "gia": "", "mota": "Bản văn hóa dân tộc Thái; nhà sàn lớn; du lịch sinh thái, trải nghiệm văn hóa."}, {"loai": "Điểm du lịch", "ten": "Đồi Độc Lập", "dia_chi": "TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.3867, "lon": 103.02102, "gio": "", "dienthoai": "", "gia": "", "mota": "Cứ điểm Độc Lập trong chiến dịch Điện Biên Phủ."}, {"loai": "Điểm du lịch", "ten": "Đồi Him Lam", "dia_chi": "Phường Him Lam, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.40468, "lon": 103.02942, "gio": "", "dienthoai": "", "gia": "", "mota": "Cứ điểm Him Lam – trận đánh mở màn chiến dịch Điện Biên Phủ."}, {"loai": "Điểm du lịch", "ten": "Chợ đêm Mường Thanh", "dia_chi": "Phường Mường Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.3867, "lon": 103.02102, "gio": "", "dienthoai": "", "gia": "", "mota": "Chợ đêm trung tâm; ẩm thực, quà lưu niệm đặc sản Tây Bắc."}, {"loai": "Điểm du lịch", "ten": "Đền Hoàng Công Chất (Thành Bản Phủ)", "dia_chi": "Xã Noong Hẹt, huyện Điện Biên, tỉnh Điện Biên", "lat": 21.31667, "lon": 103.00385, "gio": "", "dienthoai": "", "gia": "", "mota": "Đền thờ thủ lĩnh nghĩa quân Hoàng Công Chất trong di tích thành Bản Phủ."}, {"loai": "Điểm du lịch", "ten": "Hồ Pá Khoang", "dia_chi": "Xã Pá Khoang, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.43586, "lon": 103.11031, "gio": "", "dienthoai": "", "gia": "", "mota": "'Vịnh Hạ Long trên cạn'; vườn anh đào nở rộ dịp gần Tết."}, {"loai": "Điểm du lịch", "ten": "Đèo Pha Đin", "dia_chi": "Xã Tỏa Tình, huyện Tuần Giáo, tỉnh Điện Biên", "lat": 21.56084, "lon": 103.51587, "gio": "", "dienthoai": "", "gia": "", "mota": "Một trong 'Tứ đại đỉnh đèo' Tây Bắc; cung đường uốn lượn hùng vĩ."}, {"loai": "Gọi xe", "ten": "Taxi Phát Tài (Mường Thanh)", "dia_chi": "19 tổ dân phố 32, phường Mường Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38596, "lon": 103.01482, "gio": "", "dienthoai": "02153838383", "gia": "Mở cửa 5.000 đồng", "mota": "Taxi địa phương; cho thuê xe đưa đón sân bay, xe tham quan du lịch."}, {"loai": "Gọi xe", "ten": "Taxi Mai Linh Điện Biên", "dia_chi": "134 tổ 10, phường Noong Bua, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.38636, "lon": 103.03274, "gio": "", "dienthoai": "02156282828", "gia": "~10.000 đồng/km", "mota": "Hãng taxi toàn quốc; có app đặt xe."}, {"loai": "Gọi xe", "ten": "Taxi Hoa Ban", "dia_chi": "TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.49669, "lon": 103.10281, "gio": "", "dienthoai": "02153898989", "gia": "Khởi điểm ~5.000 đồng", "mota": "Giá cước rẻ, ổn định; cho thuê xe du lịch, cưới hỏi."}, {"loai": "Gọi xe", "ten": "Taxi Him Lam", "dia_chi": "45 tổ 10, phường Nam Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.40468, "lon": 103.02942, "gio": "", "dienthoai": "02153727272", "gia": "", "mota": "Tổng đài phục vụ 24/24."}, {"loai": "Gọi xe", "ten": "Thuê xe máy Tuấn Lê", "dia_chi": "12 Lò Văn Hặc, phường Thanh Bình, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.39267, "lon": 103.01095, "gio": "Luôn mở cửa", "dienthoai": "0908934708", "gia": "150.000–200.000 đồng/ngày", "mota": "Cho thuê xe máy du lịch Điện Biên."}, {"loai": "Gọi xe", "ten": "Thổ địa Điện Biên (thuê xe máy)", "dia_chi": "81 tổ 5, phường Mường Thanh, TP. Điện Biên Phủ, tỉnh Điện Biên", "lat": 21.49669, "lon": 103.10281, "gio": "08:00–17:30", "dienthoai": "0378117227", "gia": "150.000–200.000 đồng/ngày", "mota": "Thuê xe máy + nhà trọ; tư vấn tour bản địa."}];
+var map = L.map("map").setView([21.7, 102.9], 9.0);
+var gStreet = L.tileLayer("https://{s}.google.com/vt/lyrs=m&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gHybrid = L.tileLayer("https://{s}.google.com/vt/lyrs=y&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gTerrain = L.tileLayer("https://{s}.google.com/vt/lyrs=p&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"OpenStreetMap"});
+var gTraffic = L.tileLayer("https://{s}.google.com/vt/lyrs=h,traffic&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+gHybrid.addTo(map);
+gTraffic.addTo(map);
+var ICONS = {"Nhà hàng": "🍽️", "Khách sạn": "🏨", "Cà phê": "☕", "Điểm du lịch": "🏞️", "Gọi xe": "🚕"};
+var BADGES = {"Nhà hàng": "nh", "Khách sạn": "ks", "Cà phê": "cf", "Điểm du lịch": "dl", "Gọi xe": "gx"};
+function iconFor(loai){
+  var e = ICONS[loai] || "\uD83D\uDCCD";
+  return L.divIcon({className:"", html:'<div class="poi-icon">'+e+'</div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-14]});
+}
+function badgeCls(loai){
+  return BADGES[loai] || "xx";
+}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function popupHtml(d){
+  var h = '<h3>'+esc(d.ten)+'</h3>';
+  h += '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span></div>';
+  h += '<div>\uD83D\uDCCD '+esc(d.dia_chi)+'</div>';
+  if(d.gio) h += '<div>\uD83D\uDD50 '+esc(d.gio)+'</div>';
+  if(d.dienthoai) h += '<div>\uD83D\uDCDE <a href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">'+esc(d.dienthoai)+'</a></div>';
+  if(d.gia) h += '<div>\uD83D\uDCB0 '+esc(d.gia)+'</div>';
+  if(d.mota) h += '<div style="margin-top:4px;color:#444;">'+esc(d.mota)+'</div>';
+  h += '<div class="btns">';
+  h += '<a class="gm" target="_blank" href="https://www.google.com/maps/search/?api=1&query='+d.lat+','+d.lon+'">M\u1edf tr\u00ean Google Maps</a>';
+  h += '<a class="dir" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+d.lat+','+d.lon+'">D\u1eabn \u0111\u01b0\u1eddng t\u1edbi \u0111\u00e2y</a>';
+  if(d.dienthoai) h += '<a class="tel" href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">G\u1ecdi \u0111i\u1ec7n</a>';
+  h += '</div>';
+  return h;
+}
+var markers = [];
+var listEl = document.getElementById("list");
+var curFilter = "all";
+function render(){
+  listEl.innerHTML = "";
+  markers.forEach(function(m){ map.removeLayer(m); });
+  markers = [];
+  var q = document.getElementById("search").value.toLowerCase();
+  var shown = 0;
+  DATA.forEach(function(d, i){
+    if(curFilter !== "all" && d.loai !== curFilter) return;
+    if(q && (d.ten+" "+d.dia_chi+" "+d.mota).toLowerCase().indexOf(q) < 0) return;
+    shown++;
+    var mk = L.marker([d.lat, d.lon], {icon: iconFor(d.loai)}).addTo(map);
+    mk.bindPopup(popupHtml(d));
+    markers.push(mk);
+    var div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span><span class="t">'+esc(d.ten)+'</span></div><div class="a">'+esc(d.dia_chi)+'</div>';
+    (function(m){ div.onclick = function(){ map.setView(m.getLatLng(), 16); m.openPopup(); }; })(mk);
+    listEl.appendChild(div);
+  });
+  document.getElementById("count").textContent = "Hi\u1ec3n th\u1ecb "+shown+"/"+DATA.length+" \u0111\u1ecba \u0111i\u1ec3m";
+}
+document.getElementById("search").addEventListener("input", render);
+var fbtns = document.querySelectorAll("#filters button");
+fbtns.forEach(function(b){
+  b.addEventListener("click", function(){
+    fbtns.forEach(function(x){ x.classList.remove("active"); });
+    b.classList.add("active");
+    curFilter = b.getAttribute("data-f");
+    render();
+  });
+});
+render();
+//]]>
+
+</script>
+</body>
+</html>

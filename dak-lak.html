@@ -1,0 +1,797 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="vi" lang="vi">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bản đồ Bản đồ du lịch Đắk Lắk</title>
+<style type="text/css">
+/*<![CDATA[*/
+
+/* required styles */
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+/* Prevents IE11 from highlighting tiles in blue */
+.leaflet-tile::selection {
+	background: transparent;
+}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */
+.leaflet-container .leaflet-overlay-pane svg {
+	max-width: none !important;
+	max-height: none !important;
+	}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+	max-width: none !important;
+	max-height: none !important;
+	width: auto;
+	padding: 0;
+	}
+
+.leaflet-container img.leaflet-tile {
+	/* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
+	mix-blend-mode: plus-lighter;
+}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	/* Fallback for FF which doesn't support pinch-zoom */
+	touch-action: none;
+	touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	behavior: url(#default#VML);
+	display: inline-block;
+	position: absolute;
+	}
+
+
+/* control positioning */
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+/* zoom and fade animations */
+
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+svg.leaflet-zoom-animated {
+	will-change: transform;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+/* cursors */
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor:         grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor:         grabbing;
+	}
+
+/* marker & overlays interactivity */
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+
+/* visual tweaks */
+
+.leaflet-container {
+	background: #ddd;
+	outline-offset: 1px;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+/* general typography */
+.leaflet-container {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	}
+
+
+/* general toolbar styles */
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+/* zoom control */
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+/* layers control */
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	background-image: url(images/layers.png);
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: url(images/layers-2x.png);
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	font-size: 13px;
+	font-size: 1.08333em;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+/* Default icon URLs */
+.leaflet-default-icon-path { /* used only in path-guessing heuristic, see L.Icon.Default */
+	background-image: url(images/marker-icon.png);
+	}
+
+
+/* attribution and scale controls */
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	line-height: 1.4;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover,
+.leaflet-control-attribution a:focus {
+	text-decoration: underline;
+	}
+.leaflet-attribution-flag {
+	display: inline !important;
+	vertical-align: baseline !important;
+	width: 1em;
+	height: 0.6669em;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px #fff;
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+/* popup */
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 24px 13px 20px;
+	line-height: 1.3;
+	font-size: 13px;
+	font-size: 1.08333em;
+	min-height: 1px;
+	}
+.leaflet-popup-content p {
+	margin: 17px 0;
+	margin: 1.3em 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-top: -1px;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+	pointer-events: auto;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: none;
+	text-align: center;
+	width: 24px;
+	height: 24px;
+	font: 16px/24px Tahoma, Verdana, sans-serif;
+	color: #757575;
+	text-decoration: none;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover,
+.leaflet-container a.leaflet-popup-close-button:focus {
+	color: #585858;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	-ms-zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+/* div icon */
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-interactive {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+
+/* Printing */
+
+@media print {
+	/* Prevent printers from removing background-images of controls. */
+	.leaflet-control {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+		}
+	}
+html,body{margin:0;padding:0;height:100%;font-family:Arial,Helvetica,sans-serif;}
+#wrap{display:flex;height:100vh;}
+#panel{width:330px;min-width:330px;background:#fff;border-right:1px solid #ddd;display:flex;flex-direction:column;z-index:1000;}
+#panel h2{margin:0;padding:12px 14px;background:#1F6F3B;color:#fff;font-size:16px;}
+#panel .sub{padding:8px 14px;font-size:12px;color:#555;border-bottom:1px solid #eee;}
+#search{margin:10px 14px 4px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:14px;}
+#filters{display:flex;gap:6px;padding:8px 14px;flex-wrap:wrap;}
+#filters button{flex:1;padding:7px 4px;border:1px solid #1F6F3B;background:#fff;color:#1F6F3B;border-radius:6px;font-size:13px;cursor:pointer;white-space:nowrap;}
+#filters button.active{background:#1F6F3B;color:#fff;}
+#list{flex:1;overflow-y:auto;padding:0 0 10px;}
+.item{padding:9px 14px;border-bottom:1px solid #f0f0f0;cursor:pointer;}
+.item:hover{background:#f4f9f5;}
+.item .t{font-weight:bold;font-size:14px;}
+.item .a{font-size:12px;color:#666;margin-top:2px;}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;color:#fff;margin-right:6px;}
+.badge.nh{background:#e67e22;} .badge.ks{background:#2980b9;} .badge.dl{background:#27ae60;} .badge.cf{background:#8e5a2b;} .badge.xx{background:#7f8c8d;}
+#map{flex:1;height:100vh;}
+.poi-icon{font-size:22px;text-align:center;line-height:30px;width:30px;height:30px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.4);}
+.leaflet-popup-content{font-size:13px;line-height:1.5;min-width:230px;}
+.leaflet-popup-content h3{margin:0 0 6px;font-size:15px;}
+.btns{margin-top:8px;}
+.btns a{display:inline-block;margin:3px 6px 0 0;padding:7px 12px;border-radius:6px;text-decoration:none;font-size:13px;color:#fff;}
+.btns a.gm{background:#1a73e8;} .btns a.dir{background:#1F6F3B;} .btns a.tel{background:#e67e22;}
+@media (max-width:760px){
+  #wrap{flex-direction:column;}
+  #panel{width:100%;min-width:0;max-height:42vh;border-right:none;border-bottom:1px solid #ddd;}
+  #map{height:58vh;}
+}
+/*]]>*/
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="panel">
+    <h2>🗺️ Bản đồ du lịch Đắk Lắk</h2>
+    <div class="sub" id="count"></div>
+    <input id="search" type="text" placeholder="Tìm tên, địa chỉ..." />
+    <div id="filters">
+      <button data-f="all" class="active">Tất cả</button>
+      <button data-f="Nhà hàng">🍽️ Ăn</button>
+      <button data-f="Cà phê">☕ Cafe</button>
+      <button data-f="Khách sạn">🏨 Ở</button>
+      <button data-f="Gọi xe">🚕 Gọi xe</button>
+      <button data-f="Điểm du lịch">🏞️ Chơi</button>
+    </div>
+    <div id="list"></div>
+  </div>
+  <div id="map"></div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="text/javascript">
+
+//<![CDATA[
+var DATA = [{"loai": "Nhà hàng", "ten": "Quán Bà Tám - Cá ngừ đại dương", "dia_chi": "293 Lê Duẩn, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.09847, "lon": 109.31724, "gio": "08:00-20:00", "dienthoai": "0573 841 020", "gia": "30.000đ-150.000đ", "mota": "Đặc sản mắt cá ngừ đại dương hầm thuốc Bắc, trứng cá ngừ chiên; quán nổi tiếng nhất xứ Nẫu, luôn đông khách. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Seafood Garden Canary", "dia_chi": "Đường Mai Xuân Thưởng, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.09223, "lon": 109.30142, "gio": "T2-T6: 11:00-22:00; T7-CN: 10:00-23:00", "dienthoai": "0935 400 377 - 0915 851 377", "gia": "", "mota": "Hải sản tươi sống đa dạng: cá tai tượng, tôm càng xanh; không gian vườn rộng 3 sảnh, giá hợp lý. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Bến Thủy", "dia_chi": "259 Hùng Vương, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.10255, "lon": 109.30724, "gio": "08:00-22:00", "dienthoai": "0903 099 246", "gia": "200.000đ-300.000đ/người", "mota": "Hải sản từ đầm Ô Loan, nổi tiếng mắt cá ngừ đại dương; hơn 20 năm, sức chứa ~400 khách. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Nhà hàng", "ten": "Nhà hàng Cây Dừa", "dia_chi": "352 Lê Duẩn, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.10215, "lon": 109.31447, "gio": "10:00-23:00", "dienthoai": "", "gia": "200.000đ-500.000đ/người", "mota": "Hải sản: mực lá hấp, tôm hùm nướng, lẩu hải sản; không gian rộng, phục vụ chuyên nghiệp. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Nhà hàng", "ten": "Quán hải sản Năm Ánh", "dia_chi": "303 Hùng Vương, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.10562, "lon": 109.30509, "gio": "09:00-23:00", "dienthoai": "", "gia": "200.000đ-300.000đ/người", "mota": "Được dân địa phương yêu thích: ghẹ, cua, tôm, mực tươi sống chế biến tại chỗ, giá dễ chịu. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Nhà hàng", "ten": "Bánh canh hẹ Cô Thi", "dia_chi": "81B Trần Phú, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.10169, "lon": 109.3101, "gio": "", "dienthoai": "", "gia": "20.000đ-30.000đ/tô", "mota": "Đặc sản bánh canh hẹ Phú Yên - nước dùng ngọt từ cá, hẹ xanh phủ kín tô. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Nhà hàng", "ten": "Bánh hỏi lòng heo Bà Triệu", "dia_chi": "123 Điện Biên Phủ, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.09577, "lon": 109.31379, "gio": "05:00-10:00 (nghỉ rằm, mùng 1)", "dienthoai": "", "gia": "15.000đ-25.000đ", "mota": "Bánh hỏi dầu hẹ, lòng heo luộc, cháo nóng - món sáng must-try xứ Nẫu. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Nhà hàng", "ten": "Bánh canh hẹ Năm Hiền", "dia_chi": "305 Lê Lợi, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.08999, "lon": 109.30995, "gio": "", "dienthoai": "", "gia": "15.000đ-35.000đ", "mota": "Bánh canh hẹ chuẩn vị địa phương, giá bình dân. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Nhà hàng", "ten": "Bún đỏ Bà Thu", "dia_chi": "26 Đinh Tiên Hoàng, phường Buôn Ma Thuột, tỉnh Đắk Lắk", "lat": 12.67702, "lon": 108.04605, "gio": "15:00-22:00", "dienthoai": "", "gia": "30.000đ/tô", "mota": "Đặc sản bún đỏ Ban Mê lâu đời: sợi bún đỏ, riêu cua, trứng cút, tóp mỡ. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Nhà hàng", "ten": "Bánh ướt thịt nướng 45 (Ông Ù)", "dia_chi": "43 Trần Nhật Duật, phường Tân Lợi, tỉnh Đắk Lắk", "lat": 12.69271, "lon": 108.05316, "gio": "11:00-20:30", "dienthoai": "0906 552 998", "gia": "40.000đ-50.000đ/người", "mota": "Bánh ướt chồng dĩa kiểu Ban Mê: bánh tráng nóng cuốn thịt nướng, xoài, dưa chua, mắm nêm. Rất đông buổi tối."}, {"loai": "Nhà hàng", "ten": "Gà nướng cơm lam", "dia_chi": "383/81 Nguyễn Văn Cừ, phường Tân Lập, tỉnh Đắk Lắk", "lat": 12.68806, "lon": 108.07969, "gio": "09:00-21:30", "dienthoai": "0932 514 226", "gia": "12.000đ-200.000đ/món", "mota": "Gà tre nướng sa lửa, cơm lam nếp thượng hạng, rau rừng Tây Nguyên; làm khi khách gọi nên luôn nóng hổi."}, {"loai": "Nhà hàng", "ten": "Gà ta nướng Cường Mập BMT", "dia_chi": "74 Phạm Hồng Thái, phường Buôn Ma Thuột, tỉnh Đắk Lắk", "lat": 12.6758, "lon": 108.0477, "gio": "10:30-22:00", "dienthoai": "", "gia": "", "mota": "Quán dân dã chuyên gà đồi nướng ăn kèm cơm lam, rau sống; decor đậm chất Tây Nguyên, giá phải chăng. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Nhà hàng", "ten": "Bo Đàn Quán", "dia_chi": "194/25 Nguyễn Lương Bằng, xã Hòa Thắng, tỉnh Đắk Lắk", "lat": 12.66662, "lon": 108.09897, "gio": "10:00-22:00", "dienthoai": "", "gia": "50.000đ-250.000đ/món", "mota": "Ẩm thực Tây Nguyên - Tây Bắc: gà nướng cơm lam best-seller, gỏi cà đắng cá khô, trâu bò nướng mọi, cá lăng."}, {"loai": "Nhà hàng", "ten": "Quán Kiều Thy", "dia_chi": "Hẻm 304 Nguyễn Lương Bằng, xã Hòa Thắng, tỉnh Đắk Lắk", "lat": 12.65905, "lon": 108.10374, "gio": "11:00-22:00", "dienthoai": "", "gia": "", "mota": "Sân vườn thoáng, chuyên đặc sản Tây Nguyên: cá lóc nướng, lợn rừng, gà nướng cơm lam, gỏi bắp chuối. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Nhà hàng", "ten": "Ẩm thực Tây Nguyên Yangsin", "dia_chi": "Đường Trần Nhật Duật, phường Tân Lợi, tỉnh Đắk Lắk", "lat": 12.68957, "lon": 108.05637, "gio": "08:00-22:00", "dienthoai": "", "gia": "", "mota": "Nhà sàn buôn làng: gà nướng, lẩu cá lăng, gỏi trái vả, canh cà đắng. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Cà phê", "ten": "Soul Roastery BMT", "dia_chi": "87 Nguyễn Khuyến, phường Tân Lợi, tỉnh Đắk Lắk", "lat": 12.69449, "lon": 108.04773, "gio": "07:00-22:00", "dienthoai": "0262 8557 879", "gia": "32.000đ-59.000đ", "mota": "Cà phê đặc sản rang xay, cold brew lên men rượu cần; không gian rộng, máy lạnh, hợp làm việc/học nhóm."}, {"loai": "Cà phê", "ten": "ARUL Coffee", "dia_chi": "17-19 Trần Nhật Duật, phường Tân Lợi, tỉnh Đắk Lắk", "lat": 12.68999, "lon": 108.05584, "gio": "", "dienthoai": "", "gia": "", "mota": "Nhà dài Ê-đê, ché chiêng, vườn cây cổ thụ; phục vụ heo tộc, gà nướng, cơm lam (đặt trước). Địa chỉ suy luận, chờ duyệt."}, {"loai": "Cà phê", "ten": "Ticos Coffee", "dia_chi": "6-8 Nguyễn Đình Chiểu, phường Tân Lợi, tỉnh Đắk Lắk", "lat": 12.68745, "lon": 108.05238, "gio": "", "dienthoai": "", "gia": "30.000đ-50.000đ", "mota": "Phong cách công nghiệp hiện đại, cà phê pha máy, nhiều trà hấp dẫn. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Cà phê", "ten": "Trung Nguyên Legend Café (Apec Mandala)", "dia_chi": "660 Đại lộ Hùng Vương, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.10383, "lon": 109.3068, "gio": "07:00-22:00", "dienthoai": "0865 830 432", "gia": "", "mota": "Kiến trúc tân cổ điển kiểu lâu đài châu Âu, thực đơn đa dạng, đêm nhạc acoustic thứ 7. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Cà phê", "ten": "Pani Coffee & Tea", "dia_chi": "79 Lương Tấn Thịnh, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.09588, "lon": 109.31269, "gio": "", "dienthoai": "", "gia": "", "mota": "Không gian đơn giản thu hút, đa dạng cà phê - trà trái cây - trà sữa - sinh tố; nhiều góc chụp ảnh. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Cà phê", "ten": "PHD Book & Coffee", "dia_chi": "Đường An Dương Vương, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.11277, "lon": 109.29231, "gio": "", "dienthoai": "", "gia": "20.000đ-50.000đ", "mota": "Ốc đảo yên tĩnh ven thành phố: sách, hoa giấy, cà phê đậm vị, bánh ngọt; hợp đọc sách, làm việc. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Cà phê", "ten": "Coffee Ayaru - Nghinh Phong Quán", "dia_chi": "Đường Trường Chinh, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.10079, "lon": 109.31204, "gio": "", "dienthoai": "", "gia": "", "mota": "Khu vực Tháp Nghinh Phong, sát biển - ngắm bình minh/hoàng hôn; tên quán cần kiểm tra lại. Địa chỉ suy luận, chờ duyệt."}, {"loai": "Khách sạn", "ten": "Mường Thanh Luxury Buôn Ma Thuột", "dia_chi": "81 Nguyễn Tất Thành, phường Tân An, tỉnh Đắk Lắk", "lat": 12.69346, "lon": 108.06405, "gio": "", "dienthoai": "0262 3961 888", "gia": "Từ 1.200.000đ/đêm", "mota": "Khách sạn 5 sao đầu tiên tại Buôn Ma Thuột, chuỗi Mường Thanh, vị trí trung tâm, phòng hiện đại. Phường theo địa chỉ cũ/geocoder, suy luận chờ duyệt."}, {"loai": "Khách sạn", "ten": "Khách sạn Hai Bà Trưng", "dia_chi": "8 Hai Bà Trưng, phường Thắng Lợi, tỉnh Đắk Lắk", "lat": 12.68152, "lon": 108.04434, "gio": "", "dienthoai": "0262 3899 999", "gia": "Từ 950.000đ/đêm", "mota": "Khách sạn 4 sao kiến trúc hoàng gia, vị trí trung tâm Buôn Ma Thuột gần tượng đài Chiến thắng, có spa, gym, karaoke. Phường theo địa chỉ cũ/geocoder, suy luận chờ duyệt."}, {"loai": "Khách sạn", "ten": "Khách sạn Sài Gòn – Ban Mê", "dia_chi": "1-3 Phan Chu Trinh, phường Thắng Lợi, tỉnh Đắk Lắk", "lat": 12.68043, "lon": 108.04451, "gio": "", "dienthoai": "0262 3685 666", "gia": "Khoảng 750.000đ/đêm", "mota": "Khách sạn 4 sao ngay ngã 6 Buôn Ma Thuột, 131 phòng view toàn cảnh thành phố, gần bảo tàng Buôn Ma Thuột và khu du lịch KoTam. Phường theo địa chỉ cũ/geocoder, suy luận chờ duyệt."}, {"loai": "Khách sạn", "ten": "Khách sạn Bạch Mã", "dia_chi": "7-9-11 Nguyễn Đức Cảnh, phường Thắng Lợi, tỉnh Đắk Lắk", "lat": 12.68422, "lon": 108.04492, "gio": "", "dienthoai": "0262 3815 656", "gia": "Khoảng 450.000đ/đêm", "mota": "Khách sạn giá tốt ở Buôn Ma Thuột, có bồn tắm nước nóng, massage, spa, phòng tập; gần làng cà phê Trung Nguyên, biệt điện Bảo Đại. Phường theo địa chỉ cũ/geocoder, suy luận chờ duyệt."}, {"loai": "Khách sạn", "ten": "Khách sạn Thanh Mai", "dia_chi": "170 Ngô Quyền, phường Tân An, tỉnh Đắk Lắk", "lat": 12.69241, "lon": 108.05899, "gio": "", "dienthoai": "0941 789 989", "gia": "", "mota": "Khách sạn 3 sao kiến trúc Tây Nguyên kết hợp hiện đại tại Buôn Ma Thuột, có nhà hàng buffet và phòng hội nghị 200 khách. Phường theo địa chỉ cũ/geocoder, suy luận chờ duyệt."}, {"loai": "Khách sạn", "ten": "Coralina Hotel & Spa Phú Yên", "dia_chi": "335 Lê Duẩn, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.10009, "lon": 109.31605, "gio": "", "dienthoai": "", "gia": "", "mota": "Khách sạn phong cách Địa Trung Hải cách bãi biển Tuy Hòa 100m, cách tháp Nghinh Phong 2km, có nhà hàng tầng mái view biển và spa. Địa chỉ cũ: Phường 7, TP Tuy Hòa (cũ)."}, {"loai": "Khách sạn", "ten": "Stelia Beach Resort Tuy Hòa", "dia_chi": "Lô C1 đường Độc Lập, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.11402, "lon": 109.30807, "gio": "", "dienthoai": "", "gia": "", "mota": "Resort 3-4 sao sát biển Tuy Hòa, kiến trúc Địa Trung Hải, 100 phòng + 59 villa hồ bơi riêng, cách trung tâm 2km. Địa chỉ cũ: Phường 9, TP Tuy Hòa (cũ)."}, {"loai": "Khách sạn", "ten": "Khách sạn Calaha Tuy Hòa", "dia_chi": "09 Trần Phú, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.09321, "lon": 109.29817, "gio": "", "dienthoai": "", "gia": "Từ 820.000đ/đêm", "mota": "Khách sạn đối diện bãi biển Tuy Hòa, cách biển 200m, gần núi Nhạn; có bãi đậu xe, lễ tân 24h, đưa đón sân bay. Geocoder chỉ khớp số nhà trên đường (relevance 51), cần kiểm tra lại."}, {"loai": "Khách sạn", "ten": "Bãi Tràm Hideaway Resort", "dia_chi": "Thôn Hòa Lợi, xã Xuân Cảnh, tỉnh Đắk Lắk", "lat": 13.55009, "lon": 109.25006, "gio": "", "dienthoai": "0826 990 890", "gia": "Từ 2.250.000-3.700.000đ/đêm", "mota": "Resort 5 sao tại Sông Cầu (Phú Yên cũ), bãi biển riêng dài 800m, villa hướng biển, bể bơi, spa. Lưu ý: một số nguồn cũ ghi resort đã đóng cửa — nên gọi xác minh trước khi đi."}, {"loai": "Khách sạn", "ten": "Nhất Tự Sơn Beachfront Villas & Resort", "dia_chi": "Khu phố Mỹ Thành, phường Xuân Thành, tỉnh Đắk Lắk", "lat": 13.42148, "lon": 109.22514, "gio": "", "dienthoai": "0944 500 018", "gia": "Khoảng 1.000.000đ/đêm", "mota": "Resort view biển tại Sông Cầu (Phú Yên cũ), phong cách mở, có bếp tự phục vụ, cách bãi tắm 5 phút taxi. Geocoder chỉ tìm thấy nhà hàng cùng tên tại phường Xuân Thành, tọa độ cần kiểm tra lại. Phường suy luận, chờ duyệt."}, {"loai": "Khách sạn", "ten": "Lak Tented Camp", "dia_chi": "Buôn Bhốk, xã Liên Sơn Lắk, tỉnh Đắk Lắk", "lat": 12.40943, "lon": 108.17866, "gio": "", "dienthoai": "0262 6255 552", "gia": "Từ 1.000.000đ/đêm", "mota": "Resort lều trại trên đồi ven hồ Lắk, phong cách nhà ở người M'Nông, view hồ núi, kayak, văn nghệ cồng chiêng. Địa chỉ cũ: 193 Nguyễn Tất Thành, TT Liên Sơn, huyện Lắk (địa chỉ mới suy luận, chờ duyệt). Đi thuyền 8 phút từ bến."}, {"loai": "Khách sạn", "ten": "Homestay Ruby Garden Buôn Đôn", "dia_chi": "Buôn Đôn, tỉnh Đắk Lắk", "lat": 12.80999, "lon": 107.8957, "gio": "", "dienthoai": "", "gia": "", "mota": "Homestay sinh thái tại Buôn Đôn, không gian xanh, hồ bơi, khu vui chơi trẻ em, góc check-in, tổ chức BBQ. Không tìm thấy địa chỉ chính xác và geocoder không khớp tên — tọa độ đặt tạm tại khu vực Buôn Đôn (NGOÀI bounds lon 108.0-109.5 do Buôn Đôn nằm ở phía tây). Địa chỉ suy luận, chờ duyệt."}, {"loai": "Gọi xe", "ten": "Taxi Mai Linh Buôn Ma Thuột", "dia_chi": "165 Phan Đăng Lưu, phường Tân An, tỉnh Đắk Lắk", "lat": 12.70186, "lon": 108.06572, "gio": "", "dienthoai": "0262 3819 819", "gia": "Từ 15.000đ/km", "mota": "Hãng taxi quốc gia phục vụ nội tỉnh Đắk Lắk, đặt xe qua tổng đài hoặc app Mai Linh. Địa chỉ văn phòng: 165 Phan Đăng Lưu, BMT."}, {"loai": "Gọi xe", "ten": "Taxi Quyết Tiến Buôn Ma Thuột", "dia_chi": "1 Trường Chinh, phường Thắng Lợi, tỉnh Đắk Lắk", "lat": 12.6836, "lon": 108.04857, "gio": "", "dienthoai": "0262 3813 813", "gia": "Từ 12.000đ/km", "mota": "Hãng taxi địa phương Buôn Ma Thuột, giá rẻ, đón khách nhanh, nhận đặt xe theo tháng. Địa chỉ văn phòng: 1 Trường Chinh, BMT."}, {"loai": "Gọi xe", "ten": "Taxi Vinasun Buôn Ma Thuột", "dia_chi": "34 Nguyễn Sơn, phường Tân Lợi, tỉnh Đắk Lắk", "lat": 12.69323, "lon": 108.0488, "gio": "", "dienthoai": "0262 3510 051", "gia": "Từ 12.500đ/km", "mota": "Hãng taxi lớn, nhiều năm kinh nghiệm tại BMT, đón tiễn sân bay, phục vụ toàn tỉnh. Địa chỉ văn phòng: 34 Nguyễn Sơn, BMT."}, {"loai": "Gọi xe", "ten": "Taxi Mai Linh Phú Yên (Tuy Hòa)", "dia_chi": "239 Nguyễn Tất Thành, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.09796, "lon": 109.29177, "gio": "", "dienthoai": "0257 3898 989", "gia": "Từ 10.500đ/km", "mota": "Chi nhánh Mai Linh phục vụ Tuy Hòa và toàn tỉnh Phú Yên cũ, xe đẹp, giá minh bạch. Địa chỉ văn phòng: 239 Nguyễn Tất Thành, Tuy Hòa."}, {"loai": "Gọi xe", "ten": "Taxi Lado Phú Yên (Tuy Hòa)", "dia_chi": "Đường Mậu Thân, thôn Liên Trì 2, xã Bình Kiến, tỉnh Đắk Lắk", "lat": 13.11443, "lon": 109.29065, "gio": "", "dienthoai": "0257 3666 777", "gia": "11.900đ/km (dưới 20km)", "mota": "Hãng taxi phổ biến tại Tuy Hòa, có app đặt xe riêng, chương trình tích điểm. Địa chỉ văn phòng: đường Mậu Thân, Liên Trì 2, Bình Kiến."}, {"loai": "Gọi xe", "ten": "Cho thuê xe điện Buôn Ma Thuột", "dia_chi": "Trung tâm TP Buôn Ma Thuột, tỉnh Đắk Lắk", "lat": 12.67939, "lon": 108.0451, "gio": "", "dienthoai": "0944 956 465", "gia": "", "mota": "Dịch vụ cho thuê xe máy điện dạo phố BMT theo giờ/ngày, giao xe tận nơi trung tâm thành phố, không khói, tiết kiệm. Không có địa chỉ văn phòng cố định — tọa độ đặt tại Ngã Sáu trung tâm BMT, địa chỉ suy luận, chờ duyệt."}, {"loai": "Điểm du lịch", "ten": "Ghềnh Đá Đĩa", "dia_chi": "xã An Ninh Đông, tỉnh Đắk Lắk", "lat": 13.35431, "lon": 109.29368, "gio": "8:00–18:30 hàng ngày", "dienthoai": "", "gia": "Người lớn 20.000đ; trẻ em 10.000đ; xe điện 5.000đ/lượt", "mota": "Kiệt tác đá bazan hình tổ ong 200 triệu năm bên bờ biển."}, {"loai": "Điểm du lịch", "ten": "Mũi Điện / Hải đăng Đại Lãnh", "dia_chi": "xã Hòa Xuân, tỉnh Đắk Lắk", "lat": 12.89566, "lon": 109.45741, "gio": "Khu Mũi Điện 7:00–18:00; hải đăng 7:30–11:30 và 13:30–17:00", "dienthoai": "", "gia": "Vé tham quan 20.000đ/người; vé lên hải đăng 10.000đ/người", "mota": "Điểm đón bình minh sớm nhất trên đất liền Việt Nam với hải đăng cổ xây năm 1890."}, {"loai": "Điểm du lịch", "ten": "Tháp Nhạn", "dia_chi": "Núi Nhạn, phường Tuy Hòa, tỉnh Đắk Lắk", "lat": 13.08282, "lon": 109.30091, "gio": "", "dienthoai": "", "gia": "", "mota": "Tháp Chăm cổ cuối thế kỷ XI, di tích quốc gia đặc biệt, biểu tượng của Tuy Hòa."}, {"loai": "Điểm du lịch", "ten": "Vịnh Vũng Rô", "dia_chi": "xã Hòa Xuân, tỉnh Đắk Lắk", "lat": 12.86942, "lon": 109.41292, "gio": "", "dienthoai": "", "gia": "", "mota": "Vịnh biển hoang sơ dưới chân đèo Cả, gắn với di tích đường Hồ Chí Minh trên biển."}, {"loai": "Điểm du lịch", "ten": "Buôn Đôn", "dia_chi": "xã Buôn Đôn, tỉnh Đắk Lắk", "lat": 12.88781, "lon": 107.78246, "gio": "7:00–18:00 hàng ngày", "dienthoai": "", "gia": "Vé vào cổng 40.000đ/người lớn; trẻ em dưới 1,3m miễn phí", "mota": "Vùng đất huyền thoại bên sông Sêrêpốk với nghề săn bắt, thuần dưỡng voi, cầu treo và cồng chiêng. (tọa độ tại cầu treo Sàn Si, xã Krông Na — ngoài bounds lon 108.0; địa chỉ suy luận, chờ duyệt)"}, {"loai": "Điểm du lịch", "ten": "Hồ Lắk", "dia_chi": "xã Liên Sơn Lắk, tỉnh Đắk Lắk", "lat": 12.41282, "lon": 108.17038, "gio": "", "dienthoai": "", "gia": "Tham khảo: 10.000đ/người", "mota": "Hồ nước ngọt tự nhiên lớn thứ hai Việt Nam; chèo thuyền độc mộc, thăm buôn làng M'nông ven hồ. (tọa độ tại Buôn Jun ven hồ; địa chỉ suy luận, chờ duyệt)"}, {"loai": "Điểm du lịch", "ten": "Thác Dray Nur", "dia_chi": "xã Dray Sáp, tỉnh Đắk Lắk", "lat": 12.54462, "lon": 107.89758, "gio": "", "dienthoai": "", "gia": "Vé tham quan 30.000đ/người; gửi xe 10.000đ/xe", "mota": "Thác hùng vĩ trên sông Sêrêpốk gắn truyền thuyết tình yêu với thác Dray Sáp. (ngoài bounds lon 108.0 một chút)"}, {"loai": "Điểm du lịch", "ten": "Bảo tàng Thế giới Cà phê", "dia_chi": "đường Nguyễn Đình Chiểu, phường Tân Lợi, TP. Buôn Ma Thuột, tỉnh Đắk Lắk", "lat": 12.69115, "lon": 108.04458, "gio": "7:00–17:45 hàng ngày", "dienthoai": "", "gia": "Người lớn 150.000đ; người Đắk Lắk 90.000đ; trẻ em 6–12 tuổi 40.000đ", "mota": "Bảo tàng kiến trúc độc đáo với hơn 10.000 hiện vật văn hóa cà phê thế giới."}, {"loai": "Điểm du lịch", "ten": "Bảo tàng Đắk Lắk", "dia_chi": "12 Lê Duẩn, phường Tự An, TP. Buôn Ma Thuột, tỉnh Đắk Lắk", "lat": 12.67594, "lon": 108.04324, "gio": "8:00–21:00, thứ 3 đến chủ nhật", "dienthoai": "", "gia": "Người lớn 30.000đ; trẻ em 20.000đ", "mota": "Bảo tàng kiến trúc nhà dài Êđê, gần 13.000 hiện vật lịch sử – văn hóa Tây Nguyên. (địa chỉ suy luận, chờ duyệt)"}, {"loai": "Điểm du lịch", "ten": "Bãi Xép", "dia_chi": "xã An Chấn, tỉnh Đắk Lắk", "lat": 13.19191, "lon": 109.30048, "gio": "7:00–18:00 hàng ngày", "dienthoai": "", "gia": "Vé 20.000đ/người lớn; trẻ em miễn phí", "mota": "Phim trường 'Tôi thấy hoa vàng trên cỏ xanh' với bãi cát trắng, ghềnh đá đen và hàng xương rồng."}, {"loai": "Điểm du lịch", "ten": "Hòn Yến", "dia_chi": "thôn Nhơn Hội, xã An Phú, tỉnh Đắk Lắk", "lat": 13.16835, "lon": 109.29146, "gio": "", "dienthoai": "", "gia": "", "mota": "Đảo nhỏ ngoài khơi với rạn san hô lộ ra khi thủy triều rút. (tọa độ là tâm xã An Phú, cần kiểm tra lại; địa chỉ suy luận, chờ duyệt)"}, {"loai": "Điểm du lịch", "ten": "Chùa Thanh Lương", "dia_chi": "thôn Mỹ Quang Nam, xã An Chấn, tỉnh Đắk Lắk", "lat": 13.18105, "lon": 109.29587, "gio": "", "dienthoai": "", "gia": "Miễn phí", "mota": "Ngôi chùa độc đáo xây từ san hô, vỏ ốc, gáo dừa với tượng Quan Âm ẩn mình dưới nước."}, {"loai": "Điểm du lịch", "ten": "Buôn Akô Dhông", "dia_chi": "phường Tân Lợi, TP. Buôn Ma Thuột, tỉnh Đắk Lắk", "lat": 12.695, "lon": 108.048, "gio": "", "dienthoai": "", "gia": "", "mota": "Buôn du lịch cộng đồng của người Êđê với nhà dài truyền thống và cà phê bản địa. (chưa geocode được do giới hạn tốc độ API; địa chỉ đã xác minh) [Tọa độ ước lượng cuối đường Trần Nhật Duật, cần xác minh]"}, {"loai": "Điểm du lịch", "ten": "Hồ Ea Kao", "dia_chi": "thôn 1, phường Ea Kao, tỉnh Đắk Lắk", "lat": 12.60692, "lon": 108.0538, "gio": "", "dienthoai": "", "gia": "", "mota": "Hồ thủy lợi 'không bao giờ cạn', khu du lịch dã ngoại, cắm trại ven thành phố. (chưa geocode được do giới hạn tốc độ API; địa chỉ đã xác minh)"}, {"loai": "Điểm du lịch", "ten": "Làng Cà phê Trung Nguyên", "dia_chi": "163 Lý Thái Tổ, phường Tân An, TP. Buôn Ma Thuột, tỉnh Đắk Lắk", "lat": 12.6875, "lon": 108.0672, "gio": "7:00–22:00 hàng ngày", "dienthoai": "19006011", "gia": "Miễn phí vé vào; đồ uống 25.000–200.000đ", "mota": "Quần thể kiến trúc Tây Nguyên 20.000m² tôn vinh văn hóa cà phê Việt. (chưa geocode được do giới hạn tốc độ API; địa chỉ đã xác minh) [Tọa độ ước lượng theo địa chỉ (ngã tư Lý Thái Tổ–Nguyễn Hữu Thọ, Tân An), cần xác minh]"}];
+var map = L.map("map").setView([13.0, 108.75], 9.0);
+var gStreet = L.tileLayer("https://{s}.google.com/vt/lyrs=m&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gHybrid = L.tileLayer("https://{s}.google.com/vt/lyrs=y&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var gTerrain = L.tileLayer("https://{s}.google.com/vt/lyrs=p&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+var osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"OpenStreetMap"});
+var gTraffic = L.tileLayer("https://{s}.google.com/vt/lyrs=h,traffic&hl=vi&x={x}&y={y}&z={z}",{maxZoom:20,subdomains:["mt0","mt1","mt2","mt3"],attribution:"Google Maps"});
+gHybrid.addTo(map);
+gTraffic.addTo(map);
+var ICONS = {"Nhà hàng": "🍽️", "Cà phê": "☕", "Khách sạn": "🏨", "Gọi xe": "🚕", "Điểm du lịch": "🏞️"};
+var BADGES = {"Nhà hàng": "nh", "Cà phê": "cf", "Khách sạn": "ks", "Gọi xe": "gx", "Điểm du lịch": "dl"};
+function iconFor(loai){
+  var e = ICONS[loai] || "\uD83D\uDCCD";
+  return L.divIcon({className:"", html:'<div class="poi-icon">'+e+'</div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-14]});
+}
+function badgeCls(loai){
+  return BADGES[loai] || "xx";
+}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function popupHtml(d){
+  var h = '<h3>'+esc(d.ten)+'</h3>';
+  h += '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span></div>';
+  h += '<div>\uD83D\uDCCD '+esc(d.dia_chi)+'</div>';
+  if(d.gio) h += '<div>\uD83D\uDD50 '+esc(d.gio)+'</div>';
+  if(d.dienthoai) h += '<div>\uD83D\uDCDE <a href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">'+esc(d.dienthoai)+'</a></div>';
+  if(d.gia) h += '<div>\uD83D\uDCB0 '+esc(d.gia)+'</div>';
+  if(d.mota) h += '<div style="margin-top:4px;color:#444;">'+esc(d.mota)+'</div>';
+  h += '<div class="btns">';
+  h += '<a class="gm" target="_blank" href="https://www.google.com/maps/search/?api=1&query='+d.lat+','+d.lon+'">M\u1edf tr\u00ean Google Maps</a>';
+  h += '<a class="dir" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+d.lat+','+d.lon+'">D\u1eabn \u0111\u01b0\u1eddng t\u1edbi \u0111\u00e2y</a>';
+  if(d.dienthoai) h += '<a class="tel" href="tel:'+esc(d.dienthoai.replace(/[ .]/g,""))+'">G\u1ecdi \u0111i\u1ec7n</a>';
+  h += '</div>';
+  return h;
+}
+var markers = [];
+var listEl = document.getElementById("list");
+var curFilter = "all";
+function render(){
+  listEl.innerHTML = "";
+  markers.forEach(function(m){ map.removeLayer(m); });
+  markers = [];
+  var q = document.getElementById("search").value.toLowerCase();
+  var shown = 0;
+  DATA.forEach(function(d, i){
+    if(curFilter !== "all" && d.loai !== curFilter) return;
+    if(q && (d.ten+" "+d.dia_chi+" "+d.mota).toLowerCase().indexOf(q) < 0) return;
+    shown++;
+    var mk = L.marker([d.lat, d.lon], {icon: iconFor(d.loai)}).addTo(map);
+    mk.bindPopup(popupHtml(d));
+    markers.push(mk);
+    var div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = '<div><span class="badge '+badgeCls(d.loai)+'">'+esc(d.loai)+'</span><span class="t">'+esc(d.ten)+'</span></div><div class="a">'+esc(d.dia_chi)+'</div>';
+    (function(m){ div.onclick = function(){ map.setView(m.getLatLng(), 16); m.openPopup(); }; })(mk);
+    listEl.appendChild(div);
+  });
+  document.getElementById("count").textContent = "Hi\u1ec3n th\u1ecb "+shown+"/"+DATA.length+" \u0111\u1ecba \u0111i\u1ec3m";
+}
+document.getElementById("search").addEventListener("input", render);
+var fbtns = document.querySelectorAll("#filters button");
+fbtns.forEach(function(b){
+  b.addEventListener("click", function(){
+    fbtns.forEach(function(x){ x.classList.remove("active"); });
+    b.classList.add("active");
+    curFilter = b.getAttribute("data-f");
+    render();
+  });
+});
+render();
+//]]>
+
+</script>
+</body>
+</html>
